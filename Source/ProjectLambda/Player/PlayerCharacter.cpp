@@ -110,3 +110,19 @@ void APlayerCharacter::ShootHandler(const FInputActionValue& Value)
 {
 	//@@TODO Add shooting functionality
 }
+
+void APlayerCharacter::AttachWeapon(TSubclassOf<AActor> weaponClass, FName socketName)
+{
+	//Get the orientation of the socket
+	const FTransform orientation = GetMesh()->GetSocketTransform(socketName, ERelativeTransformSpace::RTS_World);
+	
+	//Spawn in the weapon
+	AActor* newWeapon = GetWorld()->SpawnActor(weaponClass, &orientation);
+	if (newWeapon == nullptr)
+	{
+		return;
+	}
+
+	//Attach the weapon to the player
+	newWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, socketName);
+}

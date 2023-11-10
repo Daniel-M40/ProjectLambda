@@ -69,5 +69,7 @@ public:
 	void StrafeHandler(const FInputActionValue& Value); //Handles movement left and right
 	
 	void ShootHandler(const FInputActionValue& Value); //Handles the firing input
+
+	void AttachWeapon(TSubclassOf<AActor> weaponClass, FName socketName);//Attaches a weapon class to the player
 	
 };
