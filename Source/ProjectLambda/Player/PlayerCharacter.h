@@ -15,7 +15,7 @@ private:
 
 	#pragma region Player Config
 	UPROPERTY(EditAnywhere, Category="Player Config", meta=(DisplayName="Player Static Mesh"))
-	class UStaticMeshComponent* playerStaticMesh;
+	class UStaticMeshComponent* PlayerStaticMesh;
 
 	
 	#pragma endregion
@@ -34,16 +34,34 @@ private:
 	UPROPERTY(EditAnywhere, Category="Input", meta=(DisplayName="Fire Input"))
 	UInputAction* ShootInput;
 
+	UPROPERTY(EditAnywhere, Category="Input", meta=(DisplayName="Dash Input"))
+	UInputAction* DashInput;
+	
 	#pragma endregion
 	
 	class APlayerController* PlayerController;
 
 	UPROPERTY(EditAnywhere, Category="Player Config", meta=(DisplayName="Rotation Speed"))
-	float mRotationSpeed = 10.f;
+	float RotationSpeed = 10.f;
 
+
+	//Dash config
+	UPROPERTY(EditAnywhere, Category="Player Config", meta=(DisplayName="Launch Force"))
+	float LaunchForce = 5.f;
+
+	UPROPERTY(EditAnywhere, Category="Player Config", meta=(DisplayName="Dash Delay"))
+	float DashDelay = 3.f;
+	
+	bool bLaunchOnce = true; //Flag the tells us whether the player can dash or not
+
+	//Timer handle
+	FTimerHandle DashTimeHandle;
+	
+
+	//Debug config
 	UPROPERTY(EditAnywhere, Category="General", meta=(DisplayName="Debug Mode (Logs / Spheres)"))
 	bool bIsDebug = false;
-
+	
 	const float SphereRadius = 25.f;
 	const int SphereSegments = 12;
 	
@@ -55,6 +73,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+private:
+	void ResetDash();
+	
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -69,5 +90,7 @@ public:
 	void StrafeHandler(const FInputActionValue& Value); //Handles movement left and right
 	
 	void ShootHandler(const FInputActionValue& Value); //Handles the firing input
+	
+	void DashHandler(const FInputActionValue& Value); //Handles the firing input
 	
 };

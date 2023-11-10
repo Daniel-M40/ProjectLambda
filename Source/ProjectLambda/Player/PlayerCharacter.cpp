@@ -17,8 +17,8 @@ APlayerCharacter::APlayerCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	//Static mesh for the player
-	playerStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Player Mesh"));
-	playerStaticMesh->SetupAttachment(RootComponent);
+	PlayerStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Player Mesh"));
+	PlayerStaticMesh->SetupAttachment(RootComponent);
 	
 	
 	//Auto posses player when the game starts
@@ -35,13 +35,17 @@ void APlayerCharacter::BeginPlay()
 	
 	if (PlayerController)
 	{
-		
 		//Get the subsystem from the player controller
 		UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
 
 		//Add the mapping context to the subsystem
 		Subsystem->AddMappingContext(MappingContext, 0);
 	}
+}
+
+void APlayerCharacter::ResetDash()
+{
+	bLaunchOnce = true;
 }
 
 // Called every frame
@@ -63,7 +67,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 		}
 
 		//Rotate the player to where the cursor it located
-		RotatePlayer(HitResult.ImpactPoint, mRotationSpeed);
+		RotatePlayer(HitResult.ImpactPoint, RotationSpeed);
 
 	}
 }
@@ -81,6 +85,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	EIC->BindAction(MoveInput, ETriggerEvent::Triggered, this, &APlayerCharacter::MoveHandler);
 	EIC->BindAction(StrafeInput, ETriggerEvent::Triggered, this, &APlayerCharacter::StrafeHandler);
 	EIC->BindAction(ShootInput, ETriggerEvent::Triggered, this, &APlayerCharacter::ShootHandler);
+	EIC->BindAction(DashInput, ETriggerEvent::Triggered, this, &APlayerCharacter::DashHandler);
 }
 
 
@@ -110,3 +115,33 @@ void APlayerCharacter::ShootHandler(const FInputActionValue& Value)
 {
 	//@@TODO Add shooting functionality
 }
+
+void APlayerCharacter::DashHandler(const FInputActionValue& Value)
+{
+	if (bLaunchOnce)
+	{
+		bLaunchOnce = false;
+
+		//Set timer for dash
+		GetWorldTimerManager().SetTimer(DashTimeHandle, this,
+			&APlayerCharacter::ResetDash, DashDelay, false);
+		
+		//Get player velocity
+		FVector ActorVelocity = GetVelocity();
+
+		//If the player isnt moving then just use the forward vector
+		if (ActorVelocity.IsZero())
+		{
+			ActorVelocity = FVector::ForwardVector * 100;
+		}
+
+		//Multiply the players velocity with the launch force
+		const FVector LaunchVector = ActorVelocity * LaunchForce;
+
+		//Call launch character function and do not override x,y,z axis
+		LaunchCharacter(LaunchVector, false, false);
+
+		//@@TODO Add particles / sound here
+	}
+}
+
