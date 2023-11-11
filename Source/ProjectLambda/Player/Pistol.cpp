@@ -11,6 +11,7 @@ APistol::APistol()
 
 	PistolMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Pistol Mesh"));
 	PistolMesh->SetupAttachment(RootComponent);
+	PistolMesh->SetCollisionProfileName(TEXT("OverlapAll"));
 
 }
 

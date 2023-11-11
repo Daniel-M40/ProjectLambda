@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "PlayerCharacter.generated.h"
 
+class APistol;
+
 UCLASS()
 class PROJECTLAMBDA_API APlayerCharacter : public ACharacter
 {
@@ -54,6 +56,9 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere, Category = "Weapons")
+	TSubclassOf<APistol> StartingWeapon;
 
 public:
 	// Called every frame
