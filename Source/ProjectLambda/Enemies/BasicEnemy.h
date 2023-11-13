@@ -29,6 +29,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="", meta=(DisplayName=""))
 	float MovementSpeed = 5.f;
+	int Health = 5;
 	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
