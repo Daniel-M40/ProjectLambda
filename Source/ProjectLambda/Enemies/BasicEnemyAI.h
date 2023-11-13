@@ -13,8 +13,15 @@ UCLASS()
 class PROJECTLAMBDA_API ABasicEnemyAI : public AAIController
 {
 	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, Category="Properties")
+	UStaticMeshComponent* ActorMesh;
 	
 public:
-	void Test();
+	ABasicEnemyAI();
+	
+	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaSeconds) override;
 
 };
