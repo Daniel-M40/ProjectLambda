@@ -34,10 +34,12 @@ void ABasicEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FVector PlayerLocation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
-	FVector EnenmyLocation = GetActorLocation();
+	const FVector PlayerLocation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
+	const FVector EnemyLocation = GetActorLocation();
+
+	SetActorLocation(FMath::VInterpTo(EnemyLocation, PlayerLocation, GetWorld()->DeltaTimeSeconds, MovementSpeed));
 	
-	Cast<ABasicEnemyAI>(Controller)->Test();
+	//Cast<ABasicEnemyAI>(Controller)->Test();
 	
 
 }

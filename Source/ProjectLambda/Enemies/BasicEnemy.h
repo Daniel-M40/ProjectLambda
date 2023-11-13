@@ -27,6 +27,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* BasicEnemyMesh;
 
+	UPROPERTY(EditAnywhere, Category="", meta=(DisplayName=""))
+	float MovementSpeed = 5.f;
+	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
