@@ -46,7 +46,7 @@ void APlayerCharacter::BeginPlay()
 
 	if (StartingWeapon)
 	{
-		AttachWeapon(StartingWeapon, FName("WeaponSocket"));
+		CurrentWeapon = AttachWeapon(StartingWeapon, FName("WeaponSocket"));
 	}
 }
 
@@ -114,21 +114,22 @@ void APlayerCharacter::StrafeHandler(const FInputActionValue& Value)
 
 void APlayerCharacter::ShootHandler(const FInputActionValue& Value)
 {
-	//@@TODO Add shooting functionality
+	CurrentWeapon->Fire();
 }
 
-void APlayerCharacter::AttachWeapon(TSubclassOf<AActor> weaponClass, FName socketName)
+APistol* APlayerCharacter::AttachWeapon(TSubclassOf<APistol> weaponClass, FName socketName)
 {
 	//Get the orientation of the socket
 	const FTransform orientation = playerStaticMesh->GetSocketTransform(socketName, ERelativeTransformSpace::RTS_World);
 	
 	//Spawn in the weapon
-	AActor* newWeapon = GetWorld()->SpawnActor(weaponClass, &orientation);
+	APistol* newWeapon = (APistol*) GetWorld()->SpawnActor(weaponClass, &orientation);
 	if (newWeapon == nullptr)
 	{
-		return;
+		return nullptr;
 	}
 
 	//Attach the weapon to the player
 	newWeapon->AttachToComponent(playerStaticMesh, FAttachmentTransformRules::SnapToTargetIncludingScale, socketName);
+	return newWeapon;
 }

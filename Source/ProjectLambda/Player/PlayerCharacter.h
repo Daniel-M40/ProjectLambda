@@ -48,6 +48,8 @@ private:
 
 	const float SphereRadius = 25.f;
 	const int SphereSegments = 12;
+	//@@TODO refactor to AWeapon
+	APistol* CurrentWeapon;
 	
 public:
 	// Sets default values for this character's properties
@@ -75,6 +77,7 @@ public:
 	
 	void ShootHandler(const FInputActionValue& Value); //Handles the firing input
 
-	void AttachWeapon(TSubclassOf<AActor> weaponClass, FName socketName);//Attaches a weapon class to the player
+	//@@TODO Change retun type to AWeapon
+	APistol* AttachWeapon(TSubclassOf<APistol> weaponClass, FName socketName);//Attaches a weapon class to the player
 	
 };

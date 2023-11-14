@@ -2,6 +2,7 @@
 
 
 #include "Pistol.h"
+#include "PistolProjectile.h"
 
 // Sets default values
 APistol::APistol()
@@ -12,6 +13,9 @@ APistol::APistol()
 	PistolMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Pistol Mesh"));
 	PistolMesh->SetupAttachment(RootComponent);
 	PistolMesh->SetCollisionProfileName(TEXT("OverlapAll"));
+
+	ProjectileSpawn = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile Spawn"));
+	ProjectileSpawn->SetupAttachment(PistolMesh);
 
 }
 
@@ -27,5 +31,15 @@ void APistol::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void APistol::Fire()
+{
+	if (ProjectileClass) // Checks the projectile has been set in the editor
+	{
+		FVector SpawnLoacation = ProjectileSpawn->GetComponentLocation();
+		FRotator SpawnRotation = ProjectileSpawn->GetComponentRotation();
+		APistolProjectile* Bullet = GetWorld()->SpawnActor<APistolProjectile>(ProjectileClass, SpawnLoacation, SpawnRotation);
+	}
 }
 

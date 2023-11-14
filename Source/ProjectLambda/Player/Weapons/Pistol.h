@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Pistol.generated.h"
 
+class APistolProjectile;
+
 UCLASS()
 class PROJECTLAMBDA_API APistol : public AActor
 {
@@ -26,4 +28,12 @@ public:
 private:
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* PistolMesh;
+	UPROPERTY(EditAnywhere)
+	USceneComponent* ProjectileSpawn;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<APistolProjectile> ProjectileClass;
+
+public:
+
+	void Fire();
 };
