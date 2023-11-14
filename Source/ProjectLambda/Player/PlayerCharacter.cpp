@@ -2,7 +2,7 @@
 
 
 #include "PlayerCharacter.h"
-#include "Pistol.h"
+#include "Weapons/Pistol.h"
 
 #include "InputAction.h"
 #include "InputMappingContext.h"
