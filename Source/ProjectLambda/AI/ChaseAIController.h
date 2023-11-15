@@ -16,7 +16,7 @@ class PROJECTLAMBDA_API AChaseAIController : public AAIController
 	
 
 public:
-	AChaseAIController();
+	explicit AChaseAIController(FObjectInitializer const &ObjectInitializer);
 
 	virtual void OnPossess(APawn* InPawn) override;
 

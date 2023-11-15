@@ -9,6 +9,10 @@ ABaseEnemyCharacter::ABaseEnemyCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	//Static mesh for the player
+	characterMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Character Static Mesh"));
+	characterMesh->SetupAttachment(RootComponent);
+
 }
 
 // Called when the game starts or when spawned
@@ -30,5 +34,10 @@ void ABaseEnemyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+UBehaviorTree* ABaseEnemyCharacter::GetBehaviorTree() const
+{
+	return Tree;
 }
 
