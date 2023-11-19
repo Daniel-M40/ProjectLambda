@@ -28,11 +28,14 @@ public:
 private:
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* WeaponMesh;
+	
 	UPROPERTY(EditAnywhere)
 	USceneComponent* ProjectileSpawn;
+	
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AProjectile> ProjectileClass;
 
+	
 public:
 
 	virtual void Fire();
