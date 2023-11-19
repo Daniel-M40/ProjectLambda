@@ -33,6 +33,9 @@ protected:
 
 	//Timer handle which allows us to add a timer to the shooting
 	FTimerHandle FireRateTimerHandle;
+
+public:
+	bool bIsActive = true;
 	
 #pragma endregion
 
