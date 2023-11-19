@@ -65,8 +65,19 @@ private:
 	
 	const float SphereRadius = 25.f;
 	const int SphereSegments = 12;
+
+	
+	#pragma region Weapons
 	
 	class AWeaponBase* CurrentWeapon;
+
+	UPROPERTY(EditAnywhere, Category="Weapons", meta=(DisplayName="Weapon Position"))
+	USceneComponent* WeaponPosition;
+
+	UPROPERTY(EditAnywhere, Category = "Weapons")
+	TSubclassOf<class AWeaponBase> PistolClass;
+	
+	#pragma endregion
 	
 public:
 	// Sets default values for this character's properties
@@ -78,9 +89,6 @@ protected:
 
 private:
 	void ResetDash();
-	
-	UPROPERTY(EditAnywhere, Category = "Weapons")
-	TSubclassOf<class AWeaponBase> StartingWeapon;
 
 public:
 	// Called every frame

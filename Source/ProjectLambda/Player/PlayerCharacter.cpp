@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Weapons/Pistol/Pistol.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -20,6 +21,10 @@ APlayerCharacter::APlayerCharacter()
 	//Static mesh for the player
 	PlayerStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Player Mesh"));
 	PlayerStaticMesh->SetupAttachment(RootComponent);
+
+	
+	WeaponPosition = CreateDefaultSubobject<USceneComponent>(TEXT("Weapon Position"));
+	WeaponPosition->SetupAttachment(PlayerStaticMesh);
 	
 	
 	//Auto posses player when the game starts
@@ -43,9 +48,14 @@ void APlayerCharacter::BeginPlay()
 		Subsystem->AddMappingContext(MappingContext, 0);
 	}
 
-	if (StartingWeapon)
+	//Set gun component location and rotation
+	//Pistol is default gun
+	if (PistolClass)
 	{
-		//CurrentWeapon = AttachWeapon(StartingWeapon, FName("WeaponSocket"));
+		CurrentWeapon = GetWorld()->SpawnActor<AWeaponBase>(PistolClass);
+		
+		CurrentWeapon->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
+		CurrentWeapon->SetActorLocation(WeaponPosition->GetComponentLocation());
 	}
 }
 
