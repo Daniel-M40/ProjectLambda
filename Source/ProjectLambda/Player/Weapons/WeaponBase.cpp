@@ -36,16 +36,5 @@ void AWeaponBase::Tick(float DeltaTime)
 
 void AWeaponBase::Fire()
 {
-	if (ProjectileClass) // Checks the projectile has been set in the editor
-	{
-		FVector SpawnLoacation = ProjectileSpawn->GetComponentLocation();
-		FRotator SpawnRotation = ProjectileSpawn->GetComponentRotation();
-
-		//Spawn projectile at projectile spawn location and rotation
-		AProjectile* Bullet = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, SpawnLoacation, SpawnRotation);
-
-		//Set the owner of the projectile
-		Bullet->SetOwner(this);
-	}
 }
 

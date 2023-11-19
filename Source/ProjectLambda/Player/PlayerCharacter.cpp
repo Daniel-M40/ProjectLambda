@@ -52,7 +52,7 @@ void APlayerCharacter::BeginPlay()
 	//Pistol is default gun
 	if (PistolClass)
 	{
-		CurrentWeapon = GetWorld()->SpawnActor<AWeaponBase>(PistolClass);
+		CurrentWeapon = GetWorld()->SpawnActor<APistol>(PistolClass);
 		
 		CurrentWeapon->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
 		CurrentWeapon->SetActorLocation(WeaponPosition->GetComponentLocation());
