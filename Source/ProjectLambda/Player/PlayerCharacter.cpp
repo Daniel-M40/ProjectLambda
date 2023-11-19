@@ -2,7 +2,7 @@
 
 
 #include "PlayerCharacter.h"
-#include "Weapons/Pistol.h"
+#include "Weapons\WeaponBase.h"
 
 #include "InputAction.h"
 #include "InputMappingContext.h"
@@ -45,7 +45,7 @@ void APlayerCharacter::BeginPlay()
 
 	if (StartingWeapon)
 	{
-		CurrentWeapon = AttachWeapon(StartingWeapon, FName("WeaponSocket"));
+		//CurrentWeapon = AttachWeapon(StartingWeapon, FName("WeaponSocket"));
 	}
 }
 
@@ -120,26 +120,23 @@ void APlayerCharacter::StrafeHandler(const FInputActionValue& Value)
 void APlayerCharacter::ShootHandler(const FInputActionValue& Value)
 {
 	//@@TODO Add shooting functionality
+	if (CurrentWeapon)
+	{
 		CurrentWeapon->Fire();
+	}
 }
 
 void APlayerCharacter::DashHandler(const FInputActionValue& Value)
 {
 	if (bLaunchOnce)
-	{
-		bLaunchOnce = false;
-
-		//Set timer for dash
-		GetWorldTimerManager().SetTimer(DashTimeHandle, this,
-			&APlayerCharacter::ResetDash, DashDelay, false);
-		
+	{		
 		//Get player velocity
 		FVector ActorVelocity = GetVelocity();
 
-		//If the player isnt moving then just use the forward vector
+		//If the player isn't moving then early return and do not launch the player
 		if (ActorVelocity.IsZero())
 		{
-			ActorVelocity = FVector::ForwardVector * 100;
+			return;
 		}
 
 		//Multiply the players velocity with the launch force
@@ -148,16 +145,23 @@ void APlayerCharacter::DashHandler(const FInputActionValue& Value)
 		//Call launch character function and do not override x,y,z axis
 		LaunchCharacter(LaunchVector, false, false);
 
+		//After launching the player set flag to false to prevent the user from spamming the dash
+		bLaunchOnce = false;
+
+		//Set timer for dash
+		GetWorldTimerManager().SetTimer(DashTimeHandle, this,
+			&APlayerCharacter::ResetDash, DashDelay, false);
+
 		//@@TODO Add particles / sound here
 	}
 }
 
 
 
-APistol* APlayerCharacter::AttachWeapon(TSubclassOf<APistol> weaponClass, FName socketName)
+void APlayerCharacter::AttachWeapon(TSubclassOf<AWeaponBase> weaponClass, FName socketName)
 {
-	//Get the orientation of the socket
-	const FTransform orientation = playerStaticMesh->GetSocketTransform(socketName, ERelativeTransformSpace::RTS_World);
+	/*//Get the orientation of the socket
+	const FTransform orientation = PlayerStaticMesh->GetSocketTransform(socketName, ERelativeTransformSpace::RTS_World);
 	
 	//Spawn in the weapon
 	APistol* newWeapon = (APistol*) GetWorld()->SpawnActor(weaponClass, &orientation);
@@ -167,6 +171,6 @@ APistol* APlayerCharacter::AttachWeapon(TSubclassOf<APistol> weaponClass, FName 
 	}
 
 	//Attach the weapon to the player
-	newWeapon->AttachToComponent(playerStaticMesh, FAttachmentTransformRules::SnapToTargetIncludingScale, socketName);
-	return newWeapon;
+	newWeapon->AttachToComponent(PlayerStaticMesh, FAttachmentTransformRules::SnapToTargetIncludingScale, socketName);
+	return newWeapon;*/
 }
