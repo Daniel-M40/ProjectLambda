@@ -11,6 +11,7 @@
 #include "Camera/CameraComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Weapons/Pistol/PistolWeapon.h"
+#include "Weapons/Shotgun/Shotgun.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -48,20 +49,67 @@ void APlayerCharacter::BeginPlay()
 		Subsystem->AddMappingContext(MappingContext, 0);
 	}
 
-	//Set gun component location and rotation
+	
 	//Pistol is default gun
 	if (PistolClass)
 	{
-		CurrentWeapon = GetWorld()->SpawnActor<APistolWeapon>(PistolClass);
-		
-		CurrentWeapon->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
-		CurrentWeapon->SetActorLocation(WeaponPosition->GetComponentLocation());
+		//Spawn pistol
+		//Set current weapon
+		CurrentWeapon = GetWorld()->SpawnActor<AWeaponBase>(PistolClass);
+
+		//Add pistol to Weapon array
+		Weapons.Add(CurrentWeapon);
+
+		//Attach weapon to player
+		AttachWeapon();
 	}
+
+	//Add shotgun to weapons array
+	if (ShotgunClass)
+	{
+		AWeaponBase* tempShotgun = GetWorld()->SpawnActor<AWeaponBase>(ShotgunClass);
+
+		//Hide actor in world
+		tempShotgun->SetActorHiddenInGame(true);
+
+		Weapons.Add(tempShotgun);
+	}
+
+	//Set weapon length
+	WeaponLength = Weapons.Num();
 }
 
 void APlayerCharacter::ResetDash()
 {
 	bLaunchOnce = true;
+}
+
+void APlayerCharacter::SwapWeaponHandler(const FInputActionValue& Value)
+{
+	WeaponIndex += Value.Get<float>();
+	
+	//Hide old weapon
+	CurrentWeapon->SetActorHiddenInGame(true);
+	
+	//Check if weapon is in range
+	//If upper bound / lower bound wrap round
+	if (WeaponIndex >= WeaponLength)
+	{
+		WeaponIndex = 0;
+	}
+	else if (WeaponIndex < 0)
+	{
+		WeaponIndex = WeaponLength - 1;
+	}
+
+	//Set weapon
+	CurrentWeapon = Weapons[WeaponIndex];
+
+	//Set position of weapon
+	AttachWeapon();
+
+	//Unhide new weapon
+	CurrentWeapon->SetActorHiddenInGame(false);
 }
 
 // Called every frame
@@ -97,12 +145,16 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 	if (EIC == nullptr)
 		return;
-	
+
+	#pragma region Bind Actions
 	EIC->BindAction(MoveInput, ETriggerEvent::Triggered, this, &APlayerCharacter::MoveHandler);
 	EIC->BindAction(StrafeInput, ETriggerEvent::Triggered, this, &APlayerCharacter::StrafeHandler);
 	EIC->BindAction(ShootInput, ETriggerEvent::Triggered, this, &APlayerCharacter::ShootHandler);
 	EIC->BindAction(DashInput, ETriggerEvent::Triggered, this, &APlayerCharacter::DashHandler);
+	EIC->BindAction(SwapWeaponInput, ETriggerEvent::Triggered, this, &APlayerCharacter::SwapWeaponHandler);
+	#pragma endregion
 }
+
 
 
 void APlayerCharacter::RotatePlayer(const FVector& LookAtTarget, const float RotateSpeed)
@@ -168,19 +220,9 @@ void APlayerCharacter::DashHandler(const FInputActionValue& Value)
 
 
 
-void APlayerCharacter::AttachWeapon(TSubclassOf<AWeaponBase> weaponClass, FName socketName)
+void APlayerCharacter::AttachWeapon()
 {
-	/*//Get the orientation of the socket
-	const FTransform orientation = PlayerStaticMesh->GetSocketTransform(socketName, ERelativeTransformSpace::RTS_World);
-	
-	//Spawn in the weapon
-	APistol* newWeapon = (APistol*) GetWorld()->SpawnActor(weaponClass, &orientation);
-	if (newWeapon == nullptr)
-	{
-		return nullptr;
-	}
-
-	//Attach the weapon to the player
-	newWeapon->AttachToComponent(PlayerStaticMesh, FAttachmentTransformRules::SnapToTargetIncludingScale, socketName);
-	return newWeapon;*/
+	//Set gun component location and rotation
+	CurrentWeapon->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
+	CurrentWeapon->SetActorLocation(WeaponPosition->GetComponentLocation());
 }

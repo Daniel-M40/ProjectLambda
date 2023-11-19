@@ -37,6 +37,10 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="Input", meta=(DisplayName="Dash Input"))
 	UInputAction* DashInput;
+
+	UPROPERTY(EditAnywhere, Category="Input")
+	UInputAction* SwapWeaponInput;
+
 	
 	#pragma endregion
 	
@@ -75,7 +79,16 @@ private:
 	USceneComponent* WeaponPosition;
 
 	UPROPERTY(EditAnywhere, Category = "Weapons")
-	TSubclassOf<class APistolWeapon> PistolClass;
+	TSubclassOf<class AWeaponBase> PistolClass;
+
+	UPROPERTY(EditAnywhere, Category = "Weapons")
+	TSubclassOf<class AWeaponBase> ShotgunClass;
+
+	TArray<AWeaponBase*> Weapons;
+
+	int WeaponLength = 0;
+
+	int WeaponIndex = 0;
 	
 	#pragma endregion
 	
@@ -97,6 +110,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	#pragma region Input Handles
 	void RotatePlayer(const FVector& LookAtTarget, const float RotateSpeed);
 	
 	void MoveHandler(const struct FInputActionValue& Value); //Handles movement forward and backwards
@@ -105,9 +119,13 @@ public:
 	
 	void ShootHandler(const FInputActionValue& Value); //Handles the firing input
 
-	//@@TODO Change return type to AWeapon
-	void AttachWeapon(TSubclassOf<AWeaponBase> weaponClass, FName socketName);//Attaches a weapon class to the player
+	void SwapWeaponHandler(const FInputActionValue& Value);
 	
-	void DashHandler(const FInputActionValue& Value); //Handles the firing input
+	//Handles dash input
+	void DashHandler(const FInputActionValue& Value); 
+
+	#pragma endregion
 	
+	//Attaches a weapon class to the player
+	void AttachWeapon();
 };
