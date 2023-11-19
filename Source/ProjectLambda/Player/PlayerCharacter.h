@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "PlayerCharacter.generated.h"
 
+class APistol;
+
 UCLASS()
 class PROJECTLAMBDA_API APlayerCharacter : public ACharacter
 {
@@ -64,6 +66,8 @@ private:
 	
 	const float SphereRadius = 25.f;
 	const int SphereSegments = 12;
+	//@@TODO refactor to AWeapon
+	APistol* CurrentWeapon;
 	
 public:
 	// Sets default values for this character's properties
@@ -76,6 +80,9 @@ protected:
 private:
 	void ResetDash();
 	
+	UPROPERTY(EditAnywhere, Category = "Weapons")
+	TSubclassOf<APistol> StartingWeapon;
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -90,6 +97,9 @@ public:
 	void StrafeHandler(const FInputActionValue& Value); //Handles movement left and right
 	
 	void ShootHandler(const FInputActionValue& Value); //Handles the firing input
+
+	//@@TODO Change retun type to AWeapon
+	APistol* AttachWeapon(TSubclassOf<APistol> weaponClass, FName socketName);//Attaches a weapon class to the player
 	
 	void DashHandler(const FInputActionValue& Value); //Handles the firing input
 	

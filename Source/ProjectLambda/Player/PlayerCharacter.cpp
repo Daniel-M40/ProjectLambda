@@ -2,6 +2,7 @@
 
 
 #include "PlayerCharacter.h"
+#include "Weapons/Pistol.h"
 
 #include "InputAction.h"
 #include "InputMappingContext.h"
@@ -40,6 +41,11 @@ void APlayerCharacter::BeginPlay()
 
 		//Add the mapping context to the subsystem
 		Subsystem->AddMappingContext(MappingContext, 0);
+	}
+
+	if (StartingWeapon)
+	{
+		CurrentWeapon = AttachWeapon(StartingWeapon, FName("WeaponSocket"));
 	}
 }
 
@@ -114,6 +120,7 @@ void APlayerCharacter::StrafeHandler(const FInputActionValue& Value)
 void APlayerCharacter::ShootHandler(const FInputActionValue& Value)
 {
 	//@@TODO Add shooting functionality
+		CurrentWeapon->Fire();
 }
 
 void APlayerCharacter::DashHandler(const FInputActionValue& Value)
@@ -145,3 +152,21 @@ void APlayerCharacter::DashHandler(const FInputActionValue& Value)
 	}
 }
 
+
+
+APistol* APlayerCharacter::AttachWeapon(TSubclassOf<APistol> weaponClass, FName socketName)
+{
+	//Get the orientation of the socket
+	const FTransform orientation = playerStaticMesh->GetSocketTransform(socketName, ERelativeTransformSpace::RTS_World);
+	
+	//Spawn in the weapon
+	APistol* newWeapon = (APistol*) GetWorld()->SpawnActor(weaponClass, &orientation);
+	if (newWeapon == nullptr)
+	{
+		return nullptr;
+	}
+
+	//Attach the weapon to the player
+	newWeapon->AttachToComponent(playerStaticMesh, FAttachmentTransformRules::SnapToTargetIncludingScale, socketName);
+	return newWeapon;
+}
