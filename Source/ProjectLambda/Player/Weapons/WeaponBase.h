@@ -4,18 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Pistol.generated.h"
+#include "WeaponBase.generated.h"
 
-class APistolProjectile;
+class AProjectile;
 
 UCLASS()
-class PROJECTLAMBDA_API APistol : public AActor
+class PROJECTLAMBDA_API AWeaponBase : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	APistol();
+	AWeaponBase();
 
 protected:
 	// Called when the game starts or when spawned
@@ -27,13 +27,13 @@ public:
 
 private:
 	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* PistolMesh;
+	UStaticMeshComponent* WeaponMesh;
 	UPROPERTY(EditAnywhere)
 	USceneComponent* ProjectileSpawn;
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<APistolProjectile> ProjectileClass;
+	TSubclassOf<AProjectile> ProjectileClass;
 
 public:
 
-	void Fire();
+	virtual void Fire();
 };

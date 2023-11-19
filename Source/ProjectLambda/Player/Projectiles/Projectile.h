@@ -4,18 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "PistolProjectile.generated.h"
+#include "Projectile.generated.h"
 
 class UProjectileMovementComponent;
 
 UCLASS()
-class PROJECTLAMBDA_API APistolProjectile : public AActor
+class PROJECTLAMBDA_API AProjectile : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	APistolProjectile();
+	AProjectile();
 
 protected:
 	// Called when the game starts or when spawned
@@ -29,10 +29,13 @@ private:
 	
 	UPROPERTY(EditAnywhere)
 	float MovementSpeed = 1000.0f;
+	
 	UPROPERTY(EditAnywhere)
 	float Lifespan = 10.0f;
+	
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* ProjectileMesh;
+	
 	UPROPERTY(EditAnywhere)
 	UProjectileMovementComponent* ProjectileMovement;
 
