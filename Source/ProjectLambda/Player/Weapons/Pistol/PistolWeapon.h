@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "ProjectLambda/Player/Weapons/WeaponBase.h"
-#include "Pistol.generated.h"
+#include "PistolWeapon.generated.h"
 
 UCLASS()
-class PROJECTLAMBDA_API APistol : public AWeaponBase
+class PROJECTLAMBDA_API APistolWeapon : public AWeaponBase
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
-	APistol();
+	APistolWeapon();
 
 protected:
 	// Called when the game starts or when spawned

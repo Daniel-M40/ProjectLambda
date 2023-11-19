@@ -10,7 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Weapons/Pistol/Pistol.h"
+#include "Weapons/Pistol/PistolWeapon.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -52,7 +52,7 @@ void APlayerCharacter::BeginPlay()
 	//Pistol is default gun
 	if (PistolClass)
 	{
-		CurrentWeapon = GetWorld()->SpawnActor<APistol>(PistolClass);
+		CurrentWeapon = GetWorld()->SpawnActor<APistolWeapon>(PistolClass);
 		
 		CurrentWeapon->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
 		CurrentWeapon->SetActorLocation(WeaponPosition->GetComponentLocation());

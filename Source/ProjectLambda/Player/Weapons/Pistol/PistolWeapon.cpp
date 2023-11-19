@@ -1,32 +1,31 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Pistol.h"
-
+#include "PistolWeapon.h"
 #include "ProjectLambda/Player/Projectiles/Projectile.h"
 
 
 // Sets default values
-APistol::APistol()
+APistolWeapon::APistolWeapon()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 }
 
 // Called when the game starts or when spawned
-void APistol::BeginPlay()
+void APistolWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void APistol::Tick(float DeltaTime)
+void APistolWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
-void APistol::Fire()
+void APistolWeapon::Fire()
 {
 	Super::Fire();
 	UE_LOG(LogTemp, Warning, TEXT("Pistol Fired"));
@@ -42,6 +41,5 @@ void APistol::Fire()
 		//Set the owner of the projectile
 		Bullet->SetOwner(this);
 	}
-	
 }
 

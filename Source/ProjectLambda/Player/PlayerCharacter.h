@@ -75,7 +75,7 @@ private:
 	USceneComponent* WeaponPosition;
 
 	UPROPERTY(EditAnywhere, Category = "Weapons")
-	TSubclassOf<class APistol> PistolClass;
+	TSubclassOf<class APistolWeapon> PistolClass;
 	
 	#pragma endregion
 	
