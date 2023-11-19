@@ -27,10 +27,10 @@ void APistolWeapon::Tick(float DeltaTime)
 
 void APistolWeapon::Fire()
 {
-	Super::Fire();
 	UE_LOG(LogTemp, Warning, TEXT("Pistol Fired"));
 
-	if (ProjectileClass) // Checks the projectile has been set in the editor
+	//If we have the projectile class and can fire spawn projectile
+	if (ProjectileClass && bCanFire) // Checks the projectile has been set in the editor
 	{
 		FVector SpawnLoacation = ProjectileSpawn->GetComponentLocation();
 		FRotator SpawnRotation = ProjectileSpawn->GetComponentRotation();
@@ -40,6 +40,8 @@ void APistolWeapon::Fire()
 
 		//Set the owner of the projectile
 		Bullet->SetOwner(this);
+
+		EnableFireTimer();
 	}
 }
 

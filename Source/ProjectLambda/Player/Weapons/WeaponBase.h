@@ -12,6 +12,31 @@ UCLASS()
 class PROJECTLAMBDA_API AWeaponBase : public AActor
 {
 	GENERATED_BODY()
+
+#pragma region Properties
+
+protected:
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* WeaponMesh;
+	
+	UPROPERTY(EditAnywhere)
+	USceneComponent* ProjectileSpawn;
+	
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AProjectile> ProjectileClass;
+	
+	UPROPERTY(EditAnywhere, Category="Config")
+	float FireRate = 1.5f;
+	
+	//Flag which determines whether we can shoot the weapon
+	bool bCanFire = true;
+
+	//Timer handle which allows us to add a timer to the shooting
+	FTimerHandle FireRateTimerHandle;
+	
+#pragma endregion
+
+#pragma region Action
 	
 public:	
 	// Sets default values for this actor's properties
@@ -25,18 +50,14 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-protected:
-	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* WeaponMesh;
-	
-	UPROPERTY(EditAnywhere)
-	USceneComponent* ProjectileSpawn;
-	
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<AProjectile> ProjectileClass;
-
+private:
+	void EnableShooting();
 	
 public:
 
 	virtual void Fire();
+
+	void EnableFireTimer();
+	
+#pragma endregion
 };

@@ -129,7 +129,7 @@ void APlayerCharacter::StrafeHandler(const FInputActionValue& Value)
 
 void APlayerCharacter::ShootHandler(const FInputActionValue& Value)
 {
-	//@@TODO Add shooting functionality
+	//shooting functionality
 	if (CurrentWeapon)
 	{
 		CurrentWeapon->Fire();

@@ -24,7 +24,6 @@ AWeaponBase::AWeaponBase()
 void AWeaponBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -34,7 +33,21 @@ void AWeaponBase::Tick(float DeltaTime)
 
 }
 
+void AWeaponBase::EnableShooting()
+{
+	bCanFire = true;
+}
+
 void AWeaponBase::Fire()
 {
+}
+
+void AWeaponBase::EnableFireTimer()
+{
+	//After firing set flag to false to prevent user from shooting again until timer resets flag
+	bCanFire = false;
+	
+	//Timer to delay the shooting
+	GetWorldTimerManager().SetTimer(FireRateTimerHandle, this, &AWeaponBase::EnableShooting, FireRate, false);
 }
 
