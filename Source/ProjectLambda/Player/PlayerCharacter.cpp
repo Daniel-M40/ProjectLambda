@@ -13,6 +13,8 @@
 #include "Weapons/Pistol/PistolWeapon.h"
 #include "Weapons/Shotgun/Shotgun.h"
 
+
+
 // Sets default values
 APlayerCharacter::APlayerCharacter()
 {
@@ -27,6 +29,9 @@ APlayerCharacter::APlayerCharacter()
 	WeaponPosition = CreateDefaultSubobject<USceneComponent>(TEXT("Weapon Position"));
 	WeaponPosition->SetupAttachment(PlayerStaticMesh);
 	
+	//fires event when player collides with another actor
+	playerStaticMesh->SetNotifyRigidBodyCollision(true);
+	
 	
 	//Auto posses player when the game starts
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
@@ -37,11 +42,15 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Calls the OnHit Funtion when a collision happens
+	OnActorHit.AddDynamic(this, &APlayerCharacter::OnHit);
+
 	//Get the player controller
 	PlayerController = Cast<APlayerController>(GetController());
-	
+
 	if (PlayerController)
 	{
+
 		//Get the subsystem from the player controller
 		UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
 
@@ -110,6 +119,9 @@ void APlayerCharacter::SwapWeaponHandler(const FInputActionValue& Value)
 
 	//Unhide new weapon
 	CurrentWeapon->SetActorHiddenInGame(false);
+
+
+
 }
 
 // Called every frame
@@ -225,4 +237,10 @@ void APlayerCharacter::AttachWeapon()
 	//Set gun component location and rotation
 	CurrentWeapon->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
 	CurrentWeapon->SetActorLocation(WeaponPosition->GetComponentLocation());
+}
+
+
+void APlayerCharacter::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Collision Test")); //tests if collision works
 }
