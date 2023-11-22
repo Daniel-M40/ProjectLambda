@@ -18,6 +18,7 @@ class PROJECTLAMBDA_API AChaseAIController : public AAIController
 public:
 	explicit AChaseAIController(FObjectInitializer const &ObjectInitializer);
 
+	//Called when the controller possess a pawn
 	virtual void OnPossess(APawn* InPawn) override;
 
 };
