@@ -2,13 +2,15 @@
 
 
 #include "PlayerCharacter.h"
-
+#
 #include "InputAction.h"
 #include "InputMappingContext.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+
+
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -19,6 +21,9 @@ APlayerCharacter::APlayerCharacter()
 	//Static mesh for the player
 	playerStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Player Mesh"));
 	playerStaticMesh->SetupAttachment(RootComponent);
+	
+	//fires event when player collides with another actor
+	playerStaticMesh->SetNotifyRigidBodyCollision(true);
 	
 	
 	//Auto posses player when the game starts
@@ -32,16 +37,21 @@ void APlayerCharacter::BeginPlay()
 
 	//Get the player controller
 	PlayerController = Cast<APlayerController>(GetController());
-	
+
 	if (PlayerController)
 	{
-		
+
 		//Get the subsystem from the player controller
 		UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
 
 		//Add the mapping context to the subsystem
 		Subsystem->AddMappingContext(MappingContext, 0);
 	}
+
+	// Calls the OnHit Funtion when a collision happens
+	OnActorHit.AddDynamic(this, &APlayerCharacter::OnHit);
+
+
 }
 
 // Called every frame
@@ -109,4 +119,9 @@ void APlayerCharacter::StrafeHandler(const FInputActionValue& Value)
 void APlayerCharacter::ShootHandler(const FInputActionValue& Value)
 {
 	//@@TODO Add shooting functionality
+}
+
+void APlayerCharacter::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Collision Test")); //tests if collision works
 }

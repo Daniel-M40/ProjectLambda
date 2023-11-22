@@ -46,6 +46,9 @@ private:
 
 	const float SphereRadius = 25.f;
 	const int SphereSegments = 12;
+
+	UFUNCTION()
+	void OnHit(AActor* Player, AActor* Enemy, FVector NormalImpulse, const FHitResult& Hit);
 	
 public:
 	// Sets default values for this character's properties
