@@ -30,7 +30,7 @@ APlayerCharacter::APlayerCharacter()
 	WeaponPosition->SetupAttachment(PlayerStaticMesh);
 	
 	//fires event when player collides with another actor
-	playerStaticMesh->SetNotifyRigidBodyCollision(true);
+	PlayerStaticMesh->SetNotifyRigidBodyCollision(true);
 	
 	
 	//Auto posses player when the game starts
