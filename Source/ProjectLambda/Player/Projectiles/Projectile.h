@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Projectile.generated.h"
 
+class USphereComponent;
 class UProjectileMovementComponent;
 
 UCLASS()
@@ -25,7 +26,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Movement", meta = (DisplayName = "Max Speed", AllowPrivateAccess = true))
 	float ProjectileMaxSpeed = 1300.f;
-
+	
+	
+	
 	UPROPERTY(EditAnywhere)
 	float Lifespan = 10.0f;
 
@@ -33,7 +36,7 @@ private:
 	class UProjectileMovementComponent* ProjectileMovement;
 
 	UPROPERTY(EditAnywhere)
-	float Damage = 50.f;
+	float Damage = 10.f;
 	
 #pragma endregion
 

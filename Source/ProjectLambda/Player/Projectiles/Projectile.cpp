@@ -41,8 +41,22 @@ void AProjectile::Tick(float DeltaTime)
 void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& HitResult)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Projectile Hit"));
 	const AActor* CurrentOwner = GetOwner();
 
+	//If we dont have a current owner destroy the projectile
+	if (!CurrentOwner || OtherActor == nullptr)
+	{
+		Destroy();
+		return;
+	}
+
+	//If the projectile has collided with itself ignore the collision
+	if (OtherActor && OtherActor->GetClass()->IsChildOf(AProjectile::StaticClass()))
+	{
+		return;
+	}
+	
 	if (CurrentOwner)
 	{
 		AController* CurrentInstigator = CurrentOwner->GetInstigatorController();
@@ -51,8 +65,13 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 		if (OtherActor && OtherActor != this && OtherActor != CurrentOwner)
 		{
 			UGameplayStatics::ApplyDamage(OtherActor, Damage, CurrentInstigator, this, DamageTypeClass);
-			Destroy();
+
+			//@@TODO Add sound / particles here
 		}
+		
 	}
+
+	//Destroy the actor if we have collided with anything
+	Destroy();
 }
 

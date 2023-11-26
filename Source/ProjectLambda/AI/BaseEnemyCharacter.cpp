@@ -12,6 +12,9 @@ ABaseEnemyCharacter::ABaseEnemyCharacter()
 	//Static mesh for the player
 	characterMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Character Static Mesh"));
 	characterMesh->SetupAttachment(RootComponent);
+	
+	//fires event when player collides with another actor
+	characterMesh->SetNotifyRigidBodyCollision(true);
 
 }
 
