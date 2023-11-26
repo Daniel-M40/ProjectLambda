@@ -8,7 +8,7 @@
 
 void AProjectLambdaGameModeBase::StartTimer()
 {
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &IncrementTimer, 1.f, true);
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &AProjectLambdaGameModeBase::IncrementTimer, 1.f, true);
 }
 
 void AProjectLambdaGameModeBase::IncrementTimer()
