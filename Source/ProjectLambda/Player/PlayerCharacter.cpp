@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "ProjectLambda/Components/HealthComponent.h"
 #include "Weapons/Pistol/PistolWeapon.h"
 #include "Weapons/Shotgun/Shotgun.h"
 
@@ -31,6 +32,9 @@ APlayerCharacter::APlayerCharacter()
 	
 	//fires event when player collides with another actor
 	PlayerStaticMesh->SetNotifyRigidBodyCollision(true);
+
+	//Health Component
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Component"));
 	
 	
 	//Auto posses player when the game starts
@@ -237,6 +241,18 @@ void APlayerCharacter::AttachWeapon()
 	//Set gun component location and rotation
 	CurrentWeapon->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
 	CurrentWeapon->SetActorLocation(WeaponPosition->GetComponentLocation());
+}
+
+float APlayerCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+	AActor* DamageCauser)
+{
+	//If we have health component apply damage
+	if (HealthComponent)
+	{
+		HealthComponent->ApplyDamage(DamageAmount);
+	}
+
+	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }
 
 

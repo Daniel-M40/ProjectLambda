@@ -17,6 +17,10 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Character Config", meta = (DisplayName = "Static Mesh"))
 	class UStaticMeshComponent* characterMesh;
 
+	//Health / Damage Component
+	UPROPERTY(EditAnywhere, Category="Component")
+	class UHealthComponent* HealthComponent;
+	
 public:
 	// Sets default values for this character's properties
 	ABaseEnemyCharacter();
@@ -36,4 +40,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UBehaviorTree* GetBehaviorTree() const;
+
+	UFUNCTION()
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
+		AController* EventInstigator, AActor* DamageCauser) override;
 };

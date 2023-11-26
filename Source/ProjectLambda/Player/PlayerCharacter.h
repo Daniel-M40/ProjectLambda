@@ -43,6 +43,10 @@ private:
 
 	
 	#pragma endregion
+
+	//Health / Damage Component
+	UPROPERTY(EditAnywhere, Category="Component")
+	class UHealthComponent* HealthComponent;
 	
 	class APlayerController* PlayerController;
 
@@ -131,4 +135,8 @@ public:
 	
 	//Attaches a weapon class to the player
 	void AttachWeapon();
+
+	UFUNCTION()
+	virtual float TakeDamage(float DamageAmount,
+		FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 };

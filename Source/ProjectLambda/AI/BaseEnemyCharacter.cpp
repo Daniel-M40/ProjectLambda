@@ -3,6 +3,8 @@
 
 #include "BaseEnemyCharacter.h"
 
+#include "ProjectLambda/Components/HealthComponent.h"
+
 // Sets default values
 ABaseEnemyCharacter::ABaseEnemyCharacter()
 {
@@ -16,13 +18,17 @@ ABaseEnemyCharacter::ABaseEnemyCharacter()
 	//fires event when player collides with another actor
 	characterMesh->SetNotifyRigidBodyCollision(true);
 
+	//Health Component
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Component"));
+	
+	
+
 }
 
 // Called when the game starts or when spawned
 void ABaseEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -42,5 +48,17 @@ void ABaseEnemyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 UBehaviorTree* ABaseEnemyCharacter::GetBehaviorTree() const
 {
 	return Tree;
+}
+
+float ABaseEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+	AActor* DamageCauser)
+{
+	//If we have health component apply damage
+	if (HealthComponent)
+	{
+		HealthComponent->ApplyDamage(DamageAmount);
+	}
+
+	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }
 
