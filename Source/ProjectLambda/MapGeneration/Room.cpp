@@ -3,6 +3,7 @@
 
 #include "Room.h"
 #include "Door.h"
+#include "RoomManager.h"
 
 // Sets default values
 ARoom::ARoom()
@@ -81,6 +82,49 @@ bool ARoom::SetDoor(int direction, bool isDoor)
 	return doorGenerated;
 }
 
+ADoor* ARoom::GetDoor(int direction)
+{
+	ADoor* door = nullptr;
+	switch (direction)
+	{
+		case 0:
+			door = DoorNorth;
+			break;
+
+		case 1:
+			door = DoorEast;
+			break;
+
+		case 2:
+			door = DoorSouth;
+			break;
+
+		case 3:
+			door = DoorWest;
+			break;
+	}
+	return door;
+}
+
+
+void ARoom::Setup(ARoomManager* _Manager, int _GridHorizontal, int _GridVertical)
+{
+	Manager = _Manager;
+
+	GridHorizontal = _GridHorizontal;
+	GridVertical = _GridVertical;
+}
+
+void ARoom::GetCoords(int& horizontal, int& vertical)
+{
+	horizontal = GridHorizontal;
+	vertical = GridVertical;
+}
+
+ARoomManager* ARoom::GetManager()
+{
+	return Manager;
+}
 
 void ARoom::SpawnDoors()
 {

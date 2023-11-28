@@ -73,7 +73,15 @@ private:
 		USceneComponent* DoorWestSpawn;
 		ADoor* DoorWest;
 
-	USceneComponent* Root;
+	UPROPERTY(EditAnywhere)
+		USceneComponent* Root;
+
+
+private:
+
+	class ARoomManager* Manager = nullptr;
+	int GridHorizontal = 0;
+	int GridVertical = 0;
 
 public:
 	// Spawn the room
@@ -82,14 +90,22 @@ public:
 	UFUNCTION()
 		bool SetDoor(int direction, bool isDoor);
 
+	UFUNCTION()
+		ADoor* GetDoor(int direction);
+
 	// ----- Maybe add difficulty multiplier for later levels? -----
 	// ----- Could effect spawnrate/health of enemies -----
 	//bool SetDifficulty(float difficulty);
 
 	// Set the array coordinates of the room
-	//UFUNCTION()
-		//void SetCoords(int horizontal, int vertical);
+	UFUNCTION()
+		void Setup(ARoomManager* _Manager, int _GridHorizontal , int _GridVertical);
 
+	UFUNCTION()
+		void GetCoords(int& horizontal, int& vertical);
+
+	UFUNCTION()
+		ARoomManager* GetManager();
 
 	UFUNCTION()
 		void SpawnDoors();

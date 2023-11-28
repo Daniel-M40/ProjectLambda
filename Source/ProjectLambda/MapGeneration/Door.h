@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Door.generated.h"
 
+class ARoom;
+
 UCLASS()
 class PROJECTLAMBDA_API ADoor : public AActor
 {
@@ -23,8 +25,27 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION()
+		void Setup(ARoom* _Room, int Direction);
+
+	UFUNCTION()
+		void Enter(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+		USceneComponent* GetExitPosition();
+
+private:
+	
+	int FacingDirection;
+	ARoom* Room;
+
+	bool DoorEnabled = false;
+
+	UPROPERTY(EditAnywhere)
+		class UBoxComponent* Trigger;
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* DoorMesh;
 
-	bool Enter();
+	UPROPERTY(EditAnywhere)
+		USceneComponent* ExitPosition;
 };
