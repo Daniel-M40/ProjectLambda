@@ -7,7 +7,6 @@
 #include "Room.generated.h"
 
 class ADoor;
-class ABaseEnemyCharacter;
 
 UCLASS()
 class PROJECTLAMBDA_API ARoom : public AActor
@@ -77,6 +76,7 @@ private:
 	UPROPERTY(EditAnywhere)
 		USceneComponent* Root;
 
+<<<<<<< HEAD
 	UPROPERTY(VisibleAnywhere, Category = "Enemy Spawning")
 		bool bIsActive;
 	UPROPERTY(VisibleAnywhere, Category = "Enemy Spawning")
@@ -108,6 +108,8 @@ private:
 
 	UFUNCTION()
 		FVector GenerateEnemySpawnPos();
+=======
+>>>>>>> parent of 8e1b0ee (Doors Working, Enemy Spawning Started)
 
 private:
 	
@@ -115,9 +117,6 @@ private:
 	class ARoomManager* Manager = nullptr;
 	int GridHorizontal = 0;
 	int GridVertical = 0;
-
-	UFUNCTION()
-		void CalculateCameraSize();
 
 public:
 	// Spawn the room
@@ -144,17 +143,14 @@ public:
 		ARoomManager* GetManager();
 
 	UFUNCTION()
-		void Activate();
-
-	UFUNCTION()
-		void Complete();
-
-	UFUNCTION()
 		void SpawnDoors();
 
+<<<<<<< HEAD
 	UFUNCTION()
 		void SetDoorsActive(bool doorsActive);
 
 	UFUNCTION()
 		AProjectLambdaGameModeBase* GetGameMode();
+=======
+>>>>>>> parent of 8e1b0ee (Doors Working, Enemy Spawning Started)
 };

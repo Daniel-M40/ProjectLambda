@@ -418,6 +418,7 @@ bool ARoomManager::GenerateRooms()
 					}
 
 					roomMap[horizontal].column[vertical]->SpawnDoors();
+<<<<<<< HEAD
 
 					// Move player to start Room
 
@@ -426,6 +427,9 @@ bool ARoomManager::GenerateRooms()
 
 					roomMap[horizontal].column[vertical]->Activate();
 				}*/
+=======
+				}
+>>>>>>> parent of 8e1b0ee (Doors Working, Enemy Spawning Started)
 
 			}
 		}

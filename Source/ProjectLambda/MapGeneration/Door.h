@@ -34,11 +34,14 @@ public:
 	UFUNCTION()
 		USceneComponent* GetExitPosition();
 
+<<<<<<< HEAD
 	UFUNCTION()
 		void SetActive(bool Active);
 
 	UFUNCTION()
 		ARoom* GetRoom();
+=======
+>>>>>>> parent of 8e1b0ee (Doors Working, Enemy Spawning Started)
 private:
 	
 	int FacingDirection;
@@ -53,7 +56,4 @@ private:
 
 	UPROPERTY(EditAnywhere)
 		USceneComponent* ExitPosition;
-
-	UPROPERTY(VisibleAnywhere)
-		bool bIsActive = false;
 };

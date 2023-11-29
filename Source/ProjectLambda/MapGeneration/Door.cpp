@@ -22,8 +22,6 @@ ADoor::ADoor()
 	Trigger->SetupAttachment(RootComponent);
 	Trigger->SetGenerateOverlapEvents(true);
 
-	ExitPosition = CreateDefaultSubobject<USceneComponent>(TEXT("Door Exit"));
-	ExitPosition->SetupAttachment(RootComponent);
 
 }
 
@@ -44,29 +42,34 @@ void ADoor::Tick(float DeltaTime)
 
 void ADoor::Enter(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	// If door is active
-	if (bIsActive)
+	if (OtherActor->GetClass()->IsChildOf(APlayerCharacter::StaticClass()))
 	{
-		// If colliding with player
-		if (OtherActor->GetClass()->IsChildOf(APlayerCharacter::StaticClass()))
+		int GridHorizontal;
+		int GridVertical;
+
+		Room->GetCoords(GridHorizontal, GridVertical);
+
+		switch (FacingDirection)
 		{
-			int GridHorizontal;
-			int GridVertical;
+		case 0:
+			GridVertical += 1;
+			break;
 
-			// Get coords of current room
-			Room->GetCoords(GridHorizontal, GridVertical);
+		case 1:
+			GridHorizontal += 1;
+			break;
 
-			// Get connected room
-			switch (FacingDirection)
-			{
-			case 0:
-				GridHorizontal += 1;
-				break;
+		case 2:
+			GridVertical -= 1;
+			break;
+		case 3:
+			GridHorizontal -= 1;
+			break;
+		}
 
-			case 1:
-				GridVertical += 1;
-				break;
+		ADoor* OtherDoor = Room->GetManager()->GetRoomAt(GridHorizontal, GridVertical)->GetDoor((FacingDirection + 2) % 4);
 
+<<<<<<< HEAD
 			case 2:
 				GridHorizontal -= 1;
 				break;
@@ -85,6 +88,12 @@ void ADoor::Enter(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrim
 				OtherActor->SetActorLocationAndRotation(Exit->GetComponentLocation(), Exit->GetComponentRotation());
 				OtherDoor->GetRoom()->Activate();
 			}
+=======
+		if (OtherDoor)
+		{
+			USceneComponent* Exit = OtherDoor->GetExitPosition();
+			OtherActor->SetActorLocationAndRotation(Exit->GetComponentLocation(), Exit->GetComponentRotation());
+>>>>>>> parent of 8e1b0ee (Doors Working, Enemy Spawning Started)
 		}
 	}
 }
@@ -99,6 +108,7 @@ void ADoor::Setup(ARoom* _Room, int Direction)
 {
 	Room = _Room;
 	FacingDirection = Direction;
+<<<<<<< HEAD
 }
 
 
@@ -111,3 +121,6 @@ ARoom* ADoor::GetRoom()
 {
 	return Room;
 }
+=======
+}
+>>>>>>> parent of 8e1b0ee (Doors Working, Enemy Spawning Started)
