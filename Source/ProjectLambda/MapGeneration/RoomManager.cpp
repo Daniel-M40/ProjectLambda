@@ -422,6 +422,14 @@ bool ARoomManager::GenerateRooms()
 					}
 
 					roomMap[horizontal].column[vertical]->SpawnDoors();
+
+					// Move player to start Room
+
+					// -- TEMPORARY FOR TESTING --
+					GetWorld()->GetFirstPlayerController()->GetPawn()->SetActorLocation(Room->GetActorLocation() + (FVector::UpVector * 1600.f));
+
+					roomMap[horizontal].column[vertical]->Activate();
+					roomMap[horizontal].column[vertical]->Complete();
 				}
 
 			}

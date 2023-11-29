@@ -34,6 +34,8 @@ public:
 	UFUNCTION()
 		USceneComponent* GetExitPosition();
 
+	UFUNCTION()
+		void SetActive(bool Active);
 private:
 	
 	int FacingDirection;
@@ -48,4 +50,7 @@ private:
 
 	UPROPERTY(EditAnywhere)
 		USceneComponent* ExitPosition;
+
+	UPROPERTY(VisibleAnywhere)
+		bool bIsActive = false;
 };
