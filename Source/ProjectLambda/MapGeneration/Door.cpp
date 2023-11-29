@@ -7,7 +7,6 @@
 #include "Room.h"
 #include "RoomManager.h"
 #include "../Player/PlayerCharacter.h"
-#include "../ProjectLambdaGameModeBase.h"
 
 // Sets default values
 ADoor::ADoor()
@@ -76,14 +75,13 @@ void ADoor::Enter(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrim
 			}
 
 			// Get door in next room
-			ADoor* OtherDoor = Room->GetGameMode()->GetRoomAt(GridHorizontal, GridVertical)->GetDoor((FacingDirection + 2) % 4);
+			ADoor* OtherDoor = Room->GetManager()->GetRoomAt(GridHorizontal, GridVertical)->GetDoor((FacingDirection + 2) % 4);
 
 			// Teleport to exit position of other door
 			if (OtherDoor)
 			{
 				USceneComponent* Exit = OtherDoor->GetExitPosition();
 				OtherActor->SetActorLocationAndRotation(Exit->GetComponentLocation(), Exit->GetComponentRotation());
-				OtherDoor->GetRoom()->Activate();
 			}
 		}
 	}
@@ -105,9 +103,4 @@ void ADoor::Setup(ARoom* _Room, int Direction)
 void ADoor::SetActive(bool setActive)
 {
 	bIsActive = setActive;
-}
-
-ARoom* ADoor::GetRoom()
-{
-	return Room;
 }

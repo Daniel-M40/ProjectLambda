@@ -9,9 +9,6 @@
 
 #include "NavigationSystem.h"
 
-#include "Kismet/GameplayStatics.h"
-#include "../ProjectLambdaGameModeBase.h"
-
 // Sets default values
 ARoom::ARoom()
 {
@@ -50,18 +47,6 @@ void ARoom::BeginPlay()
 
 	//GetActorBounds(false, RoomOrigin, RoomBounds);
 	RoomOrigin = GetActorLocation();
-	GameMode = Cast<AProjectLambdaGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
-	if (GameMode)
-	{
-		Manager = GameMode->GetMapManager();
-
-		if (Manager)
-		{
-			Setup(Manager);
-		}
-
-		GameMode->RegisterRoom(this, GridHorizontal, GridVertical);
-	}
 }
 
 // Called every frame
@@ -77,16 +62,13 @@ void ARoom::Tick(float DeltaTime)
 
 			if (SpawnTimer >= SpawnInterval)
 			{
-				SpawnTimer -= SpawnInterval;
-
 				// Spawn the enemy
 				GetWorld()->SpawnActor<ABaseEnemyCharacter>(EnemyClass, GenerateEnemySpawnPos(), FRotator::ZeroRotator);
-				RemainingEnemies--;
 			}
 		}
 		else
 		{
-			Complete();
+			bIsComplete = true;
 		}
 	}
 }
@@ -188,9 +170,8 @@ FVector ARoom::GenerateEnemySpawnPos()
 
 	} while (Hit != RayEnd);
 	
-	Hit.Z = 25.f;
 
-	return Hit;
+	return FVector();
 }
 
 void ARoom::CalculateCameraSize()
@@ -256,13 +237,12 @@ ADoor* ARoom::GetDoor(int direction)
 }
 
 
-void ARoom::Setup(ARoomManager* _Manager)
+void ARoom::Setup(ARoomManager* _Manager, int _GridHorizontal, int _GridVertical)
 {
 	Manager = _Manager;
 
-	
-	FVector pos = GetActorLocation();
-	Manager->CalculateMapCoords(pos.X, pos.Y, GridHorizontal, GridVertical);
+	GridHorizontal = _GridHorizontal;
+	GridVertical = _GridVertical;
 }
 
 void ARoom::GetCoords(int& horizontal, int& vertical)
@@ -336,11 +316,6 @@ void ARoom::SetDoorsActive(bool doorsActive)
 		DoorWest->SetActive(doorsActive);
 }
 
-AProjectLambdaGameModeBase* ARoom::GetGameMode()
-{
-	return GameMode;
-}
-
 
 void ARoom::Activate()
 {
@@ -358,5 +333,4 @@ void ARoom::Complete()
 {
 	bIsComplete = true;
 	bIsActive = false;
-	SetDoorsActive(true);
 }

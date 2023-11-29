@@ -103,15 +103,13 @@ private:
 	float CameraSizeX;
 	float CameraSizeY;
 
-	UPROPERTY(EditAnywhere, Category = "Enemy Spawning")
-		TSubclassOf<ABaseEnemyCharacter> EnemyClass;
+	TSubclassOf<ABaseEnemyCharacter> EnemyClass;
 
 	UFUNCTION()
 		FVector GenerateEnemySpawnPos();
 
 private:
-	
-	AProjectLambdaGameModeBase* GameMode = nullptr;
+
 	class ARoomManager* Manager = nullptr;
 	int GridHorizontal = 0;
 	int GridVertical = 0;
@@ -135,7 +133,7 @@ public:
 
 	// Set the array coordinates of the room
 	UFUNCTION()
-		void Setup(ARoomManager* _Manager);
+		void Setup(ARoomManager* _Manager, int _GridHorizontal , int _GridVertical);
 
 	UFUNCTION()
 		void GetCoords(int& horizontal, int& vertical);
@@ -154,7 +152,4 @@ public:
 
 	UFUNCTION()
 		void SetDoorsActive(bool doorsActive);
-
-	UFUNCTION()
-		AProjectLambdaGameModeBase* GetGameMode();
 };

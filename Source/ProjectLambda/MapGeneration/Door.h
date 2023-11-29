@@ -36,9 +36,6 @@ public:
 
 	UFUNCTION()
 		void SetActive(bool Active);
-
-	UFUNCTION()
-		ARoom* GetRoom();
 private:
 	
 	int FacingDirection;
