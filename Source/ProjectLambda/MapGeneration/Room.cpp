@@ -5,7 +5,6 @@
 #include "Door.h"
 #include "RoomManager.h"
 
-<<<<<<< HEAD
 #include "../AI/BaseEnemyCharacter.h"
 
 #include "NavigationSystem.h"
@@ -13,8 +12,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "../ProjectLambdaGameModeBase.h"
 
-=======
->>>>>>> parent of 8e1b0ee (Doors Working, Enemy Spawning Started)
 // Sets default values
 ARoom::ARoom()
 {
@@ -51,7 +48,6 @@ void ARoom::BeginPlay()
 {
 	Super::BeginPlay();
 
-<<<<<<< HEAD
 	//GetActorBounds(false, RoomOrigin, RoomBounds);
 	RoomOrigin = GetActorLocation();
 	GameMode = Cast<AProjectLambdaGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
@@ -66,12 +62,6 @@ void ARoom::BeginPlay()
 
 		GameMode->RegisterRoom(this, GridHorizontal, GridVertical);
 	}
-=======
-
-
-
-
->>>>>>> parent of 8e1b0ee (Doors Working, Enemy Spawning Started)
 }
 
 // Called every frame
@@ -79,7 +69,6 @@ void ARoom::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-<<<<<<< HEAD
 	if (bIsActive)
 	{
 		if (RemainingEnemies > 0)
@@ -215,11 +204,6 @@ void ARoom::CalculateCameraSize()
 	CameraSizeY = Opposite;
 }
 
-=======
-}
-
-
->>>>>>> parent of 8e1b0ee (Doors Working, Enemy Spawning Started)
 bool ARoom::SetDoor(int direction, bool isDoor)
 {
 	bool doorGenerated = false;
@@ -296,11 +280,17 @@ void ARoom::SpawnDoors()
 {
 	if (DoorPrebuild)
 	{
+		// If should spawn a door at this direction
+		// Spawn the door blueprint
+		// Parent it to the door spawn position
+		// Run the setup function to set door variables (parent room, direction)
+
 		if (isDoorNorth)
 		{
 			//UE_LOG(LogTemp, Warning, TEXT("Spawning North Door"))
 			DoorNorth = GetWorld()->SpawnActor<ADoor>(DoorPrebuild, DoorNorthSpawn->GetComponentLocation(), DoorNorthSpawn->GetComponentRotation());
 			DoorNorth->AttachToComponent(DoorNorthSpawn, FAttachmentTransformRules::KeepWorldTransform);
+			DoorNorth->Setup(this, 0);
 
 		}
 		if (isDoorEast)
@@ -308,25 +298,27 @@ void ARoom::SpawnDoors()
 			//UE_LOG(LogTemp, Warning, TEXT("Spawning East Door"))
 			DoorEast = GetWorld()->SpawnActor<ADoor>(DoorPrebuild, DoorEastSpawn->GetComponentLocation(), DoorEastSpawn->GetComponentRotation());
 			DoorEast->AttachToComponent(DoorEastSpawn, FAttachmentTransformRules::KeepWorldTransform);
+			DoorEast->Setup(this, 1);
 		}
 		if (isDoorSouth)
 		{
 			//UE_LOG(LogTemp, Warning, TEXT("Spawning South Door"))
 			DoorSouth = GetWorld()->SpawnActor<ADoor>(DoorPrebuild, DoorSouthSpawn->GetComponentLocation(), DoorSouthSpawn->GetComponentRotation());
 			DoorSouth->AttachToComponent(DoorSouthSpawn, FAttachmentTransformRules::KeepWorldTransform);
+			DoorSouth->Setup(this, 2);
 		}
 		if (isDoorWest)
 		{
 			//UE_LOG(LogTemp, Warning, TEXT("Spawning West Door"))
 			DoorWest = GetWorld()->SpawnActor<ADoor>(DoorPrebuild, DoorWestSpawn->GetComponentLocation(), DoorWestSpawn->GetComponentRotation());
 			DoorWest->AttachToComponent(DoorWestSpawn, FAttachmentTransformRules::KeepWorldTransform);
+			DoorWest->Setup(this, 3);
 		}
 	}
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("No Door Prebuild Set"));
 	}
-<<<<<<< HEAD
 }
 
 void ARoom::SetDoorsActive(bool doorsActive)
@@ -367,6 +359,4 @@ void ARoom::Complete()
 	bIsComplete = true;
 	bIsActive = false;
 	SetDoorsActive(true);
-=======
->>>>>>> parent of 8e1b0ee (Doors Working, Enemy Spawning Started)
 }
