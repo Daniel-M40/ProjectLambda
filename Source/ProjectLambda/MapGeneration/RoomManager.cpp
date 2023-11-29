@@ -5,8 +5,8 @@
 #include "Room.h"
 
 
-
-
+#include "../ProjectLambdaGameModeBase.h"
+#include "Kismet/GameplayStatics.h"
 
 
 
@@ -30,15 +30,7 @@ void ARoomManager::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("Map Generating..."));
 
 	// Initialise map of room references
-	roomMap.SetNum(mapHeight);
-	for (int i = 0; i < mapHeight; i++)
-	{
-		roomMap[i].column.SetNum(mapWidth);
-		for (int j = 0; j < mapWidth; j++)
-		{
-			roomMap[i].column[j] = nullptr;
-		}
-	}
+	
 
 	// Try generating maps until a valid one is created
 	bool mapGenerated = GenerateMap();
@@ -63,11 +55,6 @@ void ARoomManager::Tick(float DeltaTime)
 
 }
 
-
-ARoom* ARoomManager::GetRoomAt(int Horizontal, int Vertical)
-{
-	return roomMap[Horizontal].column[Vertical];
-}
 
 bool ARoomManager::GenerateMap()
 {
@@ -362,16 +349,21 @@ bool ARoomManager::GenerateMap()
 
 bool ARoomManager::GenerateRooms()
 {
+	int roomUID = 0;
 	for (int horizontal = 0; horizontal < mapHeight; horizontal++)
 	{
 		for (int vertical = 0; vertical < mapWidth; vertical++)
 		{
+			FLatentActionInfo actionInfo;
+
 			// 0 Means no room
 			if (map[horizontal].column[vertical].roomType > 0)
 			{
-				ARoom* Room = GetWorld()->SpawnActor<ARoom>(RoomTypes[map[horizontal].column[vertical].roomType], FVector(vertical * roomInterval, horizontal * roomInterval, GetActorLocation().Z), GetActorRotation());
+				//ARoom* Room = GetWorld()->SpawnActor<ARoom>(RoomTypes[map[horizontal].column[vertical].roomType], FVector(vertical * roomInterval, horizontal * roomInterval, GetActorLocation().Z), GetActorRotation());
 
-				if (Room)
+				UGameplayStatics::LoadStreamLevel(this, RoomTypes[map[horizontal].column[vertical].roomType], true, true, actionInfo);
+
+				/*if (Room)
 				{
 					Room->Setup(this, horizontal, vertical);
 					roomMap[horizontal].column[vertical] = Room;
@@ -382,15 +374,17 @@ bool ARoomManager::GenerateRooms()
 					}
 
 					roomMap[horizontal].column[vertical]->SpawnDoors();
-				}
+				}*/
 
 			}
 			// -1 is boss room
 			else if (map[horizontal].column[vertical].roomType == BossRoomCode)
 			{
-				ARoom* Room = GetWorld()->SpawnActor<ARoom>(BossRoomClass, FVector(vertical * roomInterval, horizontal * roomInterval, GetActorLocation().Z), GetActorRotation());
-				
-				if (Room)
+				//ARoom* Room = GetWorld()->SpawnActor<ARoom>(BossRoomClass, FVector(vertical * roomInterval, horizontal * roomInterval, GetActorLocation().Z), GetActorRotation());
+
+				UGameplayStatics::LoadStreamLevel(this, BossRoomLevel, true, true, actionInfo);
+
+				/*if (Room)
 				{
 					Room->Setup(this, horizontal, vertical);
 					roomMap[horizontal].column[vertical] = Room;
@@ -401,7 +395,7 @@ bool ARoomManager::GenerateRooms()
 					}
 
 					roomMap[horizontal].column[vertical]->SpawnDoors();
-				}
+				}*/
 
 
 
@@ -409,9 +403,11 @@ bool ARoomManager::GenerateRooms()
 			// -2 is start room
 			else if (map[horizontal].column[vertical].roomType == StartRoomCode)
 			{
-				ARoom* Room = GetWorld()->SpawnActor<ARoom>(StartRoomClass, FVector(vertical * roomInterval, horizontal * roomInterval, GetActorLocation().Z), GetActorRotation());
+				//ARoom* Room = GetWorld()->SpawnActor<ARoom>(StartRoomClass, FVector(vertical * roomInterval, horizontal * roomInterval, GetActorLocation().Z), GetActorRotation());
 
-				if (Room)
+				UGameplayStatics::LoadStreamLevel(this, StartRoomLevel, true, true, actionInfo);
+
+				/*if (Room)
 				{
 					Room->Setup(this, horizontal, vertical);
 					roomMap[horizontal].column[vertical] = Room;
@@ -429,8 +425,7 @@ bool ARoomManager::GenerateRooms()
 					GetWorld()->GetFirstPlayerController()->GetPawn()->SetActorLocation(Room->GetActorLocation() + (FVector::UpVector * 1600.f));
 
 					roomMap[horizontal].column[vertical]->Activate();
-					roomMap[horizontal].column[vertical]->Complete();
-				}
+				}*/
 
 			}
 		}
@@ -440,5 +435,10 @@ bool ARoomManager::GenerateRooms()
 }
 
 
-
-
+// Calculates the map indexes of a room from it's position
+// I hate this but it works
+void ARoomManager::CalculateMapCoords(float xPos, float yPos, int& Horizontal, int& Vertical)
+{
+	Horizontal = FMath::RoundToInt(xPos / roomInterval);
+	Vertical   = FMath::RoundToInt(yPos / roomInterval);
+}

@@ -6,6 +6,9 @@
 #include "GameFramework/GameModeBase.h"
 #include "ProjectLambdaGameModeBase.generated.h"
 
+struct FRoomMapRow;
+class ARoom;
+
 /**
  * 
  */
@@ -42,5 +45,17 @@ private:
 #pragma endregion
 
 
+
+#pragma region Map Generation
+public:
+	void InitialiseMap(int mapHeight, int mapWidth);
+	void RegisterRoom(ARoom* Room, int Horizontal, int Vertical);
+	class ARoomManager* GetMapManager();
+	ARoom* GetRoomAt(int Horizontal, int Vertical);
+
+private:
+	UPROPERTY(VisibleAnywhere)
+		TArray<FRoomMapRow> Map;
+#pragma endregion
 	
 };

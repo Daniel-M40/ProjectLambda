@@ -42,7 +42,7 @@ struct FRoomMapRow
 	GENERATED_BODY()
 
 		UPROPERTY(VisibleAnywhere)
-		TArray<ARoom*> column;
+			TArray<ARoom*> column;
 };
 
 
@@ -75,14 +75,19 @@ public:
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Map Generation")
-		TArray<TSubclassOf<ARoom>> RoomTypes;
+		//TArray<TSubclassOf<ARoom>> RoomTypes;
+		TArray<FName> RoomTypes;
 
 	UPROPERTY(EditAnywhere, Category = "Map Generation")
-		TSubclassOf<ARoom> BossRoomClass;
+		//TSubclassOf<ARoom> BossRoomClass;
+		FName BossRoomLevel;
+
 	const int BossRoomCode = -1;
 
 	UPROPERTY(EditAnywhere, Category = "Map Generation")
-		TSubclassOf<ARoom> StartRoomClass;
+		//TSubclassOf<ARoom> StartRoomClass;
+		FName StartRoomLevel;
+
 	const int StartRoomCode = -2;
 		
 
@@ -118,19 +123,16 @@ private:
 		TArray<FMapRow> map;
 
 	UPROPERTY(VisibleAnywhere, Category = "Map Generation")
-		TArray<FRoomMapRow> roomMap;
-
-	UPROPERTY(VisibleAnywhere, Category = "Map Generation")
 		ARoom* StartRoom = nullptr;
 public:
-
-	UFUNCTION()
-		ARoom* GetRoomAt(int Horizontal, int Vertical);
 
 	UFUNCTION()
 		bool GenerateMap();
 
 	UFUNCTION()
 		bool GenerateRooms();
+
+	UFUNCTION()
+		void CalculateMapCoords(float xPos, float yPos, int& Horizontal, int& Vertical);
 };
 
