@@ -82,6 +82,7 @@ void ADoor::Enter(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrim
 			{
 				USceneComponent* Exit = OtherDoor->GetExitPosition();
 				OtherActor->SetActorLocationAndRotation(Exit->GetComponentLocation(), Exit->GetComponentRotation());
+				OtherDoor->GetRoom()->Activate();
 			}
 		}
 	}
@@ -103,4 +104,9 @@ void ADoor::Setup(ARoom* _Room, int Direction)
 void ADoor::SetActive(bool setActive)
 {
 	bIsActive = setActive;
+}
+
+ARoom* ADoor::GetRoom()
+{
+	return Room;
 }

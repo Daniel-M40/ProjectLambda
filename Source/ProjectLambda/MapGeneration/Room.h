@@ -103,7 +103,8 @@ private:
 	float CameraSizeX;
 	float CameraSizeY;
 
-	TSubclassOf<ABaseEnemyCharacter> EnemyClass;
+	UPROPERTY(EditAnywhere, Category = "Enemy Spawning")
+		TSubclassOf<ABaseEnemyCharacter> EnemyClass;
 
 	UFUNCTION()
 		FVector GenerateEnemySpawnPos();

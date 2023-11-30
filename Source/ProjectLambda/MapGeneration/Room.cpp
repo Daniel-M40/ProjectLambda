@@ -60,15 +60,20 @@ void ARoom::Tick(float DeltaTime)
 		{
 			SpawnTimer += DeltaTime;
 
-			if (SpawnTimer >= SpawnInterval)
+			while (SpawnTimer >= SpawnInterval)
 			{
+				SpawnTimer -= SpawnInterval;
+
 				// Spawn the enemy
+				UE_LOG(LogTemp, Warning, TEXT("Spawning Enemy"))
 				GetWorld()->SpawnActor<ABaseEnemyCharacter>(EnemyClass, GenerateEnemySpawnPos(), FRotator::ZeroRotator);
+
+				RemainingEnemies--;
 			}
 		}
 		else
 		{
-			bIsComplete = true;
+			Complete();
 		}
 	}
 }
@@ -76,102 +81,137 @@ void ARoom::Tick(float DeltaTime)
 
 FVector ARoom::GenerateEnemySpawnPos()
 {
-	// Get the player position
+	// Original Version checking if over navmesh
+	// Could not find a good way to do an IsOverNavMesh() check;
+	{
+		//// Get the player position
 
-	FVector Pos = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraLocation();
-	
-	// Set the Y to something reasonible 
-	Pos.Y = 10.f;
+		//FVector Pos = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraLocation();
+		//
+		//// Set the Y to something reasonible 
+		//Pos.Y = 10.f;
 
 
-	FVector MinNoSpawn =  Pos -	FVector(CameraSizeX / 2.f - SpawnPositionBuffer, CameraSizeY / 2.f, 0.f - SpawnPositionBuffer);
-	FVector MaxNoSpawn =  Pos + FVector(CameraSizeX / 2.f + SpawnPositionBuffer, CameraSizeY / 2.f, 0.f + SpawnPositionBuffer);
+		//FVector MinNoSpawn =  Pos -	FVector(CameraSizeX / 2.f - SpawnPositionBuffer, CameraSizeY / 2.f, 0.f - SpawnPositionBuffer);
+		//FVector MaxNoSpawn =  Pos + FVector(CameraSizeX / 2.f + SpawnPositionBuffer, CameraSizeY / 2.f, 0.f + SpawnPositionBuffer);
 
-	FVector RoomMin = RoomOrigin - RoomBounds;
-	FVector RoomMax = RoomOrigin + RoomBounds;
+		//FVector RoomMin = RoomOrigin - RoomBounds;
+		//FVector RoomMax = RoomOrigin + RoomBounds;
 
-	FVector Spawn;
-	
+		//FVector Spawn;
+		//
 
-	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld());
-	FVector Hit;
-	FVector RayStart;
-	FVector RayEnd;
+		//UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld());
+		//FVector Hit;
+		//FVector RayStart;
+		//FVector RayEnd;
 
+		//do
+		//{
+		//	if (RoomMin.X < MinNoSpawn.X && RoomMax.X > MaxNoSpawn.X)
+		//	{
+		//		// Spawn Random
+		//		if (FMath::RandBool())
+		//		{
+		//			Spawn.X = FMath::RandRange(RoomMin.X, MinNoSpawn.X);
+		//		}
+		//		else
+		//		{
+		//			Spawn.X = FMath::RandRange(RoomMax.X, MaxNoSpawn.X);
+		//		}
+		//	}
+		//	else if (RoomMin.X < MinNoSpawn.X)
+		//	{
+		//		// Spawn Negative X
+		//		Spawn.X = FMath::RandRange(RoomMin.X, MinNoSpawn.X);
+		//	}
+		//	else if (RoomMax.X > MaxNoSpawn.X)
+		//	{
+		//		// Spawn Positive X
+		//		Spawn.X = FMath::RandRange(RoomMax.X, MaxNoSpawn.X);
+		//	}
+		//	else
+		//	{
+		//		// Enemy Cannot Spawn
+		//		UE_LOG(LogTemp, Warning, TEXT("Enemy Cannot Spawn X"));
+		//	}
+
+
+
+
+		//	if (RoomMin.Y < MinNoSpawn.Y && RoomMax.Y > MaxNoSpawn.Y)
+		//	{
+		//		// Spawn Random
+		//		if (FMath::RandBool())
+		//		{
+		//			Spawn.Y = FMath::RandRange(RoomMin.Y, MinNoSpawn.Y);
+		//		}
+		//		else
+		//		{
+		//			Spawn.Y = FMath::RandRange(RoomMax.Y, MaxNoSpawn.Y);
+		//		}
+		//	}
+		//	else if (RoomMin.Y < MinNoSpawn.Y)
+		//	{
+		//		// Spawn Negative X
+		//		Spawn.Y = FMath::RandRange(RoomMin.Y, MinNoSpawn.Y);
+		//	}
+		//	else if (RoomMax.Y > MaxNoSpawn.Y)
+		//	{
+		//		// Spawn Positive X
+		//		Spawn.Y = FMath::RandRange(RoomMax.Y, MaxNoSpawn.Y);
+		//	}
+		//	else
+		//	{
+		//		// Enemy Cannot Spawn
+		//		UE_LOG(LogTemp, Warning, TEXT("Enemy Cannot Spawn Y"));
+		//	}
+
+		//	// I hate this but idk another way of doing it
+		//	RayStart = Spawn;
+		//	RayEnd = Spawn;
+		//	RayStart.Z = 20.f;
+		//	RayEnd.Z = -20.f;
+
+
+		//	NavSystem->NavigationRaycast(nullptr, RayStart, RayEnd, Hit);
+
+		//} while (Hit == FVector::ZeroVector);
+		//
+	}
+
+
+	// Choose random door to spawn from
+	FVector SpawnPos = FVector::ZeroVector;
 	do
 	{
-		if (RoomMin.X < MinNoSpawn.X && RoomMax.X > MaxNoSpawn.X)
+		int SpawnDoor = FMath::RandRange(0, 3);
+
+		switch (SpawnDoor)
 		{
-			// Spawn Random
-			if (FMath::RandBool())
-			{
-				Spawn.X = FMath::RandRange(RoomMin.X, MinNoSpawn.X);
-			}
-			else
-			{
-				Spawn.X = FMath::RandRange(RoomMax.X, MaxNoSpawn.X);
-			}
+		case 0:
+			if (isDoorNorth)
+				SpawnPos = DoorNorth->GetExitPosition()->GetComponentLocation();
+			break;
+
+		case 1:
+			if (isDoorEast)
+				SpawnPos = DoorEast->GetExitPosition()->GetComponentLocation();
+			break;
+
+		case 2:
+			if (isDoorSouth)
+				SpawnPos = DoorSouth->GetExitPosition()->GetComponentLocation();
+			break;
+
+		case 3:
+			if (isDoorWest)
+				SpawnPos = DoorWest->GetExitPosition()->GetComponentLocation();
+			break;
 		}
-		else if (RoomMin.X < MinNoSpawn.X)
-		{
-			// Spawn Negative X
-			Spawn.X = FMath::RandRange(RoomMin.X, MinNoSpawn.X);
-		}
-		else if (RoomMax.X > MaxNoSpawn.X)
-		{
-			// Spawn Positive X
-			Spawn.X = FMath::RandRange(RoomMax.X, MaxNoSpawn.X);
-		}
-		else
-		{
-			// Enemy Cannot Spawn
-			UE_LOG(LogTemp, Warning, TEXT("Enemy Cannot Spawn X"));
-		}
+	} while (SpawnPos == FVector::ZeroVector);
 
-
-
-
-		if (RoomMin.Y < MinNoSpawn.Y && RoomMax.Y > MaxNoSpawn.Y)
-		{
-			// Spawn Random
-			if (FMath::RandBool())
-			{
-				Spawn.Y = FMath::RandRange(RoomMin.Y, MinNoSpawn.Y);
-			}
-			else
-			{
-				Spawn.Y = FMath::RandRange(RoomMax.Y, MaxNoSpawn.Y);
-			}
-		}
-		else if (RoomMin.Y < MinNoSpawn.Y)
-		{
-			// Spawn Negative X
-			Spawn.Y = FMath::RandRange(RoomMin.Y, MinNoSpawn.Y);
-		}
-		else if (RoomMax.Y > MaxNoSpawn.Y)
-		{
-			// Spawn Positive X
-			Spawn.Y = FMath::RandRange(RoomMax.Y, MaxNoSpawn.Y);
-		}
-		else
-		{
-			// Enemy Cannot Spawn
-			UE_LOG(LogTemp, Warning, TEXT("Enemy Cannot Spawn Y"));
-		}
-
-		// I hate this but idk another way of doing it
-		RayStart = Spawn;
-		RayEnd = Spawn;
-		RayStart.Z = 20.f;
-		RayEnd.Z = 20.f;
-
-
-		NavSystem->NavigationRaycast(nullptr, RayStart, RayEnd, Hit);
-
-	} while (Hit != RayEnd);
-	
-
-	return FVector();
+	return SpawnPos;
 }
 
 void ARoom::CalculateCameraSize()
@@ -331,6 +371,7 @@ void ARoom::Activate()
 
 void ARoom::Complete()
 {
+	SetDoorsActive(true);
 	bIsComplete = true;
 	bIsActive = false;
 }

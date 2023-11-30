@@ -429,7 +429,6 @@ bool ARoomManager::GenerateRooms()
 					GetWorld()->GetFirstPlayerController()->GetPawn()->SetActorLocation(Room->GetActorLocation() + (FVector::UpVector * 1600.f));
 
 					roomMap[horizontal].column[vertical]->Activate();
-					roomMap[horizontal].column[vertical]->Complete();
 				}
 
 			}
