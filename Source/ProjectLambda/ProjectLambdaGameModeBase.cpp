@@ -6,6 +6,7 @@
 #include "Kismet/KismetStringLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
+
 void AProjectLambdaGameModeBase::StartTimer()
 {
 	GetWorldTimerManager().SetTimer(TimerHandle, this, &AProjectLambdaGameModeBase::IncrementTimer, 1.f, true);
