@@ -40,7 +40,8 @@ void AShotgun::Fire()
 
 			//Spawn projectile at projectile spawn location and rotation
 			AProjectile* Bullet = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, SpawnLoacation, SpawnRotation);
-
+			Bullet->SetProjectileStats(ShotDamage, InitShotSpeed, MaxShotSpeed, ShotLifeSpan);
+			
 			// Calculate spread angle and adjust projectile rotation here
 			float SpreadAngle = ((float)Index / (float)(NumProjectiles - 1)) * ConeSpreadAngle - (ConeSpreadAngle / 2.0f);
 			FRotator SpreadRotation = GetActorRotation() + FRotator(0.0f, SpreadAngle, 0.0f);

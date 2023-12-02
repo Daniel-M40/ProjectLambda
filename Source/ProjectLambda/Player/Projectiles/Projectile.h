@@ -24,19 +24,18 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Movement", meta = (DisplayName = "Initial Speed", AllowPrivateAccess = true))
 	float ProjecitleInitialSpeed = 1300.f;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Movement", meta = (DisplayName = "Max Speed", AllowPrivateAccess = true))
-	float ProjectileMaxSpeed = 1300.f;
-	
-	
-	
-	UPROPERTY(EditAnywhere)
-	float Lifespan = 10.0f;
-
 	UPROPERTY(VisibleAnywhere, Category = "Movement", meta = (DisplayName = "Projectile Mesh"))
 	class UProjectileMovementComponent* ProjectileMovement;
 
+public:
 	UPROPERTY(EditAnywhere)
-	float Damage = 10.f;
+	float ProjectileDamage  = 10.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Movement", meta = (DisplayName = "Max Speed", AllowPrivateAccess = true))
+	float ProjectileMaxSpeed = 1300.f;
+
+	UPROPERTY(EditAnywhere)
+	float Lifespan = 10.0f;
 	
 #pragma endregion
 
@@ -46,6 +45,8 @@ public:
 	// Sets default values for this actor's properties
 	AProjectile();
 
+	void SetProjectileStats(float Damage, float InitSpeed, float MaxSpeed, float LifeSpan);
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

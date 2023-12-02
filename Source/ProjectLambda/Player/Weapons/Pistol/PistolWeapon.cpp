@@ -37,7 +37,8 @@ void APistolWeapon::Fire()
 
 		//Spawn projectile at projectile spawn location and rotation
 		AProjectile* Bullet = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, SpawnLoacation, SpawnRotation);
-
+		Bullet->SetProjectileStats(ShotDamage, InitShotSpeed, MaxShotSpeed, ShotLifeSpan);
+		
 		//Set the owner of the projectile
 		Bullet->SetOwner(this);
 

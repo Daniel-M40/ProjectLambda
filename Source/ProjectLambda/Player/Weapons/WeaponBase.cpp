@@ -38,9 +38,6 @@ void AWeaponBase::EnableShooting()
 	bCanFire = true;
 }
 
-void AWeaponBase::Fire()
-{
-}
 
 void AWeaponBase::EnableFireTimer()
 {

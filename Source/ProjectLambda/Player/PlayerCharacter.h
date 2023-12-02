@@ -12,6 +12,7 @@ class PROJECTLAMBDA_API APlayerCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
+	#pragma region Properties
 private:
 
 	#pragma region Player Config
@@ -95,9 +96,23 @@ private:
 	int WeaponIndex = 0;
 	
 	#pragma endregion
+
+	#pragma region Player Stats
+
+	UPROPERTY(EditAnywhere, Category="Player Stats")
+	float MovementSpeed = 100.f;
 	
-	UFUNCTION()
-	void OnHit(AActor* Player, AActor* Enemy, FVector NormalImpulse, const FHitResult& Hit);
+	UPROPERTY(EditAnywhere, Category="Player Stats")
+	float ShootSpeed = 100.f;
+	
+	UPROPERTY(EditAnywhere, Category="Player Stats")
+	float DamageAmountStat = 10.f;
+	
+	#pragma endregion
+	
+	#pragma endregion 
+
+	#pragma region Actions
 	
 public:
 	// Sets default values for this character's properties
@@ -139,4 +154,9 @@ public:
 	UFUNCTION()
 	virtual float TakeDamage(float DamageAmount,
 		FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
+	UFUNCTION()
+	void OnHit(AActor* Player, AActor* Enemy, FVector NormalImpulse, const FHitResult& Hit);
+
+	#pragma endregion
 };
