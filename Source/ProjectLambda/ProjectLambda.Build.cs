@@ -14,9 +14,9 @@ public class ProjectLambda : ModuleRules
 			"Engine", "InputCore",
 			"AIModule",
 			"GameplayTasks",
-			"NavigationSystem" });
-
-		PrivateDependencyModuleNames.AddRange(new string[] { "EnhancedInput" });
+			"NavigationSystem",
+            "EnhancedInput"
+		});
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

@@ -7,6 +7,7 @@
 #include "Room.generated.h"
 
 class ADoor;
+class ABaseEnemyCharacter;
 
 UCLASS()
 class PROJECTLAMBDA_API ARoom : public AActor
@@ -73,7 +74,49 @@ private:
 		USceneComponent* DoorWestSpawn;
 		ADoor* DoorWest;
 
-	USceneComponent* Root;
+	UPROPERTY(EditAnywhere)
+		USceneComponent* Root;
+
+	UPROPERTY(VisibleAnywhere, Category = "Enemy Spawning")
+		bool bIsActive;
+	UPROPERTY(VisibleAnywhere, Category = "Enemy Spawning")
+		bool bIsComplete;
+
+
+	UPROPERTY(VisibleAnywhere, Category = "Enemy Spawning")
+		FVector RoomOrigin; // Where is the room origin?
+	UPROPERTY(EditAnywhere, Category = "Enemy Spawning")
+		FVector RoomBounds; // How large is the room? Used to calculate where is offscreen
+
+	UPROPERTY(EditAnywhere, Category = "Enemy Spawning")
+		int RemainingEnemies = 0; // How many enemies should be spawned?
+
+	UPROPERTY(EditAnywhere, Category = "Enemy Spawning")
+		float TimeToSpawn = 10.f; // How long it should take to spawn the enemies
+
+	float SpawnTimer = 0;
+	float SpawnInterval = 5.f; // Time between spawns
+
+	UPROPERTY(EditAnywhere, Category = "Enemy Spawning")
+		float SpawnPositionBuffer = 100.f; // How long it should take to spawn the enemies
+
+	float CameraSizeX;
+	float CameraSizeY;
+
+	UPROPERTY(EditAnywhere, Category = "Enemy Spawning")
+		TSubclassOf<ABaseEnemyCharacter> EnemyClass;
+
+	UFUNCTION()
+		FVector GenerateEnemySpawnPos();
+
+private:
+
+	class ARoomManager* Manager = nullptr;
+	int GridHorizontal = 0;
+	int GridVertical = 0;
+
+	UFUNCTION()
+		void CalculateCameraSize();
 
 public:
 	// Spawn the room
@@ -82,16 +125,32 @@ public:
 	UFUNCTION()
 		bool SetDoor(int direction, bool isDoor);
 
+	UFUNCTION()
+		ADoor* GetDoor(int direction);
+
 	// ----- Maybe add difficulty multiplier for later levels? -----
 	// ----- Could effect spawnrate/health of enemies -----
 	//bool SetDifficulty(float difficulty);
 
 	// Set the array coordinates of the room
-	//UFUNCTION()
-		//void SetCoords(int horizontal, int vertical);
+	UFUNCTION()
+		void Setup(ARoomManager* _Manager, int _GridHorizontal , int _GridVertical);
 
+	UFUNCTION()
+		void GetCoords(int& horizontal, int& vertical);
+
+	UFUNCTION()
+		ARoomManager* GetManager();
+
+	UFUNCTION()
+		void Activate();
+
+	UFUNCTION()
+		void Complete();
 
 	UFUNCTION()
 		void SpawnDoors();
 
+	UFUNCTION()
+		void SetDoorsActive(bool doorsActive);
 };
