@@ -54,6 +54,12 @@ private:
 	UPROPERTY(EditAnywhere)
 		USceneComponent* ExitPosition;
 
+public:
+	//Flag to show whether you can move through the door or not
 	UPROPERTY(VisibleAnywhere)
 		bool bIsActive = false;
+
+	//Flag to show whether the door should spawn or not
+	UPROPERTY(VisibleAnywhere)
+		bool bIsInUse = false;
 };

@@ -81,8 +81,12 @@ void ADoor::Enter(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrim
 			if (OtherDoor)
 			{
 				USceneComponent* Exit = OtherDoor->GetExitPosition();
-				OtherActor->SetActorLocationAndRotation(Exit->GetComponentLocation(), Exit->GetComponentRotation());
-				OtherDoor->GetRoom()->Activate();
+
+				if (Exit)
+				{
+					OtherActor->SetActorLocationAndRotation(Exit->GetComponentLocation(), Exit->GetComponentRotation());
+					OtherDoor->GetRoom()->Activate();
+				}
 			}
 		}
 	}

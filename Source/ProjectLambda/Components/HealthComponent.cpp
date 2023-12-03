@@ -34,8 +34,9 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	// ...
 }
 
-void UHealthComponent::ApplyDamage(float DamageDealt)
+float UHealthComponent::ApplyDamage(float DamageDealt)
 {
+
 	//Deal damage
 	CurrentHealth -= DamageDealt;
 
@@ -51,5 +52,7 @@ void UHealthComponent::ApplyDamage(float DamageDealt)
 			Owner->Destroy();
 		}
 	}
+
+	return CurrentHealth;
 }
 
