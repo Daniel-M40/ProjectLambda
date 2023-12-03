@@ -5,6 +5,10 @@
 #include "Door.h"
 #include "RoomManager.h"
 
+#include "../AI/BaseEnemyCharacter.h"
+
+#include "NavigationSystem.h"
+
 // Sets default values
 ARoom::ARoom()
 {
@@ -41,10 +45,22 @@ void ARoom::BeginPlay()
 {
 	Super::BeginPlay();
 
+	for (int i = 0; i < DoorArrSize; i++)
+	{
+		ADoor* door = GetWorld()->SpawnActor<ADoor>();
+		
+		Doors.Add(door);
+	}
 
-
-
-
+	SpawnPoints.Add(DoorNorthSpawn);
+	SpawnPoints.Add(DoorEastSpawn);
+	SpawnPoints.Add(DoorSouthSpawn);
+	SpawnPoints.Add(DoorWestSpawn);
+	
+	//GetActorBounds(false, RoomOrigin, RoomBounds);
+	
+	//GetActorBounds(false, RoomOrigin, RoomBounds);
+	RoomOrigin = GetActorLocation();
 }
 
 // Called every frame
@@ -52,57 +68,76 @@ void ARoom::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (bIsActive)
+	{
+		if (RemainingEnemies > 0)
+		{
+			SpawnTimer += DeltaTime;
+
+			while (SpawnTimer >= SpawnInterval)
+			{
+				SpawnTimer -= SpawnInterval;
+
+				// Spawn the enemy
+				UE_LOG(LogTemp, Warning, TEXT("Spawning Enemy"))
+				GetWorld()->SpawnActor<ABaseEnemyCharacter>(EnemyClass, GenerateEnemySpawnPos(), FRotator::ZeroRotator);
+
+				RemainingEnemies--;
+			}
+		}
+		else
+		{
+			Complete();
+		}
+	}
 }
 
 
-bool ARoom::SetDoor(int direction, bool isDoor)
+FVector ARoom::GenerateEnemySpawnPos()
 {
-	bool doorGenerated = false;
-
-	switch (direction)
+	// Choose random door to spawn from
+	FVector SpawnPos = FVector::ZeroVector;
+	do
 	{
-	case 0:
-		isDoorNorth = true;
-		doorGenerated = true;
-		break;
-	case 1:
-		isDoorEast = true;
-		doorGenerated = true;
-		break;
-	case 2:
-		isDoorSouth = true;
-		doorGenerated = true;
-		break;
-	case 3:
-		isDoorWest = true;
-		doorGenerated = true;
-		break;
-	}
+		int SpawnDoor = FMath::RandRange(0, 3);
+		ADoor* Door = Doors[SpawnDoor];
 
-	return doorGenerated;
+		//If the door is in use spawn enemies at door location
+		if (Door && Door->bIsInUse)
+		{
+			SpawnPos = Door->GetExitPosition()->GetComponentLocation();
+		}
+		
+	} while (SpawnPos == FVector::ZeroVector);
+
+	return SpawnPos;
+}
+
+void ARoom::CalculateCameraSize()
+{
+	float FOV = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetFOVAngle();
+	float Opposite = FMath::Atan(FOV) * GetActorLocation().Z;
+
+	CameraSizeX = Opposite;
+	
+	// Can't think of a good way to get Y, enemies will just spawn further away on this axis
+	CameraSizeY = Opposite;
+}
+
+void ARoom::SetDoor(int direction)
+{
+	if (direction >= 0)
+	{
+		Doors[direction]->bIsInUse = true;
+	}
 }
 
 ADoor* ARoom::GetDoor(int direction)
 {
 	ADoor* door = nullptr;
-	switch (direction)
-	{
-		case 0:
-			door = DoorNorth;
-			break;
-
-		case 1:
-			door = DoorEast;
-			break;
-
-		case 2:
-			door = DoorSouth;
-			break;
-
-		case 3:
-			door = DoorWest;
-			break;
-	}
+	
+	door = Doors[direction];
+	
 	return door;
 }
 
@@ -126,38 +161,77 @@ ARoomManager* ARoom::GetManager()
 	return Manager;
 }
 
+ADoor* ARoom::SpawnDoor(USceneComponent* DoorSpawn, int direction)
+{
+	ADoor* door = GetWorld()->SpawnActor<ADoor>(DoorClass, DoorSpawn->GetComponentLocation(), DoorSpawn->GetComponentRotation());
+	
+	door->AttachToComponent(DoorSpawn, FAttachmentTransformRules::KeepWorldTransform);
+	door->Setup(this, direction);
+
+	return door;
+}
+
 void ARoom::SpawnDoors()
 {
-	if (DoorPrebuild)
+	if (DoorClass)
 	{
-		if (isDoorNorth)
+		// If should spawn a door at this direction
+		// Spawn the door blueprint
+		// Parent it to the door spawn position
+		// Run the setup function to set door variables (parent room, direction)		
+		for (int i = 0; i < DoorArrSize; i++)
 		{
-			//UE_LOG(LogTemp, Warning, TEXT("Spawning North Door"))
-			DoorNorth = GetWorld()->SpawnActor<ADoor>(DoorPrebuild, DoorNorthSpawn->GetComponentLocation(), DoorNorthSpawn->GetComponentRotation());
-			DoorNorth->AttachToComponent(DoorNorthSpawn, FAttachmentTransformRules::KeepWorldTransform);
+			ADoor* door = Doors[i];
 
-		}
-		if (isDoorEast)
-		{
-			//UE_LOG(LogTemp, Warning, TEXT("Spawning East Door"))
-			DoorEast = GetWorld()->SpawnActor<ADoor>(DoorPrebuild, DoorEastSpawn->GetComponentLocation(), DoorEastSpawn->GetComponentRotation());
-			DoorEast->AttachToComponent(DoorEastSpawn, FAttachmentTransformRules::KeepWorldTransform);
-		}
-		if (isDoorSouth)
-		{
-			//UE_LOG(LogTemp, Warning, TEXT("Spawning South Door"))
-			DoorSouth = GetWorld()->SpawnActor<ADoor>(DoorPrebuild, DoorSouthSpawn->GetComponentLocation(), DoorSouthSpawn->GetComponentRotation());
-			DoorSouth->AttachToComponent(DoorSouthSpawn, FAttachmentTransformRules::KeepWorldTransform);
-		}
-		if (isDoorWest)
-		{
-			//UE_LOG(LogTemp, Warning, TEXT("Spawning West Door"))
-			DoorWest = GetWorld()->SpawnActor<ADoor>(DoorPrebuild, DoorWestSpawn->GetComponentLocation(), DoorWestSpawn->GetComponentRotation());
-			DoorWest->AttachToComponent(DoorWestSpawn, FAttachmentTransformRules::KeepWorldTransform);
+			//If the door is used in room, spawn door at location and rotation
+			if (door && door->bIsInUse)
+			{
+				ADoor* tempDoor = SpawnDoor(SpawnPoints[i], i);
+				
+				//As we have assigned the temp door a flag to say whether
+				//it is active or in use we need to assign that value to the door we have spawned
+				tempDoor->bIsInUse = Doors[i]->bIsInUse;
+				tempDoor->bIsActive = Doors[i]->bIsActive;
+				
+				Doors[i] = tempDoor;
+			}
 		}
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("No Door Prebuild Set"));
+		UE_LOG(LogTemp, Error, TEXT("No Door Class Set"));
 	}
 }
+
+void ARoom::SetDoorsActive(bool bIsDoorActive)
+{
+	for (ADoor* Door : Doors)
+	{
+		if (Door && Door->bIsInUse)
+		{
+			Door->SetActive(bIsDoorActive);
+		}
+	}
+}
+
+
+void ARoom::Activate()
+{
+	if (!bIsComplete)
+	{
+		SetDoorsActive(false);
+
+		bIsActive = true;
+
+		SpawnInterval = TimeToSpawn / RemainingEnemies;
+	}
+}
+
+void ARoom::Complete()
+{
+	SetDoorsActive(true);
+	bIsComplete = true;
+	bIsActive = false;
+}
+
+

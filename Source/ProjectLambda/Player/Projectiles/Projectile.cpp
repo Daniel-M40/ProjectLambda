@@ -59,7 +59,7 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 	
 	if (CurrentOwner)
 	{
-		AController* CurrentInstigator = CurrentOwner->GetInstigatorController();
+		AController* CurrentInstigator = CurrentOwner->GetInstigatorController(); 
 		UClass* DamageTypeClass = UDamageType::StaticClass();
 
 		if (OtherActor && OtherActor != this && OtherActor != CurrentOwner)

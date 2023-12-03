@@ -132,5 +132,9 @@ public:
 
 	UFUNCTION()
 		bool GenerateRooms();
+
+	void SpawnRoom(ARoom* Room, int horizontal, int vertical);
+
+	void SpawnStartRoom(ARoom* Room, int horizontal, int vertical);
 };
 
