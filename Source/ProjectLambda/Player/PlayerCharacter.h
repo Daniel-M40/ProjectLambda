@@ -54,6 +54,7 @@ private:
 
 	float MaxHealth = 30.f;
 
+	UPROPERTY(EditAnywhere, Category="Combat")
 	int MaxAmmo = 20;
 
 	class APlayerController* PlayerController;
@@ -74,6 +75,9 @@ private:
 	//Timer handle
 	FTimerHandle DashTimeHandle;
 
+	//Components
+	class UCharacterMovementComponent* MovementComponent;
+	
 
 	//Debug config
 	UPROPERTY(EditAnywhere, Category = "General", meta = (DisplayName = "Debug Mode (Logs / Spheres)"))
