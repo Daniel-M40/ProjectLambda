@@ -36,6 +36,15 @@ struct FMapRow
 		TArray<FMapValue> column;
 };
 
+USTRUCT()
+struct FRoomMapRow
+{
+	GENERATED_BODY()
+
+		UPROPERTY(VisibleAnywhere)
+		TArray<ARoom*> column;
+};
+
 
 USTRUCT()
 struct FIntVector2D
@@ -64,15 +73,16 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+private:
 	UPROPERTY(EditAnywhere, Category = "Map Generation")
 		TArray<TSubclassOf<ARoom>> RoomTypes;
 
 	UPROPERTY(EditAnywhere, Category = "Map Generation")
-		TSubclassOf<ARoom> BossRoom;
+		TSubclassOf<ARoom> BossRoomClass;
 	const int BossRoomCode = -1;
 
 	UPROPERTY(EditAnywhere, Category = "Map Generation")
-		TSubclassOf<ARoom> StartRoom;
+		TSubclassOf<ARoom> StartRoomClass;
 	const int StartRoomCode = -2;
 		
 
@@ -107,10 +117,24 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Map Generation")
 		TArray<FMapRow> map;
 
+	UPROPERTY(VisibleAnywhere, Category = "Map Generation")
+		TArray<FRoomMapRow> roomMap;
+
+	UPROPERTY(VisibleAnywhere, Category = "Map Generation")
+		ARoom* StartRoom = nullptr;
+public:
+
+	UFUNCTION()
+		ARoom* GetRoomAt(int Horizontal, int Vertical);
+
 	UFUNCTION()
 		bool GenerateMap();
 
 	UFUNCTION()
 		bool GenerateRooms();
+
+	void SpawnRoom(ARoom* Room, int horizontal, int vertical);
+
+	void SpawnStartRoom(ARoom* Room, int horizontal, int vertical);
 };
 

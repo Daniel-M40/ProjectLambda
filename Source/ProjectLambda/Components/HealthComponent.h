@@ -14,10 +14,10 @@ class PROJECTLAMBDA_API UHealthComponent : public UActorComponent
 
 public:
 	UPROPERTY(EditAnywhere, Category="Health")
-	float MaxHealth = 10.f;
+	float MaxHealth = 30.f;
 
 	UPROPERTY(EditAnywhere, Category="Health")
-	float CurrentHealth = 10.f;
+	float CurrentHealth = 30.f;
 
 	
 public:
@@ -33,5 +33,5 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
-	void ApplyDamage(float DamageDealt);
+	float ApplyDamage(float DamageDealt);
 };

@@ -21,14 +21,13 @@ ABaseEnemyCharacter::ABaseEnemyCharacter()
 	//Health Component
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Component"));
 	
-	
-
 }
 
 // Called when the game starts or when spawned
 void ABaseEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	CurrentHealth = MaxHealth;
 }
 
 // Called every frame
@@ -56,7 +55,7 @@ float ABaseEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Da
 	//If we have health component apply damage
 	if (HealthComponent)
 	{
-		HealthComponent->ApplyDamage(DamageAmount);
+		CurrentHealth = HealthComponent->ApplyDamage(DamageAmount);
 	}
 
 	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);

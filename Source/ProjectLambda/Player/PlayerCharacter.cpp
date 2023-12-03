@@ -14,8 +14,6 @@
 #include "Weapons/Pistol/PistolWeapon.h"
 #include "Weapons/Shotgun/Shotgun.h"
 
-
-
 // Sets default values
 APlayerCharacter::APlayerCharacter()
 {
@@ -36,7 +34,6 @@ APlayerCharacter::APlayerCharacter()
 	//Health Component
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Component"));
 	
-	
 	//Auto posses player when the game starts
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
@@ -46,6 +43,10 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	Ammo = MaxAmmo;
+
+	// set health to max health
+	CurrentHealth = MaxHealth;
 	// Calls the OnHit Funtion when a collision happens
 	OnActorHit.AddDynamic(this, &APlayerCharacter::OnHit);
 
@@ -124,15 +125,13 @@ void APlayerCharacter::SwapWeaponHandler(const FInputActionValue& Value)
 	//Unhide new weapon
 	CurrentWeapon->SetActorHiddenInGame(false);
 
-
-
 }
 
 // Called every frame
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
+
 	if (PlayerController)
 	{		
 		FHitResult HitResult;
@@ -201,6 +200,11 @@ void APlayerCharacter::ShootHandler(const FInputActionValue& Value)
 	if (CurrentWeapon)
 	{
 		CurrentWeapon->Fire();
+
+		if (Ammo > 0)
+		{
+			Ammo--; // decrease ammo when player shoots
+		}
 	}
 }
 
@@ -246,10 +250,11 @@ void APlayerCharacter::AttachWeapon()
 float APlayerCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
 	AActor* DamageCauser)
 {
+
 	//If we have health component apply damage
 	if (HealthComponent)
 	{
-		HealthComponent->ApplyDamage(DamageAmount);
+		CurrentHealth = HealthComponent->ApplyDamage(DamageAmount); // call apply damage function to get the current value of character's health
 	}
 
 	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);

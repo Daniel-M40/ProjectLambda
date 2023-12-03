@@ -29,14 +29,26 @@ void ARoomManager::BeginPlay()
 
 	UE_LOG(LogTemp, Warning, TEXT("Map Generating..."));
 
+	// Initialise map of room references
+	roomMap.SetNum(mapHeight);
+	for (int i = 0; i < mapHeight; i++)
+	{
+		roomMap[i].column.SetNum(mapWidth);
+		for (int j = 0; j < mapWidth; j++)
+		{
+			roomMap[i].column[j] = nullptr;
+		}
+	}
 
 	// Try generating maps until a valid one is created
 	bool mapGenerated = GenerateMap();
+
 
 	while (!mapGenerated)
 	{
 		mapGenerated = GenerateMap();
 	}
+
 
 	GenerateRooms();
 
@@ -51,6 +63,11 @@ void ARoomManager::Tick(float DeltaTime)
 
 }
 
+
+ARoom* ARoomManager::GetRoomAt(int Horizontal, int Vertical)
+{
+	return roomMap[Horizontal].column[Vertical];
+}
 
 bool ARoomManager::GenerateMap()
 {
@@ -341,6 +358,44 @@ bool ARoomManager::GenerateMap()
 	return !mapInvalid;
 }
 
+void ARoomManager::SpawnRoom(ARoom* Room, int horizontal, int vertical)
+{
+	if (Room)
+	{
+		Room->Setup(this, horizontal, vertical);
+		roomMap[horizontal].column[vertical] = Room;
+
+		for (int door : map[horizontal].column[vertical].Doors)
+		{
+			roomMap[horizontal].column[vertical]->SetDoor(door);
+		}
+
+		roomMap[horizontal].column[vertical]->SpawnDoors();
+	}
+}
+
+void ARoomManager::SpawnStartRoom(ARoom* Room, int horizontal, int vertical)
+{
+	if (Room)
+	{
+		Room->Setup(this, horizontal, vertical);
+		roomMap[horizontal].column[vertical] = Room;
+
+		for (int door : map[horizontal].column[vertical].Doors)
+		{
+			roomMap[horizontal].column[vertical]->SetDoor(door);
+		}
+
+		roomMap[horizontal].column[vertical]->SpawnDoors();
+
+		// Move player to start Room
+
+		// -- TEMPORARY FOR TESTING --
+		GetWorld()->GetFirstPlayerController()->GetPawn()->SetActorLocation(Room->GetActorLocation() + (FVector::UpVector * 1600.f));
+
+		roomMap[horizontal].column[vertical]->Activate();
+	}
+}
 
 
 bool ARoomManager::GenerateRooms()
@@ -352,48 +407,37 @@ bool ARoomManager::GenerateRooms()
 			// 0 Means no room
 			if (map[horizontal].column[vertical].roomType > 0)
 			{
-				ARoom* room = GetWorld()->SpawnActor<ARoom>(RoomTypes[map[horizontal].column[vertical].roomType], FVector(vertical * roomInterval, horizontal * roomInterval, GetActorLocation().Z), GetActorRotation());
+				ARoom* Room = GetWorld()->SpawnActor<ARoom>(RoomTypes[map[horizontal].column[vertical].roomType], FVector(vertical * roomInterval, horizontal * roomInterval, GetActorLocation().Z), GetActorRotation());
 
+				SpawnRoom(Room, horizontal, vertical);
 
-				for (int door : map[horizontal].column[vertical].Doors)
-				{
-					room->SetDoor(door, true);
-				}
-
-				room->SpawnDoors();
 
 			}
 			// -1 is boss room
 			else if (map[horizontal].column[vertical].roomType == BossRoomCode)
 			{
-				ARoom* room = GetWorld()->SpawnActor<ARoom>(BossRoom, FVector(vertical * roomInterval, horizontal * roomInterval, GetActorLocation().Z), GetActorRotation());
+				ARoom* Room = GetWorld()->SpawnActor<ARoom>(BossRoomClass, FVector(vertical * roomInterval, horizontal * roomInterval, GetActorLocation().Z), GetActorRotation());
+				
+				SpawnRoom(Room, horizontal, vertical);
 
-				for (int door : map[horizontal].column[vertical].Doors)
-				{
-					room->SetDoor(door, true);
-				}
-
-				room->SpawnDoors();
 
 
 			}
 			// -2 is start room
 			else if (map[horizontal].column[vertical].roomType == StartRoomCode)
 			{
-				ARoom* room = GetWorld()->SpawnActor<ARoom>(StartRoom, FVector(vertical * roomInterval, horizontal * roomInterval, GetActorLocation().Z), GetActorRotation());
+				ARoom* Room = GetWorld()->SpawnActor<ARoom>(StartRoomClass, FVector(vertical * roomInterval, horizontal * roomInterval, GetActorLocation().Z), GetActorRotation());
 
-				for (int door : map[horizontal].column[vertical].Doors)
-				{
-					room->SetDoor(door, true);
-				}
+				SpawnStartRoom(Room, horizontal, vertical);
 
-				room->SpawnDoors();
 			}
 		}
 	}
 
 	return true;
 }
+
+
 
 
 
