@@ -186,5 +186,5 @@ public:
 	void SpawnDoors();
 
 	UFUNCTION()
-	void SetDoorsActive(bool doorsActive);
+	void SetDoorsActive(bool bIsDoorActive);
 };

@@ -54,8 +54,8 @@ void ARoom::BeginPlay()
 
 	SpawnPoints.Add(DoorNorthSpawn);
 	SpawnPoints.Add(DoorEastSpawn);
-	SpawnPoints.Add(DoorWestSpawn);
 	SpawnPoints.Add(DoorSouthSpawn);
+	SpawnPoints.Add(DoorWestSpawn);
 	
 	//GetActorBounds(false, RoomOrigin, RoomBounds);
 	
@@ -100,29 +100,14 @@ FVector ARoom::GenerateEnemySpawnPos()
 	do
 	{
 		int SpawnDoor = FMath::RandRange(0, 3);
-		
-		switch (SpawnDoor)
+		ADoor* Door = Doors[SpawnDoor];
+
+		//If the door is in use spawn enemies at door location
+		if (Door && Door->bIsInUse)
 		{
-		case 0:
-			if (isDoorNorth)
-				SpawnPos = Doors[0]->GetExitPosition()->GetComponentLocation();
-			break;
-
-		case 1:
-			if (isDoorEast)
-				SpawnPos = Doors[1]->GetExitPosition()->GetComponentLocation();
-			break;
-
-		case 2:
-			if (isDoorSouth)
-				SpawnPos = Doors[2]->GetExitPosition()->GetComponentLocation();
-			break;
-
-		case 3:
-			if (isDoorWest)
-				SpawnPos = Doors[3]->GetExitPosition()->GetComponentLocation();
-			break;
+			SpawnPos = Door->GetExitPosition()->GetComponentLocation();
 		}
+		
 	} while (SpawnPos == FVector::ZeroVector);
 
 	return SpawnPos;
@@ -141,20 +126,9 @@ void ARoom::CalculateCameraSize()
 
 void ARoom::SetDoor(int direction)
 {
-	switch (direction)
+	if (direction >= 0)
 	{
-	case 0:
-		isDoorNorth = true;
-		break;
-	case 1:
-		isDoorEast = true;
-		break;
-	case 2:
-		isDoorSouth = true;
-		break;
-	case 3:
-		isDoorWest = true;
-		break;
+		Doors[direction]->bIsInUse = true;
 	}
 }
 
@@ -204,59 +178,40 @@ void ARoom::SpawnDoors()
 		// If should spawn a door at this direction
 		// Spawn the door blueprint
 		// Parent it to the door spawn position
-		// Run the setup function to set door variables (parent room, direction)
-
-		if (isDoorNorth)
-		{
-			//UE_LOG(LogTemp, Warning, TEXT("Spawning North Door"))
-			Doors[0] = SpawnDoor(DoorNorthSpawn, 0);
-
-		}
-		if (isDoorEast)
-		{
-			//UE_LOG(LogTemp, Warning, TEXT("Spawning East Door"))
-			Doors[1] = SpawnDoor(DoorEastSpawn, 1);
-		}
-		if (isDoorSouth)
-		{
-			//UE_LOG(LogTemp, Warning, TEXT("Spawning South Door"))
-			Doors[2] = SpawnDoor(DoorSouthSpawn, 2);
-		}
-		if (isDoorWest)
-		{
-			//UE_LOG(LogTemp, Warning, TEXT("Spawning West Door"))
-			Doors[3] = SpawnDoor(DoorWestSpawn, 3);
-		}
-		
-		/*for (int i = 0; i < DoorArrSize; i++)
+		// Run the setup function to set door variables (parent room, direction)		
+		for (int i = 0; i < DoorArrSize; i++)
 		{
 			ADoor* door = Doors[i];
-			
-			if (door)
+
+			//If the door is used in room, spawn door at location and rotation
+			if (door && door->bIsInUse)
 			{
-				Doors[i] = SpawnDoor(SpawnPoints[i], i);
+				ADoor* tempDoor = SpawnDoor(SpawnPoints[i], i);
+				
+				//As we have assigned the temp door a flag to say whether
+				//it is active or in use we need to assign that value to the door we have spawned
+				tempDoor->bIsInUse = Doors[i]->bIsInUse;
+				tempDoor->bIsActive = Doors[i]->bIsActive;
+				
+				Doors[i] = tempDoor;
 			}
-		}*/
+		}
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("No Door Prebuild Set"));
+		UE_LOG(LogTemp, Error, TEXT("No Door Class Set"));
 	}
 }
 
-void ARoom::SetDoorsActive(bool doorsActive)
+void ARoom::SetDoorsActive(bool bIsDoorActive)
 {
-	if (isDoorNorth)
-		Doors[0]->SetActive(doorsActive);
-
-	if (isDoorEast)
-		Doors[1]->SetActive(doorsActive);
-
-	if (isDoorSouth)
-		Doors[2]->SetActive(doorsActive);
-
-	if (isDoorWest)
-		Doors[3]->SetActive(doorsActive);
+	for (ADoor* Door : Doors)
+	{
+		if (Door && Door->bIsInUse)
+		{
+			Door->SetActive(bIsDoorActive);
+		}
+	}
 }
 
 
