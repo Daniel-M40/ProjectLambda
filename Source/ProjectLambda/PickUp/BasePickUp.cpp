@@ -45,6 +45,6 @@ void ABasePickUp::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Ot
 {
 	UE_LOG(LogTemp, Warning, TEXT("Begin Overlap"));
 
-	
+	Destroy();
 }
 
