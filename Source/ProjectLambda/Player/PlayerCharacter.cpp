@@ -254,7 +254,7 @@ float APlayerCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 	//If we have health component apply damage
 	if (HealthComponent)
 	{
-		CurrentHealth = HealthComponent->ApplyDamage(DamageAmount); // call apply damage function to get the current value of character's health
+		CurrentHealth = HealthComponent->ApplyDamage(DamageAmount, false); // call apply damage function to get the current value of character's health
 	}
 
 	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);

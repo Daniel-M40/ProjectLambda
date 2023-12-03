@@ -50,4 +50,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float CurrentHealth;
+
+	class ACoreGameMode* CoreGameMode;
 };

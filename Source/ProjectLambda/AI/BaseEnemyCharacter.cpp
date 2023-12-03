@@ -3,7 +3,9 @@
 
 #include "BaseEnemyCharacter.h"
 
+#include "Kismet/GameplayStatics.h"
 #include "ProjectLambda/Components/HealthComponent.h"
+#include "ProjectLambda/GameModes/CoreGameMode.h"
 
 // Sets default values
 ABaseEnemyCharacter::ABaseEnemyCharacter()
@@ -28,6 +30,9 @@ void ABaseEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	CurrentHealth = MaxHealth;
+	
+	//Get game mode ref
+	CoreGameMode = Cast<ACoreGameMode>(UGameplayStatics::GetGameMode(this));
 }
 
 // Called every frame
@@ -55,7 +60,7 @@ float ABaseEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Da
 	//If we have health component apply damage
 	if (HealthComponent)
 	{
-		CurrentHealth = HealthComponent->ApplyDamage(DamageAmount);
+		CurrentHealth = HealthComponent->ApplyDamage(DamageAmount, true);
 	}
 
 	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);

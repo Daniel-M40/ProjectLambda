@@ -39,6 +39,9 @@ public:
 public:
 	virtual void BeginPlay() override;
 	
+	void SpawnPickup(const FVector Location);
+
+
 private:
 	//Starts timer when game starts
 	void StartTimer();
@@ -48,6 +51,8 @@ private:
 	//Starts timer when player finishes the game
 	void EndTimer();
 
+
+	
 	
 #pragma endregion
 };

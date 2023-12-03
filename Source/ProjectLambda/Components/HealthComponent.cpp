@@ -3,6 +3,9 @@
 
 #include "HealthComponent.h"
 
+#include "Kismet/GameplayStatics.h"
+#include "ProjectLambda/GameModes/CoreGameMode.h"
+
 
 // Sets default values for this component's properties
 UHealthComponent::UHealthComponent()
@@ -21,6 +24,9 @@ void UHealthComponent::BeginPlay()
 	Super::BeginPlay();
 
 	CurrentHealth = MaxHealth;
+
+	//Get game mode ref
+	CoreGameMode = Cast<ACoreGameMode>(UGameplayStatics::GetGameMode(this));
 	
 }
 
@@ -30,11 +36,10 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType,
                                      FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
+	
 }
 
-float UHealthComponent::ApplyDamage(float DamageDealt)
+float UHealthComponent::ApplyDamage(float DamageDealt, bool bIsEnemy)
 {
 
 	//Deal damage
@@ -50,6 +55,11 @@ float UHealthComponent::ApplyDamage(float DamageDealt)
 		if (Owner)
 		{
 			Owner->Destroy();
+	
+			if (bIsEnemy)
+			{
+				CoreGameMode->SpawnPickup(Owner->GetActorLocation());
+			}
 		}
 	}
 
