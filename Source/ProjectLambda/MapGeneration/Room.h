@@ -3,18 +3,29 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Door.h"
 #include "GameFramework/Actor.h"
 #include "Room.generated.h"
 
 class ADoor;
 class ABaseEnemyCharacter;
 
+UENUM()
+enum class EDoorDirection : int
+{
+	North = 0,
+	East = 1,
+	South = 2,
+	West = 3
+};
+
+
 UCLASS()
 class PROJECTLAMBDA_API ARoom : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	ARoom();
 
@@ -22,7 +33,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -32,101 +43,122 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	int exitdoor;
 
-
 private:
 
+	ADoor* DoorNorth;
+	ADoor* DoorEast; 
+	ADoor* DoorWest;
+	ADoor* DoorSouth;
+	
+	const int DoorArrSize = 4;
+	
+	TArray<ADoor*> Doors;
+	TArray<USceneComponent*> SpawnPoints;
+
+	EDoorDirection DoorDirection;
+	
 	// Can there be doors in these locations?
 	// Reference to the door
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<ADoor> DoorClass;
+
 
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<ADoor> DoorClass;
-
-
-	UPROPERTY(EditAnywhere)
-		bool canDoorNorth = true;
+	bool canDoorNorth = true;
+	
 	UPROPERTY(VisibleAnywhere)
-		bool isDoorNorth = false;
+	bool isDoorNorth = false;
+	
 	UPROPERTY(EditAnywhere)
-		USceneComponent* DoorNorthSpawn;
-		ADoor* DoorNorth;
+	USceneComponent* DoorNorthSpawn;
+	
 
 	UPROPERTY(EditAnywhere)
-		bool canDoorEast = true;
+	bool canDoorEast = true;
+	
 	UPROPERTY(VisibleAnywhere)
-		bool isDoorEast = false;
+	bool isDoorEast = false;
+	
 	UPROPERTY(EditAnywhere)
-		USceneComponent* DoorEastSpawn;
-		ADoor* DoorEast;
+	USceneComponent* DoorEastSpawn;
+	
 
 	UPROPERTY(EditAnywhere)
-		bool canDoorSouth = true;
+	bool canDoorSouth = true;
+	
 	UPROPERTY(VisibleAnywhere)
-		bool isDoorSouth = false;
+	bool isDoorSouth = false;
+	
 	UPROPERTY(EditAnywhere)
-		USceneComponent* DoorSouthSpawn;
-		ADoor* DoorSouth;
+	USceneComponent* DoorSouthSpawn;
+	
 
 	UPROPERTY(EditAnywhere)
-		bool canDoorWest = true;
+	bool canDoorWest = true;
+	
 	UPROPERTY(VisibleAnywhere)
-		bool isDoorWest = false;
+	bool isDoorWest = false;
+	
 	UPROPERTY(EditAnywhere)
-		USceneComponent* DoorWestSpawn;
-		ADoor* DoorWest;
+	USceneComponent* DoorWestSpawn;
 
 	UPROPERTY(EditAnywhere)
-		USceneComponent* Root;
+	USceneComponent* Root;
 
 	UPROPERTY(VisibleAnywhere, Category = "Enemy Spawning")
-		bool bIsActive;
+	bool bIsActive;
+	
 	UPROPERTY(VisibleAnywhere, Category = "Enemy Spawning")
-		bool bIsComplete;
+	bool bIsComplete;
 
 
 	UPROPERTY(VisibleAnywhere, Category = "Enemy Spawning")
-		FVector RoomOrigin; // Where is the room origin?
+	FVector RoomOrigin; // Where is the room origin?
+	
 	UPROPERTY(EditAnywhere, Category = "Enemy Spawning")
-		FVector RoomBounds; // How large is the room? Used to calculate where is offscreen
+	FVector RoomBounds; // How large is the room? Used to calculate where is offscreen
+	
 
 	UPROPERTY(EditAnywhere, Category = "Enemy Spawning")
-		int RemainingEnemies = 0; // How many enemies should be spawned?
+	int RemainingEnemies = 0; // How many enemies should be spawned?
 
 	UPROPERTY(EditAnywhere, Category = "Enemy Spawning")
-		float TimeToSpawn = 10.f; // How long it should take to spawn the enemies
+	float TimeToSpawn = 10.f; // How long it should take to spawn the enemies
 
 	float SpawnTimer = 0;
+	
 	float SpawnInterval = 5.f; // Time between spawns
 
 	UPROPERTY(EditAnywhere, Category = "Enemy Spawning")
-		float SpawnPositionBuffer = 100.f; // How long it should take to spawn the enemies
+	float SpawnPositionBuffer = 100.f; // How long it should take to spawn the enemies
 
 	float CameraSizeX;
+	
 	float CameraSizeY;
 
 	UPROPERTY(EditAnywhere, Category = "Enemy Spawning")
-		TSubclassOf<ABaseEnemyCharacter> EnemyClass;
+	TSubclassOf<ABaseEnemyCharacter> EnemyClass;
 
 	UFUNCTION()
-		FVector GenerateEnemySpawnPos();
+	FVector GenerateEnemySpawnPos();
 
 private:
-
 	class ARoomManager* Manager = nullptr;
 	int GridHorizontal = 0;
 	int GridVertical = 0;
 
 	UFUNCTION()
-		void CalculateCameraSize();
+	void CalculateCameraSize();
 
 public:
 	// Spawn the room
 	// Enable/disable doors
 	// Returns true if successful
 	UFUNCTION()
-		bool SetDoor(int direction, bool isDoor);
+	void SetDoor(int direction);
 
 	UFUNCTION()
-		ADoor* GetDoor(int direction);
+	ADoor* GetDoor(int direction);
 
 	// ----- Maybe add difficulty multiplier for later levels? -----
 	// ----- Could effect spawnrate/health of enemies -----
@@ -134,25 +166,25 @@ public:
 
 	// Set the array coordinates of the room
 	UFUNCTION()
-		void Setup(ARoomManager* _Manager, int _GridHorizontal , int _GridVertical);
+	void Setup(ARoomManager* _Manager, int _GridHorizontal, int _GridVertical);
 
 	UFUNCTION()
-		void GetCoords(int& horizontal, int& vertical);
+	void GetCoords(int& horizontal, int& vertical);
 
 	UFUNCTION()
-		ARoomManager* GetManager();
+	ARoomManager* GetManager();
 
 	UFUNCTION()
-		void Activate();
+	void Activate();
 
 	UFUNCTION()
-		void Complete();
+	void Complete();
 
 	ADoor* SpawnDoor(USceneComponent* DoorSpawn, int direction);
-	
-	UFUNCTION()
-		void SpawnDoors();
 
 	UFUNCTION()
-		void SetDoorsActive(bool doorsActive);
+	void SpawnDoors();
+
+	UFUNCTION()
+	void SetDoorsActive(bool doorsActive);
 };

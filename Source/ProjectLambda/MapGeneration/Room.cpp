@@ -45,6 +45,20 @@ void ARoom::BeginPlay()
 {
 	Super::BeginPlay();
 
+	for (int i = 0; i < DoorArrSize; i++)
+	{
+		ADoor* door = GetWorld()->SpawnActor<ADoor>();
+		
+		Doors.Add(door);
+	}
+
+	SpawnPoints.Add(DoorNorthSpawn);
+	SpawnPoints.Add(DoorEastSpawn);
+	SpawnPoints.Add(DoorWestSpawn);
+	SpawnPoints.Add(DoorSouthSpawn);
+	
+	//GetActorBounds(false, RoomOrigin, RoomBounds);
+	
 	//GetActorBounds(false, RoomOrigin, RoomBounds);
 	RoomOrigin = GetActorLocation();
 }
@@ -81,132 +95,32 @@ void ARoom::Tick(float DeltaTime)
 
 FVector ARoom::GenerateEnemySpawnPos()
 {
-	// Original Version checking if over navmesh
-	// Could not find a good way to do an IsOverNavMesh() check;
-	{
-		//// Get the player position
-
-		//FVector Pos = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraLocation();
-		//
-		//// Set the Y to something reasonible 
-		//Pos.Y = 10.f;
-
-
-		//FVector MinNoSpawn =  Pos -	FVector(CameraSizeX / 2.f - SpawnPositionBuffer, CameraSizeY / 2.f, 0.f - SpawnPositionBuffer);
-		//FVector MaxNoSpawn =  Pos + FVector(CameraSizeX / 2.f + SpawnPositionBuffer, CameraSizeY / 2.f, 0.f + SpawnPositionBuffer);
-
-		//FVector RoomMin = RoomOrigin - RoomBounds;
-		//FVector RoomMax = RoomOrigin + RoomBounds;
-
-		//FVector Spawn;
-		//
-
-		//UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld());
-		//FVector Hit;
-		//FVector RayStart;
-		//FVector RayEnd;
-
-		//do
-		//{
-		//	if (RoomMin.X < MinNoSpawn.X && RoomMax.X > MaxNoSpawn.X)
-		//	{
-		//		// Spawn Random
-		//		if (FMath::RandBool())
-		//		{
-		//			Spawn.X = FMath::RandRange(RoomMin.X, MinNoSpawn.X);
-		//		}
-		//		else
-		//		{
-		//			Spawn.X = FMath::RandRange(RoomMax.X, MaxNoSpawn.X);
-		//		}
-		//	}
-		//	else if (RoomMin.X < MinNoSpawn.X)
-		//	{
-		//		// Spawn Negative X
-		//		Spawn.X = FMath::RandRange(RoomMin.X, MinNoSpawn.X);
-		//	}
-		//	else if (RoomMax.X > MaxNoSpawn.X)
-		//	{
-		//		// Spawn Positive X
-		//		Spawn.X = FMath::RandRange(RoomMax.X, MaxNoSpawn.X);
-		//	}
-		//	else
-		//	{
-		//		// Enemy Cannot Spawn
-		//		UE_LOG(LogTemp, Warning, TEXT("Enemy Cannot Spawn X"));
-		//	}
-
-
-
-
-		//	if (RoomMin.Y < MinNoSpawn.Y && RoomMax.Y > MaxNoSpawn.Y)
-		//	{
-		//		// Spawn Random
-		//		if (FMath::RandBool())
-		//		{
-		//			Spawn.Y = FMath::RandRange(RoomMin.Y, MinNoSpawn.Y);
-		//		}
-		//		else
-		//		{
-		//			Spawn.Y = FMath::RandRange(RoomMax.Y, MaxNoSpawn.Y);
-		//		}
-		//	}
-		//	else if (RoomMin.Y < MinNoSpawn.Y)
-		//	{
-		//		// Spawn Negative X
-		//		Spawn.Y = FMath::RandRange(RoomMin.Y, MinNoSpawn.Y);
-		//	}
-		//	else if (RoomMax.Y > MaxNoSpawn.Y)
-		//	{
-		//		// Spawn Positive X
-		//		Spawn.Y = FMath::RandRange(RoomMax.Y, MaxNoSpawn.Y);
-		//	}
-		//	else
-		//	{
-		//		// Enemy Cannot Spawn
-		//		UE_LOG(LogTemp, Warning, TEXT("Enemy Cannot Spawn Y"));
-		//	}
-
-		//	// I hate this but idk another way of doing it
-		//	RayStart = Spawn;
-		//	RayEnd = Spawn;
-		//	RayStart.Z = 20.f;
-		//	RayEnd.Z = -20.f;
-
-
-		//	NavSystem->NavigationRaycast(nullptr, RayStart, RayEnd, Hit);
-
-		//} while (Hit == FVector::ZeroVector);
-		//
-	}
-
-
 	// Choose random door to spawn from
 	FVector SpawnPos = FVector::ZeroVector;
 	do
 	{
 		int SpawnDoor = FMath::RandRange(0, 3);
-
+		
 		switch (SpawnDoor)
 		{
 		case 0:
 			if (isDoorNorth)
-				SpawnPos = DoorNorth->GetExitPosition()->GetComponentLocation();
+				SpawnPos = Doors[0]->GetExitPosition()->GetComponentLocation();
 			break;
 
 		case 1:
 			if (isDoorEast)
-				SpawnPos = DoorEast->GetExitPosition()->GetComponentLocation();
+				SpawnPos = Doors[1]->GetExitPosition()->GetComponentLocation();
 			break;
 
 		case 2:
 			if (isDoorSouth)
-				SpawnPos = DoorSouth->GetExitPosition()->GetComponentLocation();
+				SpawnPos = Doors[2]->GetExitPosition()->GetComponentLocation();
 			break;
 
 		case 3:
 			if (isDoorWest)
-				SpawnPos = DoorWest->GetExitPosition()->GetComponentLocation();
+				SpawnPos = Doors[3]->GetExitPosition()->GetComponentLocation();
 			break;
 		}
 	} while (SpawnPos == FVector::ZeroVector);
@@ -225,54 +139,31 @@ void ARoom::CalculateCameraSize()
 	CameraSizeY = Opposite;
 }
 
-bool ARoom::SetDoor(int direction, bool isDoor)
+void ARoom::SetDoor(int direction)
 {
-	bool doorGenerated = false;
-
 	switch (direction)
 	{
 	case 0:
 		isDoorNorth = true;
-		doorGenerated = true;
 		break;
 	case 1:
 		isDoorEast = true;
-		doorGenerated = true;
 		break;
 	case 2:
 		isDoorSouth = true;
-		doorGenerated = true;
 		break;
 	case 3:
 		isDoorWest = true;
-		doorGenerated = true;
 		break;
 	}
-
-	return doorGenerated;
 }
 
 ADoor* ARoom::GetDoor(int direction)
 {
 	ADoor* door = nullptr;
-	switch (direction)
-	{
-		case 0:
-			door = DoorNorth;
-			break;
-
-		case 1:
-			door = DoorEast;
-			break;
-
-		case 2:
-			door = DoorSouth;
-			break;
-
-		case 3:
-			door = DoorWest;
-			break;
-	}
+	
+	door = Doors[direction];
+	
 	return door;
 }
 
@@ -318,24 +209,34 @@ void ARoom::SpawnDoors()
 		if (isDoorNorth)
 		{
 			//UE_LOG(LogTemp, Warning, TEXT("Spawning North Door"))
-			DoorNorth = SpawnDoor(DoorNorthSpawn, 0);
+			Doors[0] = SpawnDoor(DoorNorthSpawn, 0);
 
 		}
 		if (isDoorEast)
 		{
 			//UE_LOG(LogTemp, Warning, TEXT("Spawning East Door"))
-			DoorEast = SpawnDoor(DoorEastSpawn, 1);
+			Doors[1] = SpawnDoor(DoorEastSpawn, 1);
 		}
 		if (isDoorSouth)
 		{
 			//UE_LOG(LogTemp, Warning, TEXT("Spawning South Door"))
-			DoorSouth = SpawnDoor(DoorSouthSpawn, 2);
+			Doors[2] = SpawnDoor(DoorSouthSpawn, 2);
 		}
 		if (isDoorWest)
 		{
 			//UE_LOG(LogTemp, Warning, TEXT("Spawning West Door"))
-			DoorWest = SpawnDoor(DoorWestSpawn, 3);
+			Doors[3] = SpawnDoor(DoorWestSpawn, 3);
 		}
+		
+		/*for (int i = 0; i < DoorArrSize; i++)
+		{
+			ADoor* door = Doors[i];
+			
+			if (door)
+			{
+				Doors[i] = SpawnDoor(SpawnPoints[i], i);
+			}
+		}*/
 	}
 	else
 	{
@@ -346,16 +247,16 @@ void ARoom::SpawnDoors()
 void ARoom::SetDoorsActive(bool doorsActive)
 {
 	if (isDoorNorth)
-		DoorNorth->SetActive(doorsActive);
+		Doors[0]->SetActive(doorsActive);
 
 	if (isDoorEast)
-		DoorEast->SetActive(doorsActive);
+		Doors[1]->SetActive(doorsActive);
 
 	if (isDoorSouth)
-		DoorSouth->SetActive(doorsActive);
+		Doors[2]->SetActive(doorsActive);
 
 	if (isDoorWest)
-		DoorWest->SetActive(doorsActive);
+		Doors[3]->SetActive(doorsActive);
 }
 
 

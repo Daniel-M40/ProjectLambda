@@ -54,6 +54,7 @@ private:
 	UPROPERTY(EditAnywhere)
 		USceneComponent* ExitPosition;
 
+public:
 	UPROPERTY(VisibleAnywhere)
 		bool bIsActive = false;
 };

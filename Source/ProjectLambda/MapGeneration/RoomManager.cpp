@@ -367,7 +367,7 @@ void ARoomManager::SpawnRoom(ARoom* Room, int horizontal, int vertical)
 
 		for (int door : map[horizontal].column[vertical].Doors)
 		{
-			roomMap[horizontal].column[vertical]->SetDoor(door, true);
+			roomMap[horizontal].column[vertical]->SetDoor(door);
 		}
 
 		roomMap[horizontal].column[vertical]->SpawnDoors();
@@ -383,7 +383,7 @@ void ARoomManager::SpawnStartRoom(ARoom* Room, int horizontal, int vertical)
 
 		for (int door : map[horizontal].column[vertical].Doors)
 		{
-			roomMap[horizontal].column[vertical]->SetDoor(door, true);
+			roomMap[horizontal].column[vertical]->SetDoor(door);
 		}
 
 		roomMap[horizontal].column[vertical]->SpawnDoors();
