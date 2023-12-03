@@ -296,9 +296,19 @@ ARoomManager* ARoom::GetManager()
 	return Manager;
 }
 
+ADoor* ARoom::SpawnDoor(USceneComponent* DoorSpawn, int direction)
+{
+	ADoor* door = GetWorld()->SpawnActor<ADoor>(DoorClass, DoorSpawn->GetComponentLocation(), DoorSpawn->GetComponentRotation());
+	
+	door->AttachToComponent(DoorSpawn, FAttachmentTransformRules::KeepWorldTransform);
+	door->Setup(this, direction);
+
+	return door;
+}
+
 void ARoom::SpawnDoors()
 {
-	if (DoorPrebuild)
+	if (DoorClass)
 	{
 		// If should spawn a door at this direction
 		// Spawn the door blueprint
@@ -308,31 +318,23 @@ void ARoom::SpawnDoors()
 		if (isDoorNorth)
 		{
 			//UE_LOG(LogTemp, Warning, TEXT("Spawning North Door"))
-			DoorNorth = GetWorld()->SpawnActor<ADoor>(DoorPrebuild, DoorNorthSpawn->GetComponentLocation(), DoorNorthSpawn->GetComponentRotation());
-			DoorNorth->AttachToComponent(DoorNorthSpawn, FAttachmentTransformRules::KeepWorldTransform);
-			DoorNorth->Setup(this, 0);
+			DoorNorth = SpawnDoor(DoorNorthSpawn, 0);
 
 		}
 		if (isDoorEast)
 		{
 			//UE_LOG(LogTemp, Warning, TEXT("Spawning East Door"))
-			DoorEast = GetWorld()->SpawnActor<ADoor>(DoorPrebuild, DoorEastSpawn->GetComponentLocation(), DoorEastSpawn->GetComponentRotation());
-			DoorEast->AttachToComponent(DoorEastSpawn, FAttachmentTransformRules::KeepWorldTransform);
-			DoorEast->Setup(this, 1);
+			DoorEast = SpawnDoor(DoorEastSpawn, 1);
 		}
 		if (isDoorSouth)
 		{
 			//UE_LOG(LogTemp, Warning, TEXT("Spawning South Door"))
-			DoorSouth = GetWorld()->SpawnActor<ADoor>(DoorPrebuild, DoorSouthSpawn->GetComponentLocation(), DoorSouthSpawn->GetComponentRotation());
-			DoorSouth->AttachToComponent(DoorSouthSpawn, FAttachmentTransformRules::KeepWorldTransform);
-			DoorSouth->Setup(this, 2);
+			DoorSouth = SpawnDoor(DoorSouthSpawn, 2);
 		}
 		if (isDoorWest)
 		{
 			//UE_LOG(LogTemp, Warning, TEXT("Spawning West Door"))
-			DoorWest = GetWorld()->SpawnActor<ADoor>(DoorPrebuild, DoorWestSpawn->GetComponentLocation(), DoorWestSpawn->GetComponentRotation());
-			DoorWest->AttachToComponent(DoorWestSpawn, FAttachmentTransformRules::KeepWorldTransform);
-			DoorWest->Setup(this, 3);
+			DoorWest = SpawnDoor(DoorWestSpawn, 3);
 		}
 	}
 	else
@@ -375,3 +377,5 @@ void ARoom::Complete()
 	bIsComplete = true;
 	bIsActive = false;
 }
+
+

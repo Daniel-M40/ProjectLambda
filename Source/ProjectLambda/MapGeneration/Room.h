@@ -39,7 +39,7 @@ private:
 	// Reference to the door
 
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<ADoor> DoorPrebuild;
+		TSubclassOf<ADoor> DoorClass;
 
 
 	UPROPERTY(EditAnywhere)
@@ -148,6 +148,8 @@ public:
 	UFUNCTION()
 		void Complete();
 
+	ADoor* SpawnDoor(USceneComponent* DoorSpawn, int direction);
+	
 	UFUNCTION()
 		void SpawnDoors();
 
