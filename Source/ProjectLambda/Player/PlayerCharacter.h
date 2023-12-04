@@ -71,10 +71,21 @@ private:
 
 	bool bLaunchOnce = true; //Flag the tells us whether the player can dash or not
 
-	//Timer handle
+	//Timer handle for the players dash
 	FTimerHandle DashTimeHandle;
 
+	//Handle for players invincibility after being damaged
+	FTimerHandle InvincibleTimeHandle;
 
+	UPROPERTY(EditAnywhere, Category="Player Config")
+	float InvincibleTime = 3.f;
+	
+	//Flag to show whether the player is currently invincible or not
+	bool bIsInvincible = false;
+
+	//Game mode ref
+	class ACoreGameMode* CoreGameMode;
+	
 	//Debug config
 	UPROPERTY(EditAnywhere, Category = "General", meta = (DisplayName = "Debug Mode (Logs / Spheres)"))
 	bool bIsDebug = false;
@@ -111,6 +122,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int Ammo;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bIsAlive = true;
+	
 public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
@@ -126,6 +140,8 @@ protected:
 
 private:
 	void ResetDash();
+
+	void DisableInvincibility();
 
 public:
 	// Called every frame

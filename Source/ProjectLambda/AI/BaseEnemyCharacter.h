@@ -20,6 +20,13 @@ private:
 	//Health / Damage Component
 	UPROPERTY(EditAnywhere, Category="Component")
 	class UHealthComponent* HealthComponent;
+
+public:
+	UPROPERTY(EditAnywhere, Category="Combat")
+	float OnCollideDamage = 10.f;
+
+	UPROPERTY(EditAnywhere, Category="Combat")
+	bool bDamageOnCollide = true;
 	
 public:
 	// Sets default values for this character's properties

@@ -6,9 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "CoreGameMode.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class PROJECTLAMBDA_API ACoreGameMode : public AGameModeBase
 {
@@ -28,9 +26,12 @@ public:
 	FString TimerTxt = "";
 
 	//Track how quickly the player finishes the game
-	UPROPERTY(BlueprintReadOnly, Category = "")
+	UPROPERTY(BlueprintReadOnly, Category="Timer")
 	double PlayerTime = 0;
 
+	UPROPERTY(BlueprintReadOnly)
+	bool bPlayerWon = false;
+	
 #pragma endregion
 
 	
@@ -51,7 +52,13 @@ private:
 	//Starts timer when player finishes the game
 	void EndTimer();
 
-
+public:
+	
+	/**
+	 * Ends the game
+	 * @param bPlayerWon Flag to show whether the player has won the game or not
+	 */
+	void EndGame(bool bPlayerWon);
 	
 	
 #pragma endregion

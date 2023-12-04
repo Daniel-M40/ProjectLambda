@@ -37,3 +37,8 @@ void ACoreGameMode::EndTimer()
 {
 	GetWorldTimerManager().ClearTimer(TimerHandle);
 }
+
+void ACoreGameMode::EndGame(bool PlayerWon)
+{
+	this->bPlayerWon = PlayerWon;
+}

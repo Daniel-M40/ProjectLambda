@@ -61,7 +61,6 @@ float UHealthComponent::ApplyDamage(float DamageDealt, bool bIsEnemy)
 			//Check if the actor that has died is a the player or an enemy
 			if (bIsEnemy)
 			{
-				CoreGameMode->SpawnPickup(Owner->GetActorLocation());
 				Enemy->HandleDestruction();
 			}
 			else
