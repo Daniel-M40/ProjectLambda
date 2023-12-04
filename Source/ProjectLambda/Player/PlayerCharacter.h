@@ -104,12 +104,21 @@ private:
 
 #pragma endregion
 
-	UFUNCTION()
-	void OnHit(AActor* Player, AActor* Enemy, FVector NormalImpulse, const FHitResult& Hit);
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	float CurrentHealth;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int Ammo;
 
 public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
+	
+	UFUNCTION()
+	void OnHit(AActor* Player, AActor* Enemy, FVector NormalImpulse, const FHitResult& Hit);
+
+	virtual void HandleDestruction();
 
 protected:
 	// Called when the game starts or when spawned
@@ -148,11 +157,7 @@ public:
 	virtual float TakeDamage(float DamageAmount,
 		FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
-	float CurrentHealth;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int Ammo;
 
 };
 

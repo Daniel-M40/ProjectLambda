@@ -4,7 +4,9 @@
 #include "HealthComponent.h"
 
 #include "Kismet/GameplayStatics.h"
+#include "ProjectLambda/AI/BaseEnemyCharacter.h"
 #include "ProjectLambda/GameModes/CoreGameMode.h"
+#include "ProjectLambda/Player/PlayerCharacter.h"
 
 
 // Sets default values for this component's properties
@@ -47,18 +49,24 @@ float UHealthComponent::ApplyDamage(float DamageDealt, bool bIsEnemy)
 
 	//Get owner
 	AActor* Owner = GetOwner();
+
+	APlayerCharacter* Player = Cast<APlayerCharacter>(Owner);
+	ABaseEnemyCharacter* Enemy = Cast<ABaseEnemyCharacter>(Owner);
 	
 	//Check if owner is dead
 	if (CurrentHealth <= 0.f)
 	{
-		//Destroy owner
 		if (Owner)
 		{
-			Owner->Destroy();
-	
+			//Check if the actor that has died is a the player or an enemy
 			if (bIsEnemy)
 			{
 				CoreGameMode->SpawnPickup(Owner->GetActorLocation());
+				Enemy->HandleDestruction();
+			}
+			else
+			{
+				Player->HandleDestruction();
 			}
 		}
 	}

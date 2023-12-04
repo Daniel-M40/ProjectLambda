@@ -45,6 +45,11 @@ public:
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
 		AController* EventInstigator, AActor* DamageCauser) override;
 
+	
+	virtual void HandleDestruction();
+
+	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float MaxHealth = 100.0f;
 
@@ -52,4 +57,5 @@ public:
 	float CurrentHealth;
 
 	class ACoreGameMode* CoreGameMode;
+
 };

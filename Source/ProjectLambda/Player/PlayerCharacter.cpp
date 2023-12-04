@@ -265,3 +265,10 @@ void APlayerCharacter::OnHit(AActor* SelfActor, AActor* OtherActor, FVector Norm
 {
 	UE_LOG(LogTemp, Warning, TEXT("Collision Test")); //tests if collision works
 }
+
+void APlayerCharacter::HandleDestruction()
+{
+	//@@TODO Player sound and spawn effects here
+	
+	Destroy();
+}
