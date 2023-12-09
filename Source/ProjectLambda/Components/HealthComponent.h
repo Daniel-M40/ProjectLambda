@@ -14,10 +14,10 @@ class PROJECTLAMBDA_API UHealthComponent : public UActorComponent
 
 public:
 	UPROPERTY(EditAnywhere, Category="Health")
-	float MaxHealth = 30.f;
+	float MaxHealth = 10.f;
 
-	UPROPERTY(EditAnywhere, Category="Health")
-	float CurrentHealth = 30.f;
+	UPROPERTY(VisibleAnywhere, Category="Health")
+	float CurrentHealth = 0.f;
 
 	class ACoreGameMode* CoreGameMode;
 
