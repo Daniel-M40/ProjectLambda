@@ -19,6 +19,8 @@ public:
 	UPROPERTY(EditAnywhere, Category="Health")
 	float CurrentHealth = 30.f;
 
+	class ACoreGameMode* CoreGameMode;
+
 	
 public:
 	// Sets default values for this component's properties
@@ -33,5 +35,5 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
-	float ApplyDamage(float DamageDealt);
+	float ApplyDamage(float DamageDealt, bool bIsEnemy);
 };

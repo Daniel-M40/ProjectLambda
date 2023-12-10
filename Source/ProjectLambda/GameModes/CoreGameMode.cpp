@@ -14,6 +14,11 @@ void ACoreGameMode::BeginPlay()
 	StartTimer();
 }
 
+void ACoreGameMode::SpawnPickup(const FVector Location)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Spawn Pickup at %s"), *Location.ToString());
+}
+
 void ACoreGameMode::StartTimer()
 {
 	GetWorldTimerManager().SetTimer(TimerHandle, this, &ACoreGameMode::IncrementTimer, TimerRate, true);
@@ -31,4 +36,9 @@ void ACoreGameMode::IncrementTimer()
 void ACoreGameMode::EndTimer()
 {
 	GetWorldTimerManager().ClearTimer(TimerHandle);
+}
+
+void ACoreGameMode::EndGame(bool PlayerWon)
+{
+	this->bPlayerWon = PlayerWon;
 }
