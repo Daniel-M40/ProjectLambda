@@ -10,7 +10,9 @@
 #include "EnhancedInputComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "ProjectLambda/AI/BaseEnemyCharacter.h"
 #include "ProjectLambda/Components/HealthComponent.h"
+#include "ProjectLambda/GameModes/CoreGameMode.h"
 #include "Weapons/Pistol/PistolWeapon.h"
 #include "Weapons/Shotgun/Shotgun.h"
 
@@ -47,7 +49,8 @@ void APlayerCharacter::BeginPlay()
 
 	// set health to max health
 	CurrentHealth = MaxHealth;
-	// Calls the OnHit Funtion when a collision happens
+
+	// Calls the OnHit function when a collision happens
 	OnActorHit.AddDynamic(this, &APlayerCharacter::OnHit);
 
 	//Get the player controller
@@ -91,11 +94,19 @@ void APlayerCharacter::BeginPlay()
 
 	//Set weapon length
 	WeaponLength = Weapons.Num();
+
+	//Get game mode reference
+	CoreGameMode = Cast<ACoreGameMode>(UGameplayStatics::GetGameMode(this));
 }
 
 void APlayerCharacter::ResetDash()
 {
 	bLaunchOnce = true;
+}
+
+void APlayerCharacter::DisableInvincibility()
+{
+	bIsInvincible = false;
 }
 
 void APlayerCharacter::SwapWeaponHandler(const FInputActionValue& Value)
@@ -254,7 +265,8 @@ float APlayerCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 	//If we have health component apply damage
 	if (HealthComponent)
 	{
-		CurrentHealth = HealthComponent->ApplyDamage(DamageAmount); // call apply damage function to get the current value of character's health
+		// call apply damage function to get the current value of character's health
+		CurrentHealth = HealthComponent->ApplyDamage(DamageAmount, false); 
 	}
 
 	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
@@ -263,5 +275,44 @@ float APlayerCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 
 void APlayerCharacter::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Collision Test")); //tests if collision works
+	//Check if other actor is an enemy
+	if (OtherActor && OtherActor->GetClass()->IsChildOf(ABaseEnemyCharacter::StaticClass()))
+	{
+		ABaseEnemyCharacter* Enemy = Cast<ABaseEnemyCharacter>(OtherActor);
+
+			
+		AController* CurrentInstigator = OtherActor->GetInstigatorController(); 
+		UClass* DamageTypeClass = UDamageType::StaticClass();
+
+		//Apply damage if the player is not invincible
+		if (Enemy && Enemy->bDamageOnCollide && !bIsInvincible)
+		{
+			UGameplayStatics::ApplyDamage(this, Enemy->OnCollideDamage, CurrentInstigator,
+				this, DamageTypeClass);
+
+			bIsInvincible = true;
+			
+			//Set invincible timer
+			GetWorldTimerManager().SetTimer(InvincibleTimeHandle, this, &APlayerCharacter::DisableInvincibility,
+				InvincibleTime, false);
+			
+			//@@TODO Add sound / particles here
+		}
+		
+	}
+		
+}
+
+void APlayerCharacter::HandleDestruction()
+{
+	//@@TODO Player sound and spawn effects here
+
+	bIsAlive = false;
+
+	//Hide the actor and disable input
+	SetHidden(true);
+	DisableInput(PlayerController);
+
+	//Emit to game mode that the player is dead
+	CoreGameMode->EndGame(false);
 }

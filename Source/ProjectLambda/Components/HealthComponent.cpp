@@ -3,6 +3,11 @@
 
 #include "HealthComponent.h"
 
+#include "Kismet/GameplayStatics.h"
+#include "ProjectLambda/AI/BaseEnemyCharacter.h"
+#include "ProjectLambda/GameModes/CoreGameMode.h"
+#include "ProjectLambda/Player/PlayerCharacter.h"
+
 
 // Sets default values for this component's properties
 UHealthComponent::UHealthComponent()
@@ -21,6 +26,9 @@ void UHealthComponent::BeginPlay()
 	Super::BeginPlay();
 
 	CurrentHealth = MaxHealth;
+
+	//Get game mode ref
+	CoreGameMode = Cast<ACoreGameMode>(UGameplayStatics::GetGameMode(this));
 	
 }
 
@@ -30,11 +38,10 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType,
                                      FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
+	
 }
 
-float UHealthComponent::ApplyDamage(float DamageDealt)
+float UHealthComponent::ApplyDamage(float DamageDealt, bool bIsEnemy)
 {
 
 	//Deal damage
@@ -42,14 +49,24 @@ float UHealthComponent::ApplyDamage(float DamageDealt)
 
 	//Get owner
 	AActor* Owner = GetOwner();
+
+	APlayerCharacter* Player = Cast<APlayerCharacter>(Owner);
+	ABaseEnemyCharacter* Enemy = Cast<ABaseEnemyCharacter>(Owner);
 	
 	//Check if owner is dead
 	if (CurrentHealth <= 0.f)
 	{
-		//Destroy owner
 		if (Owner)
 		{
-			Owner->Destroy();
+			//Check if the actor that has died is a the player or an enemy
+			if (bIsEnemy)
+			{
+				Enemy->HandleDestruction();
+			}
+			else
+			{
+				Player->HandleDestruction();
+			}
 		}
 	}
 
