@@ -73,3 +73,14 @@ float UHealthComponent::ApplyDamage(float DamageDealt, bool bIsEnemy)
 	return CurrentHealth;
 }
 
+float UHealthComponent::IncreaseHealth(float HealthIncrease)
+{
+	//Increase health if we are not at the max health
+	if (CurrentHealth < MaxHealth)
+	{
+		CurrentHealth += HealthIncrease;
+	}
+
+	return CurrentHealth;
+}
+
