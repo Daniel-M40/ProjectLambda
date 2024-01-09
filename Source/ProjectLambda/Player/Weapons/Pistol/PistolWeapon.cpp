@@ -26,7 +26,7 @@ void APistolWeapon::Tick(float DeltaTime)
 }
 
 void APistolWeapon::Fire()
-{
+{	
 	UE_LOG(LogTemp, Warning, TEXT("Pistol Fired"));
 
 	//If we have the projectile class and can fire spawn projectile
