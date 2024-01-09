@@ -6,6 +6,7 @@
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "ProjectLambda/GameModes/CoreGameMode.h"
+#include "ProjectLambda/Player/PlayerCharacter.h"
 
 
 // Sets default values
@@ -32,6 +33,9 @@ void ABasePickUp::BeginPlay()
 
 	//Get game mode ref
 	CoreGameMode = Cast<ACoreGameMode>(UGameplayStatics::GetGameMode(this));
+
+	//Get player character
+	PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
 }
 
 // Called every frame
@@ -41,9 +45,14 @@ void ABasePickUp::Tick(float DeltaTime)
 }
 
 void ABasePickUp::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) 
 {
-	UE_LOG(LogTemp, Warning, TEXT("Begin Overlap"));
+}
+
+void ABasePickUp::HandleDestruction()
+{
+	//@@TODO Spawn visual effects and sound effects here
+
 
 	Destroy();
 }

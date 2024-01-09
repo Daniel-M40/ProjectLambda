@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "BasePickUp.generated.h"
 
+class APlayerCharacter;
 class ACoreGameMode;
 
 UCLASS()
@@ -24,6 +25,8 @@ private:
 
 protected:
 	ACoreGameMode* CoreGameMode;
+
+	APlayerCharacter* PlayerCharacter;
 	
 #pragma endregion 
 
@@ -45,6 +48,8 @@ public:
 	virtual void OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	                       int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	virtual void HandleDestruction();
+	
 #pragma endregion
 	
 };

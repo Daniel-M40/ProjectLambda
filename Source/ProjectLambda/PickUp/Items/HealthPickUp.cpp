@@ -3,6 +3,8 @@
 
 #include "HealthPickUp.h"
 
+#include "ProjectLambda/Player/PlayerCharacter.h"
+
 
 // Sets default values
 AHealthPickUp::AHealthPickUp()
@@ -27,9 +29,17 @@ void AHealthPickUp::Tick(float DeltaTime)
 void AHealthPickUp::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	Super::OnBeginOverlap(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
 
 	UE_LOG(LogTemp, Warning, TEXT("Health Pickup"));
+
+	//Apply health to the player
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->IncreaseHealth(HealthIncrease);
+	}
+	
+	//Call previous functionality
+	HandleDestruction();
 	
 }
 

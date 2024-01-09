@@ -169,11 +169,12 @@ public:
 	//Attaches a weapon class to the player
 	void AttachWeapon();
 
+	//Health component functions
 	UFUNCTION()
 	virtual float TakeDamage(float DamageAmount,
 		FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
-
+	void IncreaseHealth(float healthIncrement);
 
 };
 

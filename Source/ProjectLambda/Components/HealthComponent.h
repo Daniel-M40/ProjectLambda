@@ -36,4 +36,6 @@ public:
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 	float ApplyDamage(float DamageDealt, bool bIsEnemy);
+
+	void IncreaseHealth(float HealthIncrease);
 };
