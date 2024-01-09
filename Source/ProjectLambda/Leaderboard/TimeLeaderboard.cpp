@@ -94,26 +94,9 @@ void TimeLeaderboard::LoadTimeFromFile()
 	}
 }
 
-
-TArray<FString> TimeLeaderboard::GetTimeStrings()
+TArray<double> TimeLeaderboard::GetTimerValues()
 {
-	TArray<FString> TimeStrings;
-
-	//Load time values from file
 	LoadTimeFromFile();
-
-	//If time values arr is empty early return 
-	if (TimeValues.IsEmpty())
-	{
-		return TimeStrings;
-	}
 	
-	for (double Time : TimeValues)
-	{
-		// Convert each time value to a formatted string using UKismetStringLibrary
-		FString TimeString = UKismetStringLibrary::TimeSecondsToString(Time);
-		TimeStrings.Add(TimeString);
-	}
-
-	return TimeStrings;
+	return TimeValues;
 }

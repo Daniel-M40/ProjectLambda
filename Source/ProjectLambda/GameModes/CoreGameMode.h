@@ -37,9 +37,8 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	bool bPlayerWon = false;
 
-	//times for the leaderboard, already sorted
 	UPROPERTY(BlueprintReadWrite)
-	TArray<FString> times;
+	TArray<double> timeArr;
 	
 #pragma endregion
 
@@ -71,6 +70,8 @@ public:
 	 */
 	void EndGame(bool bPlayerWon);
 	
+	UFUNCTION(BlueprintCallable)
+	void GetLeaderboardTimes();
 	
 #pragma endregion
 };
