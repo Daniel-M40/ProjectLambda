@@ -34,8 +34,20 @@ protected:
 	//Timer handle which allows us to add a timer to the shooting
 	FTimerHandle FireRateTimerHandle;
 
+protected:
+
+	//Max ammo the weapon can have
+	UPROPERTY(EditAnywhere)
+	int MaxAmmo = 10;
+	
+	//Current ammo count
+	UPROPERTY(EditAnywhere)
+	int AmmoCount = 10;
+	
 public:
 	bool bIsActive = true;
+
+	
 	
 #pragma endregion
 
@@ -61,6 +73,12 @@ public:
 	virtual void Fire();
 
 	void EnableFireTimer();
+
+	int IncreaseAmmo(int ammoCount);
+
+	int DecreaseAmmo();
+
+	int GetAmmo();
 	
 #pragma endregion
 };

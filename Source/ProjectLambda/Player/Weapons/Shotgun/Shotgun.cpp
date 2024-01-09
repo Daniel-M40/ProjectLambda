@@ -28,11 +28,15 @@ void AShotgun::Tick(float DeltaTime)
 
 void AShotgun::Fire()
 {
+	
+	
 	UE_LOG(LogTemp, Warning, TEXT("Shotgun Fired"));
 
 	//If we have the projectile class and can fire spawn projectile
 	if (ProjectileClass && bCanFire) // Checks the projectile has been set in the editor
 	{
+		Super::Fire();
+		
 		for (int32 Index = 0; Index < NumProjectiles; Index++)
 		{
 			FVector SpawnLoacation = ProjectileSpawn->GetComponentLocation();
@@ -51,8 +55,6 @@ void AShotgun::Fire()
 			Bullet->SetOwner(this);
 		}
 		
-
-
 		EnableFireTimer();
 	}
 }

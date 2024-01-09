@@ -10,7 +10,9 @@
 #include "EnhancedInputComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "ProjectLambda/AI/BaseEnemyCharacter.h"
 #include "ProjectLambda/Components/HealthComponent.h"
+#include "ProjectLambda/GameModes/CoreGameMode.h"
 #include "Weapons/Pistol/PistolWeapon.h"
 #include "Weapons/Shotgun/Shotgun.h"
 
@@ -43,11 +45,10 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Ammo = MaxAmmo;
-
 	// set health to max health
 	CurrentHealth = MaxHealth;
-	// Calls the OnHit Funtion when a collision happens
+
+	// Calls the OnHit function when a collision happens
 	OnActorHit.AddDynamic(this, &APlayerCharacter::OnHit);
 
 	//Get the player controller
@@ -91,11 +92,19 @@ void APlayerCharacter::BeginPlay()
 
 	//Set weapon length
 	WeaponLength = Weapons.Num();
+
+	//Get game mode reference
+	CoreGameMode = Cast<ACoreGameMode>(UGameplayStatics::GetGameMode(this));
 }
 
 void APlayerCharacter::ResetDash()
 {
 	bLaunchOnce = true;
+}
+
+void APlayerCharacter::DisableInvincibility()
+{
+	bIsInvincible = false;
 }
 
 void APlayerCharacter::SwapWeaponHandler(const FInputActionValue& Value)
@@ -125,6 +134,8 @@ void APlayerCharacter::SwapWeaponHandler(const FInputActionValue& Value)
 	//Unhide new weapon
 	CurrentWeapon->SetActorHiddenInGame(false);
 
+	//get ammo count for weapon
+	Ammo = CurrentWeapon->GetAmmo();
 }
 
 // Called every frame
@@ -196,15 +207,12 @@ void APlayerCharacter::StrafeHandler(const FInputActionValue& Value)
 
 void APlayerCharacter::ShootHandler(const FInputActionValue& Value)
 {
-	//shooting functionality
-	if (CurrentWeapon)
+	//check if we have a weapon
+	//and if the weapon has ammo
+	if (CurrentWeapon && CurrentWeapon->GetAmmo() > 0)
 	{
 		CurrentWeapon->Fire();
-
-		if (Ammo > 0)
-		{
-			Ammo--; // decrease ammo when player shoots
-		}
+		Ammo = CurrentWeapon->GetAmmo();
 	}
 }
 
@@ -245,23 +253,88 @@ void APlayerCharacter::AttachWeapon()
 	//Set gun component location and rotation
 	CurrentWeapon->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
 	CurrentWeapon->SetActorLocation(WeaponPosition->GetComponentLocation());
+
+	//Get ammo
+	Ammo = CurrentWeapon->GetAmmo();
+}
+
+void APlayerCharacter::IncreaseAmmo(float ammoIncrease)
+{
+	//check if weapon is pistol
+	if (CurrentWeapon->GetClass()->IsChildOf(APistolWeapon::StaticClass()))
+	{
+		//dont increase ammo
+		return;
+	}
+	
+	//increase ammo for current weapon
+	Ammo = CurrentWeapon->IncreaseAmmo(ammoIncrease);
 }
 
 float APlayerCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
-	AActor* DamageCauser)
+                                   AActor* DamageCauser)
 {
 
 	//If we have health component apply damage
 	if (HealthComponent)
 	{
-		CurrentHealth = HealthComponent->ApplyDamage(DamageAmount, false); // call apply damage function to get the current value of character's health
+		// call apply damage function to get the current value of character's health
+		CurrentHealth = HealthComponent->ApplyDamage(DamageAmount, false); 
 	}
 
 	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }
 
+void APlayerCharacter::IncreaseHealth(float healthIncrement)
+{
+	//Increase health if we have a component and the value is above 0
+	if (HealthComponent && healthIncrement > 0.f)
+	{
+		CurrentHealth = HealthComponent->IncreaseHealth(healthIncrement);
+	}
+}
+
 
 void APlayerCharacter::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Collision Test")); //tests if collision works
+	//Check if other actor is an enemy
+	if (OtherActor && OtherActor->GetClass()->IsChildOf(ABaseEnemyCharacter::StaticClass()))
+	{
+		ABaseEnemyCharacter* Enemy = Cast<ABaseEnemyCharacter>(OtherActor);
+
+			
+		AController* CurrentInstigator = OtherActor->GetInstigatorController(); 
+		UClass* DamageTypeClass = UDamageType::StaticClass();
+
+		//Apply damage if the player is not invincible
+		if (Enemy && Enemy->bDamageOnCollide && !bIsInvincible)
+		{
+			UGameplayStatics::ApplyDamage(this, Enemy->OnCollideDamage, CurrentInstigator,
+				this, DamageTypeClass);
+
+			bIsInvincible = true;
+			
+			//Set invincible timer
+			GetWorldTimerManager().SetTimer(InvincibleTimeHandle, this, &APlayerCharacter::DisableInvincibility,
+				InvincibleTime, false);
+			
+			//@@TODO Add sound / particles here
+		}
+		
+	}
+		
+}
+
+void APlayerCharacter::HandleDestruction()
+{
+	//@@TODO Player sound and spawn effects here
+
+	bIsAlive = false;
+
+	//Hide the actor and disable input
+	SetHidden(true);
+	DisableInput(PlayerController);
+
+	//Emit to game mode that the player is dead
+	CoreGameMode->EndGame(false);
 }

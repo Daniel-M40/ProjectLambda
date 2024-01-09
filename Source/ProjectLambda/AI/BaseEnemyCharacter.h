@@ -20,6 +20,13 @@ private:
 	//Health / Damage Component
 	UPROPERTY(EditAnywhere, Category="Component")
 	class UHealthComponent* HealthComponent;
+
+public:
+	UPROPERTY(EditAnywhere, Category="Combat")
+	float OnCollideDamage = 10.f;
+
+	UPROPERTY(EditAnywhere, Category="Combat")
+	bool bDamageOnCollide = true;
 	
 public:
 	// Sets default values for this character's properties
@@ -45,6 +52,11 @@ public:
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
 		AController* EventInstigator, AActor* DamageCauser) override;
 
+	
+	virtual void HandleDestruction();
+
+	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float MaxHealth = 100.0f;
 
@@ -52,4 +64,5 @@ public:
 	float CurrentHealth;
 
 	class ACoreGameMode* CoreGameMode;
+
 };

@@ -54,8 +54,6 @@ private:
 
 	float MaxHealth = 30.f;
 
-	int MaxAmmo = 20;
-
 	class APlayerController* PlayerController;
 
 	UPROPERTY(EditAnywhere, Category = "Player Config", meta = (DisplayName = "Rotation Speed"))
@@ -71,10 +69,21 @@ private:
 
 	bool bLaunchOnce = true; //Flag the tells us whether the player can dash or not
 
-	//Timer handle
+	//Timer handle for the players dash
 	FTimerHandle DashTimeHandle;
 
+	//Handle for players invincibility after being damaged
+	FTimerHandle InvincibleTimeHandle;
 
+	UPROPERTY(EditAnywhere, Category="Player Config")
+	float InvincibleTime = 3.f;
+	
+	//Flag to show whether the player is currently invincible or not
+	bool bIsInvincible = false;
+
+	//Game mode ref
+	class ACoreGameMode* CoreGameMode;
+	
 	//Debug config
 	UPROPERTY(EditAnywhere, Category = "General", meta = (DisplayName = "Debug Mode (Logs / Spheres)"))
 	bool bIsDebug = false;
@@ -104,12 +113,26 @@ private:
 
 #pragma endregion
 
-	UFUNCTION()
-	void OnHit(AActor* Player, AActor* Enemy, FVector NormalImpulse, const FHitResult& Hit);
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	float CurrentHealth;
 
+	//Value so we can display the ammo, NOT THE ACTUAL AMMO VALUE FOR THE WEAPON
+	//Go to the weapon class for the actual ammo value
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int Ammo = 0;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bIsAlive = true;
+	
 public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
+	
+	UFUNCTION()
+	void OnHit(AActor* Player, AActor* Enemy, FVector NormalImpulse, const FHitResult& Hit);
+
+	virtual void HandleDestruction();
 
 protected:
 	// Called when the game starts or when spawned
@@ -117,6 +140,8 @@ protected:
 
 private:
 	void ResetDash();
+
+	void DisableInvincibility();
 
 public:
 	// Called every frame
@@ -144,15 +169,15 @@ public:
 	//Attaches a weapon class to the player
 	void AttachWeapon();
 
+	//Increase ammo for weapons
+	void IncreaseAmmo(float ammoIncrease);
+
+	//Health component functions
 	UFUNCTION()
 	virtual float TakeDamage(float DamageAmount,
 		FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
-	float CurrentHealth;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int Ammo;
+	void IncreaseHealth(float healthIncrement);
 
 };
 
