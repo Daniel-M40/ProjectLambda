@@ -54,8 +54,6 @@ private:
 
 	float MaxHealth = 30.f;
 
-	int MaxAmmo = 20;
-
 	class APlayerController* PlayerController;
 
 	UPROPERTY(EditAnywhere, Category = "Player Config", meta = (DisplayName = "Rotation Speed"))
@@ -119,8 +117,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float CurrentHealth;
 
+	//Value so we can display the ammo, NOT THE ACTUAL AMMO VALUE FOR THE WEAPON
+	//Go to the weapon class for the actual ammo value
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int Ammo;
+	int Ammo = 0;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool bIsAlive = true;
@@ -168,6 +168,9 @@ public:
 
 	//Attaches a weapon class to the player
 	void AttachWeapon();
+
+	//Increase ammo for weapons
+	void IncreaseAmmo(float ammoIncrease);
 
 	//Health component functions
 	UFUNCTION()

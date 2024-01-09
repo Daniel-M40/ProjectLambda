@@ -45,8 +45,6 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Ammo = MaxAmmo;
-
 	// set health to max health
 	CurrentHealth = MaxHealth;
 
@@ -136,6 +134,8 @@ void APlayerCharacter::SwapWeaponHandler(const FInputActionValue& Value)
 	//Unhide new weapon
 	CurrentWeapon->SetActorHiddenInGame(false);
 
+	//get ammo count for weapon
+	Ammo = CurrentWeapon->GetAmmo();
 }
 
 // Called every frame
@@ -207,15 +207,12 @@ void APlayerCharacter::StrafeHandler(const FInputActionValue& Value)
 
 void APlayerCharacter::ShootHandler(const FInputActionValue& Value)
 {
-	//shooting functionality
-	if (CurrentWeapon)
+	//check if we have a weapon
+	//and if the weapon has ammo
+	if (CurrentWeapon && CurrentWeapon->GetAmmo() > 0)
 	{
 		CurrentWeapon->Fire();
-
-		if (Ammo > 0)
-		{
-			Ammo--; // decrease ammo when player shoots
-		}
+		Ammo = CurrentWeapon->GetAmmo();
 	}
 }
 
@@ -256,10 +253,26 @@ void APlayerCharacter::AttachWeapon()
 	//Set gun component location and rotation
 	CurrentWeapon->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
 	CurrentWeapon->SetActorLocation(WeaponPosition->GetComponentLocation());
+
+	//Get ammo
+	Ammo = CurrentWeapon->GetAmmo();
+}
+
+void APlayerCharacter::IncreaseAmmo(float ammoIncrease)
+{
+	//check if weapon is pistol
+	if (CurrentWeapon->GetClass()->IsChildOf(APistolWeapon::StaticClass()))
+	{
+		//dont increase ammo
+		return;
+	}
+	
+	//increase ammo for current weapon
+	Ammo = CurrentWeapon->IncreaseAmmo(ammoIncrease);
 }
 
 float APlayerCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
-	AActor* DamageCauser)
+                                   AActor* DamageCauser)
 {
 
 	//If we have health component apply damage

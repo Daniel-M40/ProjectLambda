@@ -3,6 +3,7 @@
 
 #include "WeaponBase.h"
 
+#include "Pistol/PistolWeapon.h"
 #include "ProjectLambda/Player/Projectiles/Projectile.h"
 
 // Sets default values
@@ -40,6 +41,7 @@ void AWeaponBase::EnableShooting()
 
 void AWeaponBase::Fire()
 {
+	DecreaseAmmo();
 }
 
 void AWeaponBase::EnableFireTimer()
@@ -50,4 +52,38 @@ void AWeaponBase::EnableFireTimer()
 	//Timer to delay the shooting
 	GetWorldTimerManager().SetTimer(FireRateTimerHandle, this, &AWeaponBase::EnableShooting, FireRate, false);
 }
+
+int AWeaponBase::IncreaseAmmo(int ammoCount)
+{
+	//If we have less ammo than ammo count the increase ammo
+	if (AmmoCount < MaxAmmo)
+	{
+		AmmoCount += ammoCount;
+
+		//if new ammo total is above the max ammo count set it to the max ammo count
+		if (AmmoCount >= MaxAmmo)
+		{
+			AmmoCount = MaxAmmo;
+		}
+	}
+
+	return AmmoCount;
+}
+
+int AWeaponBase::DecreaseAmmo()
+{
+	if (AmmoCount > 0)
+	{
+		AmmoCount--; // decrease ammo when player shoots
+	}	
+
+	return AmmoCount;
+}
+
+int AWeaponBase::GetAmmo()
+{
+	return AmmoCount;
+}
+
+
 
