@@ -16,7 +16,7 @@ class PROJECTLAMBDA_API ABasePickUp : public AActor
 
 #pragma region Properties
 
-private:
+private:	
 	UPROPERTY(EditAnywhere, Category="Actor Mesh")
 	UStaticMeshComponent* BaseMesh;
 
@@ -24,6 +24,8 @@ private:
 	class USphereComponent* SphereComponent;
 
 protected:
+	bool bIsPlayer = false;
+	
 	ACoreGameMode* CoreGameMode;
 
 	APlayerCharacter* PlayerCharacter;

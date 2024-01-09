@@ -277,7 +277,7 @@ void APlayerCharacter::IncreaseHealth(float healthIncrement)
 	//Increase health if we have a component and the value is above 0
 	if (HealthComponent && healthIncrement > 0.f)
 	{
-		HealthComponent->IncreaseHealth(healthIncrement);
+		CurrentHealth = HealthComponent->IncreaseHealth(healthIncrement);
 	}
 }
 

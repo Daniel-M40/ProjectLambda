@@ -29,17 +29,20 @@ void AHealthPickUp::Tick(float DeltaTime)
 void AHealthPickUp::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-
+	//If the other actor that has collided with the pick up is the player then apply heath
+	bIsPlayer = (OtherActor && OtherActor->GetClass()->IsChildOf(APlayerCharacter::StaticClass()));
+	
 	UE_LOG(LogTemp, Warning, TEXT("Health Pickup"));
 
 	//Apply health to the player
-	if (PlayerCharacter)
+	if (PlayerCharacter && bIsPlayer)
 	{
 		PlayerCharacter->IncreaseHealth(HealthIncrease);
+
+		//Handle the destruction of the object
+		HandleDestruction();
 	}
 	
-	//Call previous functionality
-	HandleDestruction();
 	
 }
 

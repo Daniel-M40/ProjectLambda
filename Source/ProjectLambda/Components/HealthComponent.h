@@ -37,5 +37,5 @@ public:
 
 	float ApplyDamage(float DamageDealt, bool bIsEnemy);
 
-	void IncreaseHealth(float HealthIncrease);
+	float IncreaseHealth(float HealthIncrease);
 };

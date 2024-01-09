@@ -52,8 +52,10 @@ void ABasePickUp::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Ot
 void ABasePickUp::HandleDestruction()
 {
 	//@@TODO Spawn visual effects and sound effects here
-
-
-	Destroy();
+	if (bIsPlayer)
+	{
+		
+		Destroy();
+	}
 }
 
