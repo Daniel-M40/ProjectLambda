@@ -4,12 +4,21 @@
 #include "CoreGameMode.h"
 #include "Kismet/KismetStringLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "ProjectLambda/Leaderboard/TimeLeaderboard.h"
 
+
+ACoreGameMode::ACoreGameMode()
+{
+
+}
 
 void ACoreGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//Initialise leader board manager
+	LeaderboardManager = new TimeLeaderboard(LeaderboardFileName);
+	
 	//Start timer when game starts
 	StartTimer();
 }
@@ -35,10 +44,22 @@ void ACoreGameMode::IncrementTimer()
 
 void ACoreGameMode::EndTimer()
 {
+	//Stop the timer
 	GetWorldTimerManager().ClearTimer(TimerHandle);
+
+	//Store the timer
+	//@@TODO Add flag to check if player won the game to store the timer,
+	//@@TODO for testing i have left this so we can get dummy data into the file
+	if (LeaderboardManager)
+	{
+		LeaderboardManager->SaveTimeToFile(PlayerTime);
+		TArray<FString> times = LeaderboardManager->GetTimeStrings();
+	}
 }
 
 void ACoreGameMode::EndGame(bool PlayerWon)
 {
 	this->bPlayerWon = PlayerWon;
+
+	EndTimer();
 }

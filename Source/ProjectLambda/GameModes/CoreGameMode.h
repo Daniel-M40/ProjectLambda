@@ -18,6 +18,11 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="Timer")
 	float TimerRate = 0.01f;
+
+	UPROPERTY(EditAnywhere)
+	FString LeaderboardFileName = "TimerLeaderboard";
+	
+	class TimeLeaderboard* LeaderboardManager;
 	
 public:
 
@@ -38,6 +43,8 @@ public:
 #pragma region Actions
 
 public:
+	ACoreGameMode();
+	
 	virtual void BeginPlay() override;
 	
 	void SpawnPickup(const FVector Location);
@@ -49,7 +56,7 @@ private:
 	
 	void IncrementTimer();
 
-	//Starts timer when player finishes the game
+	//Ends timer when player finishes the game
 	void EndTimer();
 
 public:
