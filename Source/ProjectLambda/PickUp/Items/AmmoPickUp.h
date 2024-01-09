@@ -4,16 +4,23 @@
 
 #include "CoreMinimal.h"
 #include "ProjectLambda/PickUp/BasePickUp.h"
-#include "ShotgunAmmoPickUp.generated.h"
+#include "AmmoPickUp.generated.h"
 
 UCLASS()
-class PROJECTLAMBDA_API AShotgunAmmoPickUp : public ABasePickUp
+class PROJECTLAMBDA_API AAmmoPickUp : public ABasePickUp
 {
 	GENERATED_BODY()
 
+#pragma region Properties
+
+	UPROPERTY(EditAnywhere)
+	int AmmoIncrease = 3;
+	
+#pragma endregion
+
 public:
 	// Sets default values for this actor's properties
-	AShotgunAmmoPickUp();
+	AAmmoPickUp();
 
 protected:
 	// Called when the game starts or when spawned
