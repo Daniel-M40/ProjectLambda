@@ -36,6 +36,10 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	bool bPlayerWon = false;
+
+	//times for the leaderboard, already sorted
+	UPROPERTY(BlueprintReadWrite)
+	TArray<FString> times;
 	
 #pragma endregion
 
