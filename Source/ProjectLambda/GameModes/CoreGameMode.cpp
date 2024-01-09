@@ -53,7 +53,7 @@ void ACoreGameMode::EndTimer()
 	if (LeaderboardManager)
 	{
 		LeaderboardManager->SaveTimeToFile(PlayerTime);
-		times = LeaderboardManager->GetTimeStrings();
+		GetLeaderboardTimes();
 	}
 }
 
@@ -62,4 +62,13 @@ void ACoreGameMode::EndGame(bool PlayerWon)
 	this->bPlayerWon = PlayerWon;
 
 	EndTimer();
+}
+
+
+void ACoreGameMode::GetLeaderboardTimes()
+{
+	if (LeaderboardManager)
+	{
+		timeArr = LeaderboardManager->GetTimerValues();
+	}
 }

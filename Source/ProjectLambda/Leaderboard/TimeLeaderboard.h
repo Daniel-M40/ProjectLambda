@@ -25,6 +25,5 @@ public:
 	
 	void LoadTimeFromFile();
 	
-	UFUNCTION(BlueprintCallable, Category = "Time")
-	TArray<FString> GetTimeStrings();
+	TArray<double> GetTimerValues();
 };
