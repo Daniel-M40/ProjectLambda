@@ -53,7 +53,7 @@ void ACoreGameMode::EndTimer()
 	if (LeaderboardManager)
 	{
 		LeaderboardManager->SaveTimeToFile(PlayerTime);
-		TArray<FString> times = LeaderboardManager->GetTimeStrings();
+		times = LeaderboardManager->GetTimeStrings();
 	}
 }
 
