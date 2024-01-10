@@ -32,7 +32,7 @@ void AAmmoPickUp::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Ot
 	//If the other actor that has collided with the pick up is the player then apply heath
 	bIsPlayer = (OtherActor && OtherActor->GetClass()->IsChildOf(APlayerCharacter::StaticClass()));
 	
-	UE_LOG(LogTemp, Warning, TEXT("Shotgun Pickup"));
+	UE_LOG(LogTemp, Warning, TEXT("Ammo Pickup"));
 
 	//Apply health to the player
 	if (PlayerCharacter && bIsPlayer)

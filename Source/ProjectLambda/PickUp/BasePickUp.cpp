@@ -36,6 +36,10 @@ void ABasePickUp::BeginPlay()
 
 	//Get player character
 	PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+
+	//Timer to despawn pick after certain amount of time
+	GetWorldTimerManager().SetTimer(SpawnTimerHandle, this, &ABasePickUp::DestroyPickUp, SpawnTime,
+		false);
 }
 
 // Called every frame
@@ -57,5 +61,10 @@ void ABasePickUp::HandleDestruction()
 		
 		Destroy();
 	}
+}
+
+void ABasePickUp::DestroyPickUp()
+{
+	Destroy();
 }
 

@@ -23,6 +23,17 @@ private:
 	FString LeaderboardFileName = "TimerLeaderboard";
 	
 	class TimeLeaderboard* LeaderboardManager;
+
+	//Array of power up classes
+	UPROPERTY(EditAnywhere, Category="Pick Ups")
+	TArray<TSubclassOf<class ABasePickUp>> PickUpArr;
+
+	//Length of power up array
+	int PickUpArrLength = 0;
+
+	//Rate to determine how often we spawn a pick up
+	UPROPERTY(EditAnywhere, Category="Pick Ups")
+	int PickUpSpawnRate = 1;
 	
 public:
 
@@ -49,8 +60,6 @@ public:
 	ACoreGameMode();
 	
 	virtual void BeginPlay() override;
-	
-	void SpawnPickup(const FVector Location);
 
 
 private:
@@ -72,6 +81,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void GetLeaderboardTimes();
+
+	//Randomly spawn pick up at location
+	void SpawnPickUp(const FVector Location, const FRotator Rotation);
 	
 #pragma endregion
 };

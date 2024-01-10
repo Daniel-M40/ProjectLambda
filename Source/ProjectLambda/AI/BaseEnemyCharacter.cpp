@@ -70,8 +70,13 @@ void ABaseEnemyCharacter::HandleDestruction()
 {
 	//@@TODO Play sound and particle effects here
 
-	//Spawn pickup at enemy death location
-	CoreGameMode->SpawnPickup(Owner->GetActorLocation());
+	
+	
+	if (CoreGameMode)
+	{
+		//Spawn pickup at enemy death location
+		CoreGameMode->SpawnPickUp(GetActorLocation(), GetActorRotation());
+	}
 	
 	Destroy();
 }

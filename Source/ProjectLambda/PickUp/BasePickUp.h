@@ -23,6 +23,11 @@ private:
 	UPROPERTY(EditAnywhere, Category="Sphere Collision")
 	class USphereComponent* SphereComponent;
 
+	UPROPERTY(EditAnywhere, Category="Spawn Time")
+	float SpawnTime = 3.f;
+		
+	FTimerHandle SpawnTimerHandle;
+	
 protected:
 	bool bIsPlayer = false;
 	
@@ -51,6 +56,8 @@ public:
 	                       int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	virtual void HandleDestruction();
+
+	void DestroyPickUp();
 	
 #pragma endregion
 	
