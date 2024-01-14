@@ -1,0 +1,45 @@
+trigger:
+- master  # Change this to your main branch
+
+pr:
+- '*'
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+- group: YourVariableGroup  # Add your variable group with necessary credentials
+
+jobs:
+- job: Build
+  displayName: 'Build UE5 Project'
+  steps:
+  - checkout: self
+    submodules: true
+
+  - task: UseDotNet@2
+    inputs:
+      packageType: 'sdk'
+      version: '3.1.x'
+      installationPath: $(Agent.ToolsDirectory)/dotnet
+
+  - script: |
+      dotnet tool install --global UnrealBuildTool
+      dotnet build ProjectLambda.sln
+    displayName: 'Build UE5 Project'
+
+- job: Deploy
+  displayName: 'Deploy to Azure'
+  dependsOn: Build
+  steps:
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: '$(Build.SourcesDirectory)'
+      Contents: '**/*.exe'  # Adjust this based on your build output
+      TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'drop'
+      publishLocation: 'Container'
