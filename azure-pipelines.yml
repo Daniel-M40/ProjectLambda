@@ -1,45 +1,39 @@
 trigger:
-- master  # Change this to your main branch
-
-pr:
-- '*'
-
+  batch: true
+  branches:
+    include:
+    - master
+ 
 pool:
-  vmImage: 'windows-latest'
+  name: UnrealEnginePool
+  demands:
+  - UNREAL_ENGINE_VERSION -equals 5.2
 
-variables:
-- group: YourVariableGroup  # Add your variable group with necessary credentials
-
-jobs:
-- job: Build
-  displayName: 'Build UE5 Project'
-  steps:
-  - checkout: self
-    submodules: true
-
-  - task: UseDotNet@2
-    inputs:
-      packageType: 'sdk'
-      version: '3.1.x'
-      installationPath: $(Agent.ToolsDirectory)/dotnet
-
-  - script: |
-      dotnet tool install --global UnrealBuildTool
-      dotnet build ProjectLambda.sln
-    displayName: 'Build UE5 Project'
-
-- job: Deploy
-  displayName: 'Deploy to Azure'
-  dependsOn: Build
-  steps:
-  - task: CopyFiles@2
-    inputs:
-      SourceFolder: '$(Build.SourcesDirectory)'
-      Contents: '**/*.exe'  # Adjust this based on your build output
-      TargetFolder: '$(Build.ArtifactStagingDirectory)'
-
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      ArtifactName: 'drop'
-      publishLocation: 'Container'
+stages:
+- stage: build
+  displayName: Build
+  jobs:
+  - job: build
+    displayName: Build & Package
+    steps:
+    - script: '"$(UNREAL_ENGINE_PATH)/Binaries/DotNET/UnrealBuildTool.exe" -projectfiles $(Build.SourcesDirectory)/ProjectLambda/ProjectLambda.uproject -game -rocket -progress'
+      displayName: Generate Project Files
+    - script: '"$(UNREAL_ENGINE_PATH)/Binaries/DotNET/UnrealBuildTool.exe" Shipping Win64 -Project="$(Build.SourcesDirectory)/ProjectLambda/ProjectLambda.uproject" -TargetType=Editor -Progress -NoEngineChanges -NoHotReloadFromIDE'
+      displayName: Build Game Module
+    - script: 'RunUAT BuildCookRun -project="$(Build.SourcesDirectory)/ProjectLambda/ProjectLambda.uproject" -noP4 -clientconfig=Shipping -serverconfig=Shipping -utf8output -platform=Win64 -targetplatform=Win64 -build -cook -map=MainMenu -unversionedcookedcontent -pak -distribution -compressed -prereqs -stage -package -stagingdirectory="$(Build.SourcesDirectory)/Game/Saved/StagedBuilds/" -cmdline=" -Messaging" -compile'
+      displayName: Package Client
+      failOnStderr: true
+      workingDirectory: '"$(UNREAL_ENGINE_PATH)/Build/BatchFiles"'
+    - task: ArchiveFiles@2
+      displayName: Archive Client Package
+      inputs:
+        rootFolderOrFile: '$(Build.SourcesDirectory)/Game/Saved/StagedBuilds/WindowsNoEditor'
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(projectName)Client.zip'
+    - task: AzureCLI@2
+      displayName: Publish Client to Azure Blob Storage
+      inputs:
+        azureSubscription: https://projectlambda.blob.core.windows.net/container
+        scriptType: pscore
+        scriptLocation: inlineScript
+        inlineScript: az storage blob upload --file "$(Build.ArtifactStagingDirectory)/$(projectName)Client.zip" --account-name projectlambda --container-name clientreleases --name game-client-$(Build.BuildId).zip
