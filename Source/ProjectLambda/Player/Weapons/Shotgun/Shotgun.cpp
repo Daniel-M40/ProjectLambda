@@ -5,6 +5,7 @@
 
 #include "ProjectLambda/Player/Projectiles/Projectile.h"
 
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AShotgun::AShotgun()
@@ -35,21 +36,36 @@ void AShotgun::Fire()
 	{
 		for (int32 Index = 0; Index < NumProjectiles; Index++)
 		{
-			FVector SpawnLoacation = ProjectileSpawn->GetComponentLocation();
+			FVector SpawnLocation = ProjectileSpawn->GetComponentLocation();
 			FRotator SpawnRotation = ProjectileSpawn->GetComponentRotation();
 
 			//Spawn projectile at projectile spawn location and rotation
-			AProjectile* Bullet = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, SpawnLoacation, SpawnRotation);
-			Bullet->SetProjectileStats(ShotDamage, InitShotSpeed, MaxShotSpeed, ShotLifeSpan);
+			FTransform SpawnTransform = { SpawnRotation, SpawnLocation, FVector::OneVector };
+			AActor* BulletActor = UGameplayStatics::BeginDeferredActorSpawnFromClass(GetWorld(), ProjectileClass, SpawnTransform);
+
+			// Run before constructor
+			//
+			//    
+			AProjectile* Bullet = Cast<AProjectile>(BulletActor);
 			
-			// Calculate spread angle and adjust projectile rotation here
-			float SpreadAngle = ((float)Index / (float)(NumProjectiles - 1)) * ConeSpreadAngle - (ConeSpreadAngle / 2.0f);
-			FRotator SpreadRotation = GetActorRotation() + FRotator(0.0f, SpreadAngle, 0.0f);
+			if (Bullet)
+			{
+				// Calculate spread angle and adjust projectile rotation here
+				float SpreadAngle = ((float)Index / (float)(NumProjectiles - 1)) * ConeSpreadAngle - (ConeSpreadAngle / 2.0f);
+				FRotator SpreadRotation = GetActorRotation() + FRotator(0.0f, SpreadAngle - 90.f, 0.0f);
 
-			Bullet->SetActorRotation(SpreadRotation);
+				Bullet->SetActorRotation(SpreadRotation);
 
-			//Set the owner of the projectile
-			Bullet->SetOwner(this);
+				Bullet->SetProjectileStats(ShotDamage, InitShotSpeed, MaxShotSpeed, ShotLifeSpan);
+
+				//Set the owner of the projectile
+				Bullet->SetOwner(this);
+			}
+			//
+			// 
+			// Run constructor
+			UGameplayStatics::FinishSpawningActor(BulletActor, SpawnTransform);
+			
 		}
 		
 

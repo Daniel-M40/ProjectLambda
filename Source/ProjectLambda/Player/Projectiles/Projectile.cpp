@@ -31,7 +31,7 @@ void AProjectile::SetProjectileStats(float Damage, float InitSpeed, float MaxSpe
 
 	ProjectileMaxSpeed = MaxSpeed;
 	
-	ProjectileMovement->AddForce(ProjectileMovement->Velocity.GetSafeNormal() * MaxSpeed);
+	ProjectileMovement->AddForce(GetActorForwardVector() * MaxSpeed);
 	
 	UE_LOG(LogTemp, Warning, TEXT("Set Stats InitSpeed: %f"), ProjectileMovement->InitialSpeed);
 }
