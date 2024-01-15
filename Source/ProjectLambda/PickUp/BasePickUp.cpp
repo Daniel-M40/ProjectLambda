@@ -21,6 +21,14 @@ ABasePickUp::ABasePickUp()
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere Collision"));
 	SphereComponent->SetupAttachment(BaseMesh);
 	SphereComponent->SetCollisionProfileName("Trigger");
+
+	
+	
+	//Make pick up not affect navigation
+	SphereComponent->SetCanEverAffectNavigation(false);
+	
+	BaseMesh->SetCanEverAffectNavigation(false);
+	BaseMesh->SetCollisionProfileName("NoCollision");
 }
 
 // Called when the game starts or when spawned
