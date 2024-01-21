@@ -28,6 +28,11 @@ void ACoreGameMode::SpawnPickup(const FVector Location)
 	UE_LOG(LogTemp, Warning, TEXT("Spawn Pickup at %s"), *Location.ToString());
 }
 
+void ACoreGameMode::IncreaseCurrency(int CurrencyIncrease)
+{
+	Currency += CurrencyIncrease;
+}
+
 void ACoreGameMode::StartTimer()
 {
 	GetWorldTimerManager().SetTimer(TimerHandle, this, &ACoreGameMode::IncrementTimer, TimerRate, true);

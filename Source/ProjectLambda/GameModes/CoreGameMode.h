@@ -24,6 +24,10 @@ private:
 	
 	class TimeLeaderboard* LeaderboardManager;
 	
+
+	UPROPERTY(EditAnywhere)
+	int Currency = 0;
+
 public:
 
 	//Stores time as text
@@ -51,6 +55,8 @@ public:
 	virtual void BeginPlay() override;
 	
 	void SpawnPickup(const FVector Location);
+
+	void IncreaseCurrency(int CurrencyIncrease);
 
 
 private:

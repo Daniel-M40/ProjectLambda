@@ -124,6 +124,11 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool bIsAlive = true;
+
+	// Value only for displaying currency
+	//Go to CoreGameMode for actual currency
+	UPROPERTY(EditAnywhere)
+	int Currency = 0;
 	
 public:
 	// Sets default values for this character's properties
