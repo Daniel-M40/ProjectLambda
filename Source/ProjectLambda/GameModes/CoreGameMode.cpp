@@ -27,6 +27,11 @@ void ACoreGameMode::BeginPlay()
 	PickUpArrLength = PickUpArr.Num();
 }
 
+void ACoreGameMode::IncreaseCurrency(int CurrencyIncrease)
+{
+	Currency += CurrencyIncrease;
+}
+
 void ACoreGameMode::StartTimer()
 {
 	GetWorldTimerManager().SetTimer(TimerHandle, this, &ACoreGameMode::IncrementTimer, TimerRate, true);

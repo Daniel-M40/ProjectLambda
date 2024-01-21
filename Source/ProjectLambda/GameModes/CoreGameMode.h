@@ -35,6 +35,10 @@ private:
 	UPROPERTY(EditAnywhere, Category="Pick Ups")
 	int PickUpSpawnRate = 1;
 	
+
+	UPROPERTY(EditAnywhere)
+	int Currency = 0;
+
 public:
 
 	//Stores time as text
@@ -60,6 +64,8 @@ public:
 	ACoreGameMode();
 	
 	virtual void BeginPlay() override;
+
+	void IncreaseCurrency(int CurrencyIncrease);
 
 
 private:
