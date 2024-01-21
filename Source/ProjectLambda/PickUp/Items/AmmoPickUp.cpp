@@ -34,7 +34,7 @@ void AAmmoPickUp::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Ot
 	
 	UE_LOG(LogTemp, Warning, TEXT("Ammo Pickup"));
 
-	//Increase Ammo of Players Shotgun
+	//Increase Ammo of Players currently held weapon 
 	if (PlayerCharacter && bIsPlayer)
 	{
 		PlayerCharacter->IncreaseAmmo(AmmoIncrease);
