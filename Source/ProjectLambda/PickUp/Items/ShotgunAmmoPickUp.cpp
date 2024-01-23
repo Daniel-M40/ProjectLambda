@@ -1,32 +1,32 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AmmoPickUp.h"
+#include "ShotgunAmmoPickUp.h"
 
 #include "ProjectLambda/Player/PlayerCharacter.h"
 
 
 // Sets default values
-AAmmoPickUp::AAmmoPickUp()
+AShotgunAmmoPickUp::AShotgunAmmoPickUp()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 }
 
 // Called when the game starts or when spawned
-void AAmmoPickUp::BeginPlay()
+void AShotgunAmmoPickUp::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void AAmmoPickUp::Tick(float DeltaTime)
+void AShotgunAmmoPickUp::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
-void AAmmoPickUp::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+void AShotgunAmmoPickUp::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	//If the other actor that has collided with the pick up is the player then apply heath
@@ -37,7 +37,7 @@ void AAmmoPickUp::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Ot
 	//Increase Ammo of Players currently held weapon 
 	if (PlayerCharacter && bIsPlayer)
 	{
-		PlayerCharacter->IncreaseAmmo(AmmoIncrease);
+		PlayerCharacter->IncreaseShotgunAmmo(AmmoIncrease);
 
 		//Handle the destruction of the object
 		HandleDestruction();

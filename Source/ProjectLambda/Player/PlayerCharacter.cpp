@@ -258,16 +258,28 @@ void APlayerCharacter::AttachWeapon()
 	Ammo = CurrentWeapon->GetAmmo();
 }
 
-void APlayerCharacter::IncreaseAmmo(float ammoIncrease)
+void APlayerCharacter::IncreaseShotgunAmmo(float ammoIncrease)
 {
-	//check if weapon is pistol
-	if (CurrentWeapon->GetClass()->IsChildOf(APistolWeapon::StaticClass()))
+	//check if weapon is a shotgun
+	if (CurrentWeapon->GetClass()->IsChildOf(AShotgun::StaticClass()))
 	{
-		//dont increase ammo
-		return;
+		//immediately increase ammo
+		CurrentWeapon->IncreaseAmmo(ammoIncrease);
+	}
+	else
+	{
+		//otherwise search for the shotgun weapon in array
+		for (AWeaponBase* Weapon : Weapons)
+		{
+			//If weapon is the shotgun, increase ammo for it
+			if (Weapon->GetClass()->IsChildOf(AShotgun::StaticClass()))
+			{
+				Weapon->IncreaseAmmo(ammoIncrease);
+			}
+		}
 	}
 	
-	//increase ammo for current weapon
+	//increase ammo for current weapon for HUD
 	Ammo = CurrentWeapon->IncreaseAmmo(ammoIncrease);
 }
 

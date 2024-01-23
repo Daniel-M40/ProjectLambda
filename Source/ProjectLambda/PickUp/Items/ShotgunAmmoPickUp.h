@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "ProjectLambda/PickUp/BasePickUp.h"
-#include "AmmoPickUp.generated.h"
+#include "ShotgunAmmoPickUp.generated.h"
 
 UCLASS()
-class PROJECTLAMBDA_API AAmmoPickUp : public ABasePickUp
+class PROJECTLAMBDA_API AShotgunAmmoPickUp : public ABasePickUp
 {
 	GENERATED_BODY()
 
@@ -20,7 +20,7 @@ class PROJECTLAMBDA_API AAmmoPickUp : public ABasePickUp
 
 public:
 	// Sets default values for this actor's properties
-	AAmmoPickUp();
+	AShotgunAmmoPickUp();
 
 protected:
 	// Called when the game starts or when spawned

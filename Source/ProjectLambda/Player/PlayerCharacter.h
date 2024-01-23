@@ -175,7 +175,7 @@ public:
 	void AttachWeapon();
 
 	//Increase ammo for weapons
-	void IncreaseAmmo(float ammoIncrease);
+	void IncreaseShotgunAmmo(float ammoIncrease);
 
 	//Health component functions
 	UFUNCTION()
