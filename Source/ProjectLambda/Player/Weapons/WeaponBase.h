@@ -25,8 +25,20 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AProjectile> ProjectileClass;
 	
-	UPROPERTY(EditAnywhere, Category="Config")
+	UPROPERTY(EditAnywhere, Category="Combat")
 	float FireRate = 1.5f;
+
+	UPROPERTY(EditAnywhere, Category="Combat")
+	float ShotDamage = 10.f;
+
+	UPROPERTY(EditAnywhere, Category="Combat")
+	float InitShotSpeed = 1300.f;
+
+	UPROPERTY(EditAnywhere, Category="Combat")
+	float MaxShotSpeed = 1300.f;
+	
+	UPROPERTY(EditAnywhere, Category="Combat")
+	float ShotLifeSpan = 10.f;
 	
 	//Flag which determines whether we can shoot the weapon
 	bool bCanFire = true;
@@ -70,7 +82,7 @@ private:
 	
 public:
 
-	virtual void Fire();
+	virtual void Fire() PURE_VIRTUAL(AWeaponBase::Fire);
 
 	void EnableFireTimer();
 

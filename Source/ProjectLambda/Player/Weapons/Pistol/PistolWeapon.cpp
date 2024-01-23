@@ -4,6 +4,8 @@
 #include "PistolWeapon.h"
 #include "ProjectLambda/Player/Projectiles/Projectile.h"
 
+#include "Kismet/GameplayStatics.h"
+
 
 // Sets default values
 APistolWeapon::APistolWeapon()
@@ -32,16 +34,24 @@ void APistolWeapon::Fire()
 	//If we have the projectile class and can fire spawn projectile
 	if (ProjectileClass && bCanFire) // Checks the projectile has been set in the editor
 	{
-		FVector SpawnLoacation = ProjectileSpawn->GetComponentLocation();
+		FVector SpawnLocation = ProjectileSpawn->GetComponentLocation();
 		FRotator SpawnRotation = ProjectileSpawn->GetComponentRotation();
 
+
 		//Spawn projectile at projectile spawn location and rotation
-		AProjectile* Bullet = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, SpawnLoacation, SpawnRotation);
+		FTransform SpawnTransform = { SpawnRotation, SpawnLocation, FVector::OneVector };
+		AActor* BulletActor = UGameplayStatics::BeginDeferredActorSpawnFromClass(GetWorld(), ProjectileClass, SpawnTransform);
 
-		//Set the owner of the projectile
-		Bullet->SetOwner(this);
+		// Run before constructor
+		//
+		//    
+		AProjectile* Bullet = Cast<AProjectile>(BulletActor);
 
-		EnableFireTimer();
+		Bullet->SetProjectileStats(ShotDamage, InitShotSpeed, MaxShotSpeed, ShotLifeSpan);
+		//
+		// 
+		// Run constructor
+		UGameplayStatics::FinishSpawningActor(BulletActor, SpawnTransform);
 	}
 }
 
