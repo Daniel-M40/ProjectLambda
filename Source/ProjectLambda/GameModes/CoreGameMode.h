@@ -34,10 +34,7 @@ private:
 	//Rate to determine how often we spawn a pick up
 	UPROPERTY(EditAnywhere, Category="Pick Ups")
 	int PickUpSpawnRate = 1;
-	
 
-	UPROPERTY(EditAnywhere)
-	int Currency = 0;
 
 public:
 
@@ -48,6 +45,10 @@ public:
 	//Track how quickly the player finishes the game
 	UPROPERTY(BlueprintReadOnly, Category="Timer")
 	double PlayerTime = 0;
+
+	//Stores currency value
+	UPROPERTY(BlueprintReadOnly)
+	int Currency = 0;
 
 	UPROPERTY(BlueprintReadOnly)
 	bool bPlayerWon = false;
