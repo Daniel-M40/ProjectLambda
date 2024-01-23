@@ -129,6 +129,9 @@ public:
 	//Go to CoreGameMode for actual currency
 	UPROPERTY(EditAnywhere)
 	int Currency = 0;
+
+	UPROPERTY(EditAnywhere, Category="Movement")
+	float MovementSpeed = 1.f;
 	
 public:
 	// Sets default values for this character's properties

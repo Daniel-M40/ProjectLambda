@@ -197,12 +197,12 @@ void APlayerCharacter::RotatePlayer(const FVector& LookAtTarget, const float Rot
 
 void APlayerCharacter::MoveHandler(const FInputActionValue& Value)
 {
-	AddMovementInput(FVector::ForwardVector * Value.Get<float>());
+	AddMovementInput(FVector::ForwardVector * Value.Get<float>() * MovementSpeed);
 }
 
 void APlayerCharacter::StrafeHandler(const FInputActionValue& Value)
 {
-	AddMovementInput(FVector::RightVector * Value.Get<float>());
+	AddMovementInput(FVector::RightVector * Value.Get<float>() * MovementSpeed);
 }
 
 void APlayerCharacter::ShootHandler(const FInputActionValue& Value)
