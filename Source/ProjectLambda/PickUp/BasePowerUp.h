@@ -14,8 +14,11 @@ class PROJECTLAMBDA_API ABasePowerUp : public ABasePickUp
 #pragma region Properties
 
 protected:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int Cost;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FString Title = "Power Up";
 	
 #pragma endregion 
 
