@@ -13,4 +13,8 @@ UCLASS()
 class PROJECTLAMBDA_API APlayerCharacterController : public APlayerController
 {
 	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere)
+	int CurrencyIncrease = 1;
 };

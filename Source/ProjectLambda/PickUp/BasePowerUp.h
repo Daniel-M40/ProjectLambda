@@ -4,32 +4,38 @@
 
 #include "CoreMinimal.h"
 #include "ProjectLambda/PickUp/BasePickUp.h"
-#include "AmmoPickUp.generated.h"
+#include "BasePowerUp.generated.h"
 
 UCLASS()
-class PROJECTLAMBDA_API AAmmoPickUp : public ABasePickUp
+class PROJECTLAMBDA_API ABasePowerUp : public ABasePickUp
 {
 	GENERATED_BODY()
 
 #pragma region Properties
 
-	UPROPERTY(EditAnywhere)
-	int AmmoIncrease = 3;
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int Cost;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FString Title = "Power Up";
 	
-#pragma endregion
+#pragma endregion 
 
 public:
 	// Sets default values for this actor's properties
-	AAmmoPickUp();
+	ABasePowerUp();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	bool CheckCurrencyAmount();
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	
+
 	void OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
+					int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
 };
