@@ -66,7 +66,9 @@ public:
 	
 	virtual void BeginPlay() override;
 
-	void IncreaseCurrency(int CurrencyIncrease);
+	void IncreaseCurrency(int value);
+	
+	void DecreaseCurrency(int value);
 
 
 private:

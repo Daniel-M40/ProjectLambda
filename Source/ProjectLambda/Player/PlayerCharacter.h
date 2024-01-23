@@ -183,6 +183,8 @@ public:
 		FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	void IncreaseHealth(float healthIncrement);
+	
+	void IncreaseMaxHealth(float healthIncrement);
 
 };
 

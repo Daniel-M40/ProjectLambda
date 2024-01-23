@@ -307,6 +307,15 @@ void APlayerCharacter::IncreaseHealth(float healthIncrement)
 }
 
 
+void APlayerCharacter::IncreaseMaxHealth(float healthIncrement)
+{
+	//Increase health if we have a component and the value is above 0
+	if (HealthComponent && healthIncrement > 0.f)
+	{
+		CurrentHealth = HealthComponent->IncreaseMaxHealth(healthIncrement);
+	}
+}
+
 void APlayerCharacter::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
 {
 	//Check if other actor is an enemy

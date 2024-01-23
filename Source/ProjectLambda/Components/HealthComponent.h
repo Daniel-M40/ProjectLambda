@@ -38,4 +38,6 @@ public:
 	float ApplyDamage(float DamageDealt, bool bIsEnemy);
 
 	float IncreaseHealth(float HealthIncrease);
+	
+	float IncreaseMaxHealth(float HealthIncrease);
 };
