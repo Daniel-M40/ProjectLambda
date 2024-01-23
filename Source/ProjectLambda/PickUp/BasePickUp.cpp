@@ -73,6 +73,9 @@ void ABasePickUp::HandleDestruction()
 
 void ABasePickUp::DestroyPickUp()
 {
-	Destroy();
+	if (bPickUp)
+	{
+		Destroy();
+	}
 }
 

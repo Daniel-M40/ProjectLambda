@@ -39,6 +39,10 @@ void AHealthIncrease::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor
 
 		//Increase health
 		PlayerCharacter->IncreaseMaxHealth(MaxHealthIncrease);
+
+		//@@TODO Play sounds effects here
+		
+		Destroy();
 	}
 }
 

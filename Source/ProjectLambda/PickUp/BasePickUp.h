@@ -34,6 +34,8 @@ protected:
 	ACoreGameMode* CoreGameMode;
 
 	APlayerCharacter* PlayerCharacter;
+
+	bool bPickUp = true;
 	
 #pragma endregion 
 

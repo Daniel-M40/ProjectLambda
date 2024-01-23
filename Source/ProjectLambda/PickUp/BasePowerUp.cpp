@@ -11,6 +11,9 @@ ABasePowerUp::ABasePowerUp()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	//Flag to ensure that the pick up isnt destroyed when timer finishes
+	bPickUp = false;
 }
 
 // Called when the game starts or when spawned
