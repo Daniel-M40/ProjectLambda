@@ -61,6 +61,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float CurrentHealth;
 
+	UFUNCTION()
+	void SetProjectileStats(float Damage, float InitSpeed, float MaxSpeed, float LifeSpan);
+
 #pragma endregion
 
 };
