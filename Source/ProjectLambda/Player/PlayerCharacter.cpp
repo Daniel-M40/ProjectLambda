@@ -197,12 +197,12 @@ void APlayerCharacter::RotatePlayer(const FVector& LookAtTarget, const float Rot
 
 void APlayerCharacter::MoveHandler(const FInputActionValue& Value)
 {
-	AddMovementInput(FVector::ForwardVector * Value.Get<float>());
+	AddMovementInput(FVector::ForwardVector * Value.Get<float>() * MovementSpeed);
 }
 
 void APlayerCharacter::StrafeHandler(const FInputActionValue& Value)
 {
-	AddMovementInput(FVector::RightVector * Value.Get<float>());
+	AddMovementInput(FVector::RightVector * Value.Get<float>() * MovementSpeed);
 }
 
 void APlayerCharacter::ShootHandler(const FInputActionValue& Value)
@@ -258,16 +258,28 @@ void APlayerCharacter::AttachWeapon()
 	Ammo = CurrentWeapon->GetAmmo();
 }
 
-void APlayerCharacter::IncreaseAmmo(float ammoIncrease)
+void APlayerCharacter::IncreaseShotgunAmmo(float ammoIncrease)
 {
-	//check if weapon is pistol
-	if (CurrentWeapon->GetClass()->IsChildOf(APistolWeapon::StaticClass()))
+	//check if weapon is a shotgun
+	if (CurrentWeapon->GetClass()->IsChildOf(AShotgun::StaticClass()))
 	{
-		//dont increase ammo
-		return;
+		//immediately increase ammo
+		CurrentWeapon->IncreaseAmmo(ammoIncrease);
+	}
+	else
+	{
+		//otherwise search for the shotgun weapon in array
+		for (AWeaponBase* Weapon : Weapons)
+		{
+			//If weapon is the shotgun, increase ammo for it
+			if (Weapon->GetClass()->IsChildOf(AShotgun::StaticClass()))
+			{
+				Weapon->IncreaseAmmo(ammoIncrease);
+			}
+		}
 	}
 	
-	//increase ammo for current weapon
+	//increase ammo for current weapon for HUD
 	Ammo = CurrentWeapon->IncreaseAmmo(ammoIncrease);
 }
 
@@ -294,6 +306,15 @@ void APlayerCharacter::IncreaseHealth(float healthIncrement)
 	}
 }
 
+
+void APlayerCharacter::IncreaseMaxHealth(float healthIncrement)
+{
+	//Increase health if we have a component and the value is above 0
+	if (HealthComponent && healthIncrement > 0.f)
+	{
+		CurrentHealth = HealthComponent->IncreaseMaxHealth(healthIncrement);
+	}
+}
 
 void APlayerCharacter::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
 {

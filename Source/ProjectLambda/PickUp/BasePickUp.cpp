@@ -21,6 +21,14 @@ ABasePickUp::ABasePickUp()
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere Collision"));
 	SphereComponent->SetupAttachment(BaseMesh);
 	SphereComponent->SetCollisionProfileName("Trigger");
+
+	
+	
+	//Make pick up not affect navigation
+	SphereComponent->SetCanEverAffectNavigation(false);
+	
+	BaseMesh->SetCanEverAffectNavigation(false);
+	BaseMesh->SetCollisionProfileName("NoCollision");
 }
 
 // Called when the game starts or when spawned
@@ -36,6 +44,10 @@ void ABasePickUp::BeginPlay()
 
 	//Get player character
 	PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+
+	//Timer to despawn pick after certain amount of time
+	GetWorldTimerManager().SetTimer(SpawnTimerHandle, this, &ABasePickUp::DestroyPickUp, SpawnTime,
+		false);
 }
 
 // Called every frame
@@ -55,6 +67,14 @@ void ABasePickUp::HandleDestruction()
 	if (bIsPlayer)
 	{
 		
+		Destroy();
+	}
+}
+
+void ABasePickUp::DestroyPickUp()
+{
+	if (bPickUp)
+	{
 		Destroy();
 	}
 }

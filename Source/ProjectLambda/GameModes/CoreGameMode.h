@@ -18,7 +18,24 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="Timer")
 	float TimerRate = 0.01f;
+
+	UPROPERTY(EditAnywhere)
+	FString LeaderboardFileName = "TimerLeaderboard";
 	
+	class TimeLeaderboard* LeaderboardManager;
+
+	//Array of power up classes
+	UPROPERTY(EditAnywhere, Category="Pick Ups")
+	TArray<TSubclassOf<class ABasePickUp>> PickUpArr;
+
+	//Length of power up array
+	int PickUpArrLength = 0;
+
+	//Rate to determine how often we spawn a pick up
+	UPROPERTY(EditAnywhere, Category="Pick Ups")
+	int PickUpSpawnRate = 1;
+
+
 public:
 
 	//Stores time as text
@@ -29,8 +46,15 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="Timer")
 	double PlayerTime = 0;
 
+	//Stores currency value
+	UPROPERTY(BlueprintReadOnly)
+	int Currency = 0;
+
 	UPROPERTY(BlueprintReadOnly)
 	bool bPlayerWon = false;
+
+	UPROPERTY(BlueprintReadWrite)
+	TArray<double> timeArr;
 	
 #pragma endregion
 
@@ -38,9 +62,13 @@ public:
 #pragma region Actions
 
 public:
-	virtual void BeginPlay() override;
+	ACoreGameMode();
 	
-	void SpawnPickup(const FVector Location);
+	virtual void BeginPlay() override;
+
+	void IncreaseCurrency(int value);
+	
+	void DecreaseCurrency(int value);
 
 
 private:
@@ -49,7 +77,7 @@ private:
 	
 	void IncrementTimer();
 
-	//Starts timer when player finishes the game
+	//Ends timer when player finishes the game
 	void EndTimer();
 
 public:
@@ -60,6 +88,11 @@ public:
 	 */
 	void EndGame(bool bPlayerWon);
 	
+	UFUNCTION(BlueprintCallable)
+	void GetLeaderboardTimes();
+
+	//Randomly spawn pick up at location
+	void SpawnPickUp(const FVector Location, const FRotator Rotation);
 	
 #pragma endregion
 };
