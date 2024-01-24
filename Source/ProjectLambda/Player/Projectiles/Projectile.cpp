@@ -64,7 +64,7 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 
 		if (OtherActor && OtherActor != this && OtherActor != CurrentOwner)
 		{
-			UGameplayStatics::ApplyDamage(OtherActor, Damage, CurrentInstigator, this, DamageTypeClass);
+			UGameplayStatics::ApplyDamage(OtherActor, ProjectileDamage, CurrentInstigator, this, DamageTypeClass);
 
 			//@@TODO Add sound / particles here
 		}
