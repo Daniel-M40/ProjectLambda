@@ -46,6 +46,9 @@ void APistolWeapon::Fire()
 		AProjectile* Bullet = Cast<AProjectile>(BulletActor);
 
 		Bullet->SetProjectileStats(ShotDamage, InitShotSpeed, MaxShotSpeed, ShotLifeSpan);
+
+		//Set the owner of the projectile
+		Bullet->SetOwner(this);
 		//
 		// 
 		// Run constructor
