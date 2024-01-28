@@ -84,3 +84,11 @@ float UHealthComponent::IncreaseHealth(float HealthIncrease)
 	return CurrentHealth;
 }
 
+float UHealthComponent::IncreaseMaxHealth(float HealthIncrease)
+{
+	//Increase max health
+	MaxHealth += HealthIncrease;
+	
+	return CurrentHealth;
+}
+

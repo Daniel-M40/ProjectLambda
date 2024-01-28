@@ -1,8 +1,8 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "PistolWeapon.h"
 #include "ProjectLambda/Player/Projectiles/Projectile.h"
+#include "Kismet/GameplayStatics.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -28,7 +28,7 @@ void APistolWeapon::Tick(float DeltaTime)
 }
 
 void APistolWeapon::Fire()
-{	
+{
 	UE_LOG(LogTemp, Warning, TEXT("Pistol Fired"));
 
 	//If we have the projectile class and can fire spawn projectile
@@ -48,6 +48,9 @@ void APistolWeapon::Fire()
 		AProjectile* Bullet = Cast<AProjectile>(BulletActor);
 
 		Bullet->SetProjectileStats(ShotDamage, InitShotSpeed, MaxShotSpeed, ShotLifeSpan);
+
+		//Set the owner of the projectile
+		Bullet->SetOwner(this);
 		//
 		// 
 		// Run constructor

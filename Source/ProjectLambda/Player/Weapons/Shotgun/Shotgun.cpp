@@ -1,10 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Shotgun.h"
-
 #include "ProjectLambda/Player/Projectiles/Projectile.h"
-
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -29,15 +26,11 @@ void AShotgun::Tick(float DeltaTime)
 
 void AShotgun::Fire()
 {
-	
-	
 	UE_LOG(LogTemp, Warning, TEXT("Shotgun Fired"));
 
 	//If we have the projectile class and can fire spawn projectile
 	if (ProjectileClass && bCanFire) // Checks the projectile has been set in the editor
 	{
-		Super::Fire();
-		
 		for (int32 Index = 0; Index < NumProjectiles; Index++)
 		{
 			FVector SpawnLocation = ProjectileSpawn->GetComponentLocation();
@@ -51,7 +44,7 @@ void AShotgun::Fire()
 			//
 			//    
 			AProjectile* Bullet = Cast<AProjectile>(BulletActor);
-			
+
 			if (Bullet)
 			{
 				// Calculate spread angle and adjust projectile rotation here
@@ -69,9 +62,11 @@ void AShotgun::Fire()
 			// 
 			// Run constructor
 			UGameplayStatics::FinishSpawningActor(BulletActor, SpawnTransform);
-			
+
 		}
-		
+
+
+
 		EnableFireTimer();
 	}
 }

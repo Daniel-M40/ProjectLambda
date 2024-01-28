@@ -18,28 +18,28 @@ class PROJECTLAMBDA_API AWeaponBase : public AActor
 protected:
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* WeaponMesh;
-	
+
 	UPROPERTY(EditAnywhere)
 	USceneComponent* ProjectileSpawn;
-	
+
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AProjectile> ProjectileClass;
-	
-	UPROPERTY(EditAnywhere, Category="Combat")
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
 	float FireRate = 1.5f;
 
-	UPROPERTY(EditAnywhere, Category="Combat")
+	UPROPERTY(EditAnywhere, Category = "Combat")
 	float ShotDamage = 10.f;
 
-	UPROPERTY(EditAnywhere, Category="Combat")
+	UPROPERTY(EditAnywhere, Category = "Combat")
 	float InitShotSpeed = 1300.f;
 
-	UPROPERTY(EditAnywhere, Category="Combat")
+	UPROPERTY(EditAnywhere, Category = "Combat")
 	float MaxShotSpeed = 1300.f;
-	
-	UPROPERTY(EditAnywhere, Category="Combat")
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
 	float ShotLifeSpan = 10.f;
-	
+
 	//Flag which determines whether we can shoot the weapon
 	bool bCanFire = true;
 

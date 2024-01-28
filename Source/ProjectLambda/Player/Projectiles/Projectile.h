@@ -17,7 +17,7 @@ class PROJECTLAMBDA_API AProjectile : public AActor
 #pragma region Properties
 
 private:
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Mesh", meta = (DisplayName = "Projectile Mesh", AllowPrivateAccess = true))
 	class UStaticMeshComponent* ProjectileMesh;
 
@@ -29,35 +29,33 @@ private:
 
 public:
 	UPROPERTY(EditAnywhere)
-	float ProjectileDamage  = 10.f;
+	float ProjectileDamage = 10.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Movement", meta = (DisplayName = "Max Speed", AllowPrivateAccess = true))
 	float ProjectileMaxSpeed = 1300.f;
 
 	UPROPERTY(EditAnywhere)
 	float Lifespan = 10.0f;
-	
 #pragma endregion
 
 #pragma region Actions
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AProjectile();
 
 	void SetProjectileStats(float Damage, float InitSpeed, float MaxSpeed, float LifeSpan);
-	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse,
-	           const FHitResult& HitResult);
+		const FHitResult& HitResult);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float CurrentHealth;

@@ -136,6 +136,9 @@ public:
 	//Go to CoreGameMode for actual currency
 	UPROPERTY(EditAnywhere)
 	int Currency = 0;
+
+	UPROPERTY(EditAnywhere, Category="Movement")
+	float MovementSpeed = 1.f;
 	
 public:
 	// Sets default values for this character's properties
@@ -190,6 +193,8 @@ public:
 		FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	void IncreaseHealth(float healthIncrement);
+	
+	void IncreaseMaxHealth(float healthIncrement);
 
 };
 

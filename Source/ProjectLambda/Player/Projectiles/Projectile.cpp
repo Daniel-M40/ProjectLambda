@@ -92,3 +92,18 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 	Destroy();
 }
 
+
+
+void AProjectile::SetProjectileStats(float Damage, float InitSpeed, float MaxSpeed, float LifeSpan)
+{
+	ProjectileDamage = Damage;
+
+	ProjectileMovement->MaxSpeed = MaxSpeed;
+	ProjectileMovement->InitialSpeed = InitSpeed;
+	InitialLifeSpan = LifeSpan;
+
+	ProjectileMaxSpeed = MaxSpeed;
+
+
+	UE_LOG(LogTemp, Warning, TEXT("Set Stats InitSpeed: %f"), ProjectileMovement->InitialSpeed);
+}
