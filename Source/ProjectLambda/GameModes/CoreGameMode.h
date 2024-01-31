@@ -35,7 +35,9 @@ private:
 	UPROPERTY(EditAnywhere, Category="Pick Ups")
 	int PickUpSpawnRate = 1;
 
-
+	FName WinScreenLevel = "WinScreen";
+	FName GameOverLevel = "GameOver";
+	
 public:
 
 	//Stores time as text

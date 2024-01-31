@@ -78,11 +78,11 @@ void ACoreGameMode::EndGame(bool PlayerWon)
 
 	if (PlayerWon)
 	{
-		UGameplayStatics::OpenLevel(this, FName("WinScreen"));
+		UGameplayStatics::OpenLevel(this, FName(WinScreenLevel));
 	}
 	else
 	{
-		UGameplayStatics::OpenLevel(this, FName("GameOver"));
+		UGameplayStatics::OpenLevel(this, FName(GameOverLevel));
 	}
 }
 
