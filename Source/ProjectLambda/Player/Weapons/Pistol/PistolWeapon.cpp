@@ -55,6 +55,10 @@ void APistolWeapon::Fire()
 		// 
 		// Run constructor
 		UGameplayStatics::FinishSpawningActor(BulletActor, SpawnTransform);
+
+		Super::Fire();
+		EnableFireTimer();
 	}
+
 }
 

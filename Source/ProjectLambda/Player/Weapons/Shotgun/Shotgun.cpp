@@ -62,11 +62,9 @@ void AShotgun::Fire()
 			// 
 			// Run constructor
 			UGameplayStatics::FinishSpawningActor(BulletActor, SpawnTransform);
-
 		}
-
-
-
+		
+		Super::Fire();
 		EnableFireTimer();
 	}
 }
