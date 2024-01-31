@@ -53,6 +53,9 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	bool bPlayerWon = false;
 
+	UPROPERTY(BlueprintReadOnly)
+	bool bGameOver = false;
+	
 	UPROPERTY(BlueprintReadWrite)
 	TArray<double> timeArr;
 	
