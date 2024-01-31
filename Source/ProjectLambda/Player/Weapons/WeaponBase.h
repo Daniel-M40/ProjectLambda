@@ -82,7 +82,7 @@ private:
 	
 public:
 
-	virtual void Fire() PURE_VIRTUAL(AWeaponBase::Fire);
+	virtual void Fire();
 
 	void EnableFireTimer();
 
