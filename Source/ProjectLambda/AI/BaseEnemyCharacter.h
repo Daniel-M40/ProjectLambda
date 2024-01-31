@@ -14,8 +14,9 @@ class PROJECTLAMBDA_API ABaseEnemyCharacter : public ACharacter
 
 private:
 
-	UPROPERTY(EditAnywhere, Category = "Character Config", meta = (DisplayName = "Static Mesh"))
-	class UStaticMeshComponent* characterMesh;
+	// No longer needed due to using skeletal character mesh
+	//UPROPERTY(EditAnywhere, Category = "Character Config", meta = (DisplayName = "Static Mesh"))
+	//class UStaticMeshComponent* characterMesh;
 
 	//Health / Damage Component
 	UPROPERTY(EditAnywhere, Category="Component")
