@@ -54,6 +54,9 @@ private:
 
 	float MaxHealth = 30.f;
 
+	UPROPERTY(EditAnywhere, Category="Combat")
+	int MaxAmmo = 20;
+
 	class APlayerController* PlayerController;
 
 	UPROPERTY(EditAnywhere, Category = "Player Config", meta = (DisplayName = "Rotation Speed"))
@@ -74,6 +77,10 @@ private:
 
 	//Handle for players invincibility after being damaged
 	FTimerHandle InvincibleTimeHandle;
+	
+	//Components
+	class UCharacterMovementComponent* MovementComponent;
+	
 
 	UPROPERTY(EditAnywhere, Category="Player Config")
 	float InvincibleTime = 3.f;

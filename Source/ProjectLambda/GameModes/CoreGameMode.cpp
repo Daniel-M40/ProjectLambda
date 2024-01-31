@@ -2,6 +2,8 @@
 
 
 #include "CoreGameMode.h"
+
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetStringLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "ProjectLambda/Leaderboard/TimeLeaderboard.h"
@@ -70,7 +72,18 @@ void ACoreGameMode::EndGame(bool PlayerWon)
 {
 	this->bPlayerWon = PlayerWon;
 
+	this->bGameOver = true;
+	
 	EndTimer();
+
+	if (PlayerWon)
+	{
+		UGameplayStatics::OpenLevel(this, FName(WinScreenLevel));
+	}
+	else
+	{
+		UGameplayStatics::OpenLevel(this, FName(GameOverLevel));
+	}
 }
 
 

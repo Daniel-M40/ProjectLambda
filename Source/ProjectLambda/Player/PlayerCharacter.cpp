@@ -9,6 +9,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "ProjectLambda/AI/BaseEnemyCharacter.h"
 #include "ProjectLambda/Components/HealthComponent.h"
@@ -44,6 +45,11 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	//Get movement component
+	MovementComponent = Cast<UCharacterMovementComponent>(GetMovementComponent());
+	
+	Ammo = MaxAmmo;
 
 	// set health to max health
 	CurrentHealth = MaxHealth;
