@@ -1,10 +1,8 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Shotgun.h"
-
 #include "ProjectLambda/Player/Projectiles/Projectile.h"
-
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AShotgun::AShotgun()
@@ -28,33 +26,45 @@ void AShotgun::Tick(float DeltaTime)
 
 void AShotgun::Fire()
 {
-	
-	
 	UE_LOG(LogTemp, Warning, TEXT("Shotgun Fired"));
 
 	//If we have the projectile class and can fire spawn projectile
 	if (ProjectileClass && bCanFire) // Checks the projectile has been set in the editor
 	{
-		Super::Fire();
-		
 		for (int32 Index = 0; Index < NumProjectiles; Index++)
 		{
-			FVector SpawnLoacation = ProjectileSpawn->GetComponentLocation();
+			FVector SpawnLocation = ProjectileSpawn->GetComponentLocation();
 			FRotator SpawnRotation = ProjectileSpawn->GetComponentRotation();
 
 			//Spawn projectile at projectile spawn location and rotation
-			AProjectile* Bullet = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, SpawnLoacation, SpawnRotation);
+			FTransform SpawnTransform = { SpawnRotation, SpawnLocation, FVector::OneVector };
+			AActor* BulletActor = UGameplayStatics::BeginDeferredActorSpawnFromClass(GetWorld(), ProjectileClass, SpawnTransform);
 
-			// Calculate spread angle and adjust projectile rotation here
-			float SpreadAngle = ((float)Index / (float)(NumProjectiles - 1)) * ConeSpreadAngle - (ConeSpreadAngle / 2.0f);
-			FRotator SpreadRotation = GetActorRotation() + FRotator(0.0f, SpreadAngle, 0.0f);
+			// Run before constructor
+			//
+			//    
+			AProjectile* Bullet = Cast<AProjectile>(BulletActor);
 
-			Bullet->SetActorRotation(SpreadRotation);
+			if (Bullet)
+			{
+				// Calculate spread angle and adjust projectile rotation here
+				float SpreadAngle = ((float)Index / (float)(NumProjectiles - 1)) * ConeSpreadAngle - (ConeSpreadAngle / 2.0f);
+				FRotator SpreadRotation = GetActorRotation() + FRotator(0.0f, SpreadAngle - 90.f, 0.0f);
 
-			//Set the owner of the projectile
-			Bullet->SetOwner(this);
+				Bullet->SetActorRotation(SpreadRotation);
+
+				Bullet->SetProjectileStats(ShotDamage, InitShotSpeed, MaxShotSpeed, ShotLifeSpan);
+
+				//Set the owner of the projectile
+				Bullet->SetOwner(this);
+			}
+			//
+			// 
+			// Run constructor
+			UGameplayStatics::FinishSpawningActor(BulletActor, SpawnTransform);
 		}
 		
+		Super::Fire();
 		EnableFireTimer();
 	}
 }

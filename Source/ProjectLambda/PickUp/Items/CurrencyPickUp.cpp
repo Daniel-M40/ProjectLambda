@@ -32,6 +32,7 @@ void ACurrencyPickUp::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	
+	//If the other actor that has collided with the pick up is the player then apply heath
 	bIsPlayer = (OtherActor && OtherActor->GetClass()->IsChildOf(APlayerCharacter::StaticClass()));
 
 	UE_LOG(LogTemp, Warning, TEXT("Increase Money"));

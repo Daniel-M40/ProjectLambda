@@ -54,6 +54,9 @@ private:
 
 	float MaxHealth = 30.f;
 
+	UPROPERTY(EditAnywhere, Category="Combat")
+	int MaxAmmo = 20;
+
 	class APlayerController* PlayerController;
 
 	UPROPERTY(EditAnywhere, Category = "Player Config", meta = (DisplayName = "Rotation Speed"))
@@ -74,6 +77,10 @@ private:
 
 	//Handle for players invincibility after being damaged
 	FTimerHandle InvincibleTimeHandle;
+	
+	//Components
+	class UCharacterMovementComponent* MovementComponent;
+	
 
 	UPROPERTY(EditAnywhere, Category="Player Config")
 	float InvincibleTime = 3.f;
@@ -129,6 +136,9 @@ public:
 	//Go to CoreGameMode for actual currency
 	UPROPERTY(EditAnywhere)
 	int Currency = 0;
+
+	UPROPERTY(EditAnywhere, Category="Movement")
+	float MovementSpeed = 1.f;
 	
 public:
 	// Sets default values for this character's properties
@@ -175,7 +185,7 @@ public:
 	void AttachWeapon();
 
 	//Increase ammo for weapons
-	void IncreaseAmmo(float ammoIncrease);
+	void IncreaseShotgunAmmo(float ammoIncrease);
 
 	//Health component functions
 	UFUNCTION()
@@ -183,6 +193,8 @@ public:
 		FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	void IncreaseHealth(float healthIncrement);
+	
+	void IncreaseMaxHealth(float healthIncrement);
 
 };
 

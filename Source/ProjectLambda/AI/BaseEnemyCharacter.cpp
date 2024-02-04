@@ -14,11 +14,12 @@ ABaseEnemyCharacter::ABaseEnemyCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	//Static mesh for the player
-	characterMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Character Static Mesh"));
-	characterMesh->SetupAttachment(RootComponent);
+	//Unneeded once using character mesh from character class
+	//characterMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Character Static Mesh"));
+	//characterMesh->SetupAttachment(RootComponent);
 	
 	//fires event when player collides with another actor
-	characterMesh->SetNotifyRigidBodyCollision(true);
+	//characterMesh->SetNotifyRigidBodyCollision(true);
 
 	//Health Component
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Component"));
@@ -70,8 +71,13 @@ void ABaseEnemyCharacter::HandleDestruction()
 {
 	//@@TODO Play sound and particle effects here
 
-	//Spawn pickup at enemy death location
-	CoreGameMode->SpawnPickup(Owner->GetActorLocation());
+	
+	
+	if (CoreGameMode)
+	{
+		//Spawn pickup at enemy death location
+		CoreGameMode->SpawnPickUp(GetActorLocation(), GetActorRotation());
+	}
 	
 	Destroy();
 }

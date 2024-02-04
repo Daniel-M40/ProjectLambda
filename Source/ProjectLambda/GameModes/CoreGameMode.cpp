@@ -2,9 +2,12 @@
 
 
 #include "CoreGameMode.h"
+
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetStringLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "ProjectLambda/Leaderboard/TimeLeaderboard.h"
+#include "ProjectLambda/PickUp/BasePickUp.h"
 
 
 ACoreGameMode::ACoreGameMode()
@@ -21,16 +24,19 @@ void ACoreGameMode::BeginPlay()
 	
 	//Start timer when game starts
 	StartTimer();
+
+	//Get length of pick up array
+	PickUpArrLength = PickUpArr.Num();
 }
 
-void ACoreGameMode::SpawnPickup(const FVector Location)
+void ACoreGameMode::IncreaseCurrency(int value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Spawn Pickup at %s"), *Location.ToString());
+	Currency += value;
 }
 
-void ACoreGameMode::IncreaseCurrency(int CurrencyIncrease)
+void ACoreGameMode::DecreaseCurrency(int value)
 {
-	Currency += CurrencyIncrease;
+	Currency -= value;
 }
 
 void ACoreGameMode::StartTimer()
@@ -66,7 +72,18 @@ void ACoreGameMode::EndGame(bool PlayerWon)
 {
 	this->bPlayerWon = PlayerWon;
 
+	this->bGameOver = true;
+	
 	EndTimer();
+
+	if (PlayerWon)
+	{
+		UGameplayStatics::OpenLevel(this, FName(WinScreenLevel));
+	}
+	else
+	{
+		UGameplayStatics::OpenLevel(this, FName(GameOverLevel));
+	}
 }
 
 
@@ -75,5 +92,30 @@ void ACoreGameMode::GetLeaderboardTimes()
 	if (LeaderboardManager)
 	{
 		timeArr = LeaderboardManager->GetTimerValues();
+	}
+}
+
+void ACoreGameMode::SpawnPickUp(const FVector Location, const FRotator Rotation)
+{
+	//Check length of pick up arr
+	if (PickUpArrLength <= 0)
+	{
+		return;
+	}
+	
+	//Randomly spawn Pick up if the value is 1
+	const int spawnPowerUp = FMath::RandRange(0, PickUpSpawnRate);
+
+	if (spawnPowerUp)
+	{
+		//Randomly pick Pick up in array
+		const int index = FMath::RandRange(0, PickUpArrLength - 1);
+		
+		//Spawn Pick up in location
+		if (PickUpArr[index])
+		{
+			GetWorld()->SpawnActor<ABasePickUp>(PickUpArr[index], Location, Rotation);
+		}
+		
 	}
 }
