@@ -16,16 +16,13 @@ class PROJECTLAMBDA_API AProjectile : public AActor
 
 #pragma region Properties
 
-private:
+protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Mesh", meta = (DisplayName = "Projectile Mesh", AllowPrivateAccess = true))
 	class UStaticMeshComponent* ProjectileMesh;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Movement", meta = (DisplayName = "Initial Speed", AllowPrivateAccess = true))
 	float ProjecitleInitialSpeed = 1300.f;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Movement", meta = (DisplayName = "Max Speed", AllowPrivateAccess = true))
-	float ProjectileMaxSpeed = 1300.f;
 	
 	
 	
@@ -35,8 +32,6 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Movement", meta = (DisplayName = "Projectile Mesh"))
 	class UProjectileMovementComponent* ProjectileMovement;
 
-	UPROPERTY(EditAnywhere)
-	float Damage = 10.f;
 	
 #pragma endregion
 
@@ -60,6 +55,13 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float CurrentHealth;
+
+
+	UPROPERTY(EditDefaultsOnly, Category = "Movement", meta = (DisplayName = "Max Speed", AllowPrivateAccess = true))
+	float ProjectileMaxSpeed = 1300.f;
+
+	UPROPERTY(EditAnywhere)
+	float Damage = 10.f;
 
 #pragma endregion
 
