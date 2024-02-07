@@ -120,6 +120,9 @@ private:
 	
 
 	UPROPERTY(EditAnywhere, Category = "Enemy Spawning")
+	TArray<TSubclassOf<ABaseEnemyCharacter>> EnemyWave;
+
+	UPROPERTY(VisibleAnywhere, Category = "Enemy Spawning")
 	int RemainingEnemies = 0; // How many enemies should be spawned?
 
 	UPROPERTY(EditAnywhere, Category = "Enemy Spawning")
@@ -135,9 +138,6 @@ private:
 	float CameraSizeX;
 	
 	float CameraSizeY;
-
-	UPROPERTY(EditAnywhere, Category = "Enemy Spawning")
-	TSubclassOf<ABaseEnemyCharacter> EnemyClass;
 
 	UFUNCTION()
 	FVector GenerateEnemySpawnPos();

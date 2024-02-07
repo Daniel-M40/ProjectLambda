@@ -61,6 +61,8 @@ void ARoom::BeginPlay()
 	
 	//GetActorBounds(false, RoomOrigin, RoomBounds);
 	RoomOrigin = GetActorLocation();
+
+	RemainingEnemies = EnemyWave.Num() - 1;
 }
 
 // Called every frame
@@ -80,7 +82,7 @@ void ARoom::Tick(float DeltaTime)
 
 				// Spawn the enemy
 				UE_LOG(LogTemp, Warning, TEXT("Spawning Enemy"))
-				GetWorld()->SpawnActor<ABaseEnemyCharacter>(EnemyClass, GenerateEnemySpawnPos(), FRotator::ZeroRotator);
+				GetWorld()->SpawnActor<ABaseEnemyCharacter>(EnemyWave[EnemyWave.Num() - 1 - RemainingEnemies], GenerateEnemySpawnPos(), FRotator::ZeroRotator);
 
 				RemainingEnemies--;
 			}
