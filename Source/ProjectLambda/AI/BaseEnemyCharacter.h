@@ -28,7 +28,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category="Combat")
 	bool bDamageOnCollide = true;
-	
+
 public:
 	// Sets default values for this character's properties
 	ABaseEnemyCharacter();
