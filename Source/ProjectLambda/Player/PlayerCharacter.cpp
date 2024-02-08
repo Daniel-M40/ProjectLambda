@@ -24,15 +24,16 @@ APlayerCharacter::APlayerCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	//Static mesh for the player
-	PlayerStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Player Mesh"));
-	PlayerStaticMesh->SetupAttachment(RootComponent);
+	//PlayerStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Player Mesh"));
+	//PlayerStaticMesh->SetupAttachment(RootComponent);
 
 	
 	WeaponPosition = CreateDefaultSubobject<USceneComponent>(TEXT("Weapon Position"));
-	WeaponPosition->SetupAttachment(PlayerStaticMesh);
+	WeaponPosition->SetupAttachment(GetMesh(), FName(TEXT("Right_Hand_Socket")));
+	//WeaponPosition->SetupAttachment(PlayerStaticMesh);
 	
 	//fires event when player collides with another actor
-	PlayerStaticMesh->SetNotifyRigidBodyCollision(true);
+	GetMesh()->SetNotifyRigidBodyCollision(true);
 
 	//Health Component
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Component"));
