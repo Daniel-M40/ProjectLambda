@@ -8,6 +8,7 @@
 
 class APlayerCharacter;
 class ACoreGameMode;
+class AProjectile;
 
 UCLASS()
 class PROJECTLAMBDA_API ABasePickUp : public AActor
@@ -34,6 +35,8 @@ protected:
 	ACoreGameMode* CoreGameMode;
 
 	APlayerCharacter* PlayerCharacter;
+
+	AProjectile* Projectile;
 
 	bool bPickUp = true;
 	
