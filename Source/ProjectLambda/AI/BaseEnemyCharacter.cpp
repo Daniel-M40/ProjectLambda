@@ -7,6 +7,7 @@
 #include "ProjectLambda/Components/HealthComponent.h"
 #include "ProjectLambda/GameModes/CoreGameMode.h"
 
+
 // Sets default values
 ABaseEnemyCharacter::ABaseEnemyCharacter()
 {

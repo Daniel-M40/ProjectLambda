@@ -88,6 +88,29 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 		
 	}
 
+	// If enemy spawn enemy hit particle (blood)
+	if (OtherActor->ActorHasTag("Enemy"))
+	{
+		UNiagaraComponent* particles = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), EnemyHitParticles, GetActorLocation(), GetVelocity().Rotation().GetInverse());
+
+		if (particles != nullptr)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Spawning blood particle at %s"), *this->GetName());
+		}
+	}
+	// Anything else, spawn spark
+	else
+	{
+
+		
+		UNiagaraComponent* particles = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), GenericHitParticles, GetActorLocation(), HitResult.ImpactNormal.Rotation());
+
+		if (particles != nullptr)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Spawning generic particle at %s"), *this->GetName());
+		}
+	}
+
 	//Destroy the actor if we have collided with anything
 	Destroy();
 }

@@ -15,7 +15,8 @@ public class ProjectLambda : ModuleRules
 			"AIModule",
 			"GameplayTasks",
 			"NavigationSystem",
-            "EnhancedInput"
+            "EnhancedInput",
+			"Niagara"
 		});
 
 		// Uncomment if you are using Slate UI

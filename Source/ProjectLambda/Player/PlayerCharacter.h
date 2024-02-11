@@ -19,8 +19,9 @@ class PROJECTLAMBDA_API APlayerCharacter : public ACharacter
 private:
 
 #pragma region Player Config
-	UPROPERTY(EditAnywhere, Category = "Player Config", meta = (DisplayName = "Player Static Mesh"))
-	class UStaticMeshComponent* PlayerStaticMesh;
+	// Unneeded after implementing skeletal mesh
+	//UPROPERTY(EditAnywhere, Category = "Player Config", meta = (DisplayName = "Player Static Mesh"))
+	//class UStaticMeshComponent* PlayerStaticMesh;
 
 
 #pragma endregion
@@ -101,6 +102,10 @@ private:
 
 #pragma region Weapons
 
+
+	FName weaponSocket;
+
+	UPROPERTY(EditAnywhere, Category = "Weapons", meta = (DisplayName = "Weapon Socket"))
 	class AWeaponBase* CurrentWeapon;
 
 	UPROPERTY(EditAnywhere, Category = "Weapons", meta = (DisplayName = "Weapon Position"))

@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
 #include "Projectile.generated.h"
 
 class USphereComponent;
@@ -27,7 +29,15 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Movement", meta = (DisplayName = "Projectile Mesh"))
 	class UProjectileMovementComponent* ProjectileMovement;
 
+
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (DisplayName = "Enemy Hit"))
+	UNiagaraSystem* EnemyHitParticles;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (DisplayName = "Generic Hit"))
+	UNiagaraSystem* GenericHitParticles;
+
+
 	UPROPERTY(EditAnywhere)
 	float ProjectileDamage = 10.f;
 
