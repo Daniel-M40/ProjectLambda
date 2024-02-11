@@ -10,7 +10,7 @@ void AProjectileDamagePowerUp::OnBeginOverlap(UPrimitiveComponent* OverlappedCom
 	{
 		CoreGameMode->DecreaseCurrency(Cost); // decrease currency based on price
 
-		Projectile->Damage += IncreaseProjectileDamage; // increase projectile damage
+		Projectile->ProjectileDamage += IncreaseProjectileDamage; // increase projectile damage
 
 		Destroy(); // destroy power up
 	}

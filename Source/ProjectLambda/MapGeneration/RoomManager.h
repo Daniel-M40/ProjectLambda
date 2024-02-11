@@ -61,6 +61,10 @@ class PROJECTLAMBDA_API ARoomManager : public AActor
 {
 	GENERATED_BODY()
 
+public:
+	UPROPERTY(EditAnywhere, Category="Spawn Height")
+		float SpawnHeight = 100.f;
+	
 public:	
 	// Sets default values for this component's properties
 	ARoomManager();
