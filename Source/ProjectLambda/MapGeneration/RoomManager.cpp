@@ -391,7 +391,7 @@ void ARoomManager::SpawnStartRoom(ARoom* Room, int horizontal, int vertical)
 		// Move player to start Room
 
 		// -- TEMPORARY FOR TESTING --
-		GetWorld()->GetFirstPlayerController()->GetPawn()->SetActorLocation(Room->GetActorLocation() + (FVector::UpVector * 1600.f));
+		GetWorld()->GetFirstPlayerController()->GetPawn()->SetActorLocation(Room->GetActorLocation() + (FVector::UpVector *  SpawnHeight));
 
 		roomMap[horizontal].column[vertical]->Activate();
 	}
