@@ -45,6 +45,17 @@ void AWeaponBase::Fire()
 	DecreaseAmmo();
 }
 
+void AWeaponBase::PlayOutOfAmmoSound()
+{
+	//Play out of ammo sound
+	if (OutOfAmmoSound)
+	{
+		//Play door sound
+		UGameplayStatics::PlaySoundAtLocation(this, OutOfAmmoSound, GetActorLocation(),
+			OutOfAmmoSoundVolume, OutOfAmmoSoundPitch);
+	}
+}
+
 void AWeaponBase::EnableFireTimer()
 {
 	//After firing set flag to false to prevent user from shooting again until timer resets flag
@@ -83,8 +94,8 @@ int AWeaponBase::DecreaseAmmo()
 	if (AmmoCount > 0)
 	{
 		AmmoCount--; // decrease ammo when player shoots
-	}	
-
+	}
+	
 	return AmmoCount;
 }
 

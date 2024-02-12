@@ -272,10 +272,18 @@ void APlayerCharacter::ShootHandler(const FInputActionValue& Value)
 {
 	//check if we have a weapon
 	//and if the weapon has ammo
-	if (CurrentWeapon && CurrentWeapon->GetAmmo() > 0)
+	if (CurrentWeapon)
 	{
-		CurrentWeapon->Fire();
-		Ammo = CurrentWeapon->GetAmmo();
+		if (CurrentWeapon->GetAmmo() > 0)
+		{
+			CurrentWeapon->Fire();
+			Ammo = CurrentWeapon->GetAmmo();
+		}
+		else
+		{
+			//Play out of ammo sound
+			CurrentWeapon->PlayOutOfAmmoSound();
+		}
 	}
 }
 
