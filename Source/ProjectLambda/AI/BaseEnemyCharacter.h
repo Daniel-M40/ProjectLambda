@@ -21,7 +21,17 @@ private:
 	//Health / Damage Component
 	UPROPERTY(EditAnywhere, Category="Component")
 	class UHealthComponent* HealthComponent;
+	
+	//Stores the sound used when actor dies
+	UPROPERTY(EditAnywhere, Category="Sound")
+	class USoundBase* DeathSound;
 
+	UPROPERTY(EditAnywhere, Category="Sound")
+	float DeathSoundVolume = 1.f;
+
+	UPROPERTY(EditAnywhere, Category="Sound")
+	float DeathSoundPitch = 1.f;
+	
 public:
 	UPROPERTY(EditAnywhere, Category="Combat")
 	float OnCollideDamage = 10.f;

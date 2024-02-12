@@ -59,9 +59,7 @@ void ACoreGameMode::EndTimer()
 	GetWorldTimerManager().ClearTimer(TimerHandle);
 
 	//Store the timer
-	//@@TODO Add flag to check if player won the game to store the timer,
-	//@@TODO for testing i have left this so we can get dummy data into the file
-	if (LeaderboardManager)
+	if (LeaderboardManager && bPlayerWon)
 	{
 		LeaderboardManager->SaveTimeToFile(PlayerTime);
 		GetLeaderboardTimes();

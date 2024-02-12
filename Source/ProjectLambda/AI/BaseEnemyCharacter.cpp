@@ -71,8 +71,11 @@ float ABaseEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Da
 void ABaseEnemyCharacter::HandleDestruction()
 {
 	//@@TODO Play sound and particle effects here
-
-	
+	if (DeathSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation(),
+			DeathSoundVolume, DeathSoundPitch);
+	}
 	
 	if (CoreGameMode)
 	{

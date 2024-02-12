@@ -12,6 +12,16 @@ UCLASS()
 class PROJECTLAMBDA_API ADoor : public AActor
 {
 	GENERATED_BODY()
+
+	//Stores the sound used when actor dies
+	UPROPERTY(EditAnywhere, Category="Sound")
+	class USoundBase* EnterDoorSound;
+
+	UPROPERTY(EditAnywhere, Category="Sound")
+	float EnterDoorSoundVolume = 1.f;
+
+	UPROPERTY(EditAnywhere, Category="Sound")
+	float EnterDoorSoundPitch = 1.f;
 	
 public:	
 	// Sets default values for this actor's properties

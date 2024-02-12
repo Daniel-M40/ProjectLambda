@@ -65,11 +65,6 @@ float AFastEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Da
 
 void AFastEnemyCharacter::HandleDestruction()
 {
-	//@@TODO Play sound and particle effects here
-
-	//Spawn pickup at enemy death location
-	//CoreGameMode->SpawnPickup(GetActorLocation(), GetActorRotation());
-
-	Destroy();
+	Super::HandleDestruction();
 }
 

@@ -46,6 +46,7 @@ void ADoor::Enter(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrim
 	// If door is active
 	if (bIsActive)
 	{
+		
 		// If colliding with player
 		if (OtherActor->GetClass()->IsChildOf(APlayerCharacter::StaticClass()))
 		{
@@ -80,6 +81,13 @@ void ADoor::Enter(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrim
 			// Teleport to exit position of other door
 			if (OtherDoor)
 			{
+				if (EnterDoorSound)
+				{
+					//Play door sound
+					UGameplayStatics::PlaySoundAtLocation(this, EnterDoorSound, GetActorLocation(),
+						EnterDoorSoundVolume, EnterDoorSoundPitch);
+				}
+				
 				USceneComponent* Exit = OtherDoor->GetExitPosition();
 
 				if (Exit)
