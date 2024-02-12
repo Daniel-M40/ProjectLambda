@@ -80,7 +80,7 @@ float UHealthComponent::IncreaseHealth(float HealthIncrease)
 	{
 		CurrentHealth += HealthIncrease;
 	}
-
+	
 	return CurrentHealth;
 }
 

@@ -46,6 +46,16 @@ protected:
 	//Timer handle which allows us to add a timer to the shooting
 	FTimerHandle FireRateTimerHandle;
 
+	//Stores the sound used when actor dies
+	UPROPERTY(EditAnywhere, Category="Sound")
+	class USoundBase* FireSound;
+
+	UPROPERTY(EditAnywhere, Category="Sound")
+	float FireSoundVolume = 1.f;
+
+	UPROPERTY(EditAnywhere, Category="Sound")
+	float FireSoundPitch = 1.f;
+
 protected:
 
 	//Max ammo the weapon can have

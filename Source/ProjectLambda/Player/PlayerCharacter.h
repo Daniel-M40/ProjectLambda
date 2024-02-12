@@ -99,7 +99,28 @@ private:
 	const float SphereRadius = 25.f;
 	const int SphereSegments = 12;
 
+	bool bSoundAlreadyPlaying = false;
 
+	//Stores the sound used when actor dies
+	UPROPERTY(EditAnywhere, Category="Sound")
+	class USoundBase* LowHealthSound;
+
+	UPROPERTY(EditAnywhere, Category="Sound")
+	float LowHealthSoundVolume = 1.f;
+
+	UPROPERTY(EditAnywhere, Category="Sound")
+	float LowHealthSoundPitch = 1.f;
+
+	// Create an Audio Component to play the sound
+	UAudioComponent* AudioComponent;
+
+	FTimerHandle LowHealthSoundTimerHandle;
+
+	float LowHealthRepeat = 1.f;
+
+	UPROPERTY(EditAnywhere)
+	float LowHealth = 10.f;
+	
 #pragma region Weapons
 
 
@@ -163,6 +184,13 @@ private:
 
 	void DisableInvincibility();
 
+	void PlayLowHealthSound();
+
+	void CheckConditionToStopSound();
+
+	UFUNCTION()
+	void PlayLowHealthSoundOnFinish();
+	
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

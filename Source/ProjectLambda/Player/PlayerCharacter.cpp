@@ -8,7 +8,9 @@
 #include "InputMappingContext.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "AssetTypeActions/AssetDefinition_SoundBase.h"
 #include "Camera/CameraComponent.h"
+#include "Components/AudioComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "ProjectLambda/AI/BaseEnemyCharacter.h"
@@ -112,6 +114,60 @@ void APlayerCharacter::ResetDash()
 void APlayerCharacter::DisableInvincibility()
 {
 	bIsInvincible = false;
+}
+
+void APlayerCharacter::PlayLowHealthSound()
+{
+	if (LowHealthSound)
+	{
+		AudioComponent = UGameplayStatics::SpawnSoundAttached(LowHealthSound,
+				GetOwner()->GetRootComponent(),
+				FName(""),
+				GetActorLocation(),
+				GetActorRotation(),
+				EAttachLocation::KeepRelativeOffset,
+				false,
+				LowHealthSoundVolume,
+				LowHealthSoundPitch);
+
+		// Bind the OnAudioFinished delegate to a function, if the player is still low health play the sound again 
+		AudioComponent->OnAudioFinished.AddDynamic(this, &APlayerCharacter::PlayLowHealthSoundOnFinish);
+		
+		// Set the flag to indicate that the sound is now playing
+		bSoundAlreadyPlaying = true;
+
+	
+		// Set up a timer to periodically check the condition
+		GetWorld()->GetTimerManager().SetTimer(LowHealthSoundTimerHandle, this, &APlayerCharacter::CheckConditionToStopSound,
+			LowHealthRepeat, true);
+	}
+}
+
+void APlayerCharacter::CheckConditionToStopSound()
+{
+	if (HealthComponent->CurrentHealth > LowHealth)
+	{
+		bSoundAlreadyPlaying = false;
+
+		if (AudioComponent->IsActive())
+		{
+			AudioComponent->Stop();
+			AudioComponent->Deactivate();
+		}
+		
+
+		// Clear the timer
+		GetWorld()->GetTimerManager().ClearTimer(LowHealthSoundTimerHandle);
+	}
+}
+
+void APlayerCharacter::PlayLowHealthSoundOnFinish()
+{
+	if (AudioComponent && bSoundAlreadyPlaying)
+	{
+		AudioComponent->Play();
+		
+	}
 }
 
 void APlayerCharacter::SwapWeaponHandler(const FInputActionValue& Value)
@@ -298,7 +354,17 @@ float APlayerCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 	if (HealthComponent)
 	{
 		// call apply damage function to get the current value of character's health
-		CurrentHealth = HealthComponent->ApplyDamage(DamageAmount, false); 
+		CurrentHealth = HealthComponent->ApplyDamage(DamageAmount, false);
+
+		//Play sound if the player is low on health
+		if (CurrentHealth <= LowHealth)
+		{
+			//Check if sound is already playing
+			if (!bSoundAlreadyPlaying)
+			{
+				PlayLowHealthSound();
+			}
+		}
 	}
 
 	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);

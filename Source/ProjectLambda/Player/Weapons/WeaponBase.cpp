@@ -3,6 +3,7 @@
 
 #include "WeaponBase.h"
 
+#include "Kismet/GameplayStatics.h"
 #include "Pistol/PistolWeapon.h"
 #include "ProjectLambda/Player/Projectiles/Projectile.h"
 
@@ -48,6 +49,13 @@ void AWeaponBase::EnableFireTimer()
 {
 	//After firing set flag to false to prevent user from shooting again until timer resets flag
 	bCanFire = false;
+	
+	if (FireSound)
+	{
+		//Play door sound
+		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation(),
+			FireSoundVolume, FireSoundPitch);
+	}
 	
 	//Timer to delay the shooting
 	GetWorldTimerManager().SetTimer(FireRateTimerHandle, this, &AWeaponBase::EnableShooting, FireRate, false);

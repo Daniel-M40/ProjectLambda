@@ -28,6 +28,16 @@ private:
 	float SpawnTime = 3.f;
 		
 	FTimerHandle SpawnTimerHandle;
+
+	//Stores the sound when the pickup is collected
+	UPROPERTY(EditAnywhere, Category="Sound")
+	class USoundBase* PickUpSound;
+
+	UPROPERTY(EditAnywhere, Category="Sound")
+	float PickUpSoundVolume = 1.f;
+
+	UPROPERTY(EditAnywhere, Category="Sound")
+	float PickUpSoundPitch = 1.f;
 	
 protected:
 	bool bIsPlayer = false;

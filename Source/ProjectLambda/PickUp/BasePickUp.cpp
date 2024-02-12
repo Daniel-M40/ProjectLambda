@@ -63,10 +63,15 @@ void ABasePickUp::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Ot
 
 void ABasePickUp::HandleDestruction()
 {
-	//@@TODO Spawn visual effects and sound effects here
 	if (bIsPlayer)
 	{
-		
+		if (PickUpSound)
+		{
+			//Play door sound
+			UGameplayStatics::PlaySoundAtLocation(this, PickUpSound, GetActorLocation(),
+				PickUpSoundVolume, PickUpSoundPitch);
+		}
+
 		Destroy();
 	}
 }
