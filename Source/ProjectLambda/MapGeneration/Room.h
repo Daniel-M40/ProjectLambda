@@ -43,7 +43,7 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	int exitdoor;
 
-private:
+protected:
 
 	ADoor* DoorNorth;
 	ADoor* DoorEast; 
@@ -140,9 +140,9 @@ private:
 	float CameraSizeY;
 
 	UFUNCTION()
-	FVector GenerateEnemySpawnPos();
+	virtual FVector GenerateEnemySpawnPos();
 
-private:
+protected:
 	class ARoomManager* Manager = nullptr;
 	int GridHorizontal = 0;
 	int GridVertical = 0;
@@ -155,10 +155,10 @@ public:
 	// Enable/disable doors
 	// Returns true if successful
 	UFUNCTION()
-	void SetDoor(int direction);
+	virtual void SetDoor(int direction);
 
 	UFUNCTION()
-	ADoor* GetDoor(int direction);
+	virtual ADoor* GetDoor(int direction);
 
 	// ----- Maybe add difficulty multiplier for later levels? -----
 	// ----- Could effect spawnrate/health of enemies -----
@@ -166,25 +166,25 @@ public:
 
 	// Set the array coordinates of the room
 	UFUNCTION()
-	void Setup(ARoomManager* _Manager, int _GridHorizontal, int _GridVertical);
+	virtual void Setup(ARoomManager* _Manager, int _GridHorizontal, int _GridVertical);
 
 	UFUNCTION()
-	void GetCoords(int& horizontal, int& vertical);
+	virtual void GetCoords(int& horizontal, int& vertical);
 
 	UFUNCTION()
 	ARoomManager* GetManager();
 
 	UFUNCTION()
-	void Activate();
+	virtual void Activate();
 
 	UFUNCTION()
-	void Complete();
+	virtual void Complete();
 
-	ADoor* SpawnDoor(USceneComponent* DoorSpawn, int direction);
-
-	UFUNCTION()
-	void SpawnDoors();
+	virtual ADoor* SpawnDoor(USceneComponent* DoorSpawn, int direction);
 
 	UFUNCTION()
-	void SetDoorsActive(bool bIsDoorActive);
+	virtual void SpawnDoors();
+
+	UFUNCTION()
+	virtual void SetDoorsActive(bool bIsDoorActive);
 };
