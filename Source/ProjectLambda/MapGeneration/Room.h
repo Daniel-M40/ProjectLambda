@@ -150,6 +150,8 @@ protected:
 	UFUNCTION()
 	void CalculateCameraSize();
 
+	int EnemiesToKill = 9999999;
+
 public:
 	// Spawn the room
 	// Enable/disable doors
@@ -187,4 +189,7 @@ public:
 
 	UFUNCTION()
 	virtual void SetDoorsActive(bool bIsDoorActive);
+
+	UFUNCTION()
+	void EnemyDied();
 };
