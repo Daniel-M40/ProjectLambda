@@ -7,6 +7,10 @@
 #include "ProjectLambda/Components/HealthComponent.h"
 #include "ProjectLambda/GameModes/CoreGameMode.h"
 
+#include "ProjectLambda/Player/Projectiles/Projectile.h"
+
+#include "ProjectLambda/GameModes/CoreGameMode.h"
+
 // Sets default values
 AWormBoss::AWormBoss()
 {
@@ -43,6 +47,35 @@ UBehaviorTree* AWormBoss::GetBehaviorTree() const
 	return Tree;
 }
 
+void AWormBoss::Spit()
+{
+
+	// Get position and rotation of spawn socket
+	FVector SpawnPosition = GetMesh()->GetSocketLocation("SpitSpawn");
+	FRotator SpawnRotation = GetMesh()->GetSocketRotation("SpitSpawn");
+
+	// Pick random number to spawn
+	int toSpawn = FMath::RandRange(NumSpitLowerBound, NumSpitUpperBound);
+
+	// Spawn that number of projectiles
+	for (int i = 0; i < toSpawn; i++)
+	{
+		// Spawn in random direction
+		SpawnRotation.Pitch = FMath::RandRange(60.f, 88.f);
+		SpawnRotation.Yaw = FMath::RandRange(-180.f, 180.f);
+		
+		// Spawn the projectile
+		AActor* Projectile = GetWorld()->SpawnActor<AProjectile>(SpitProjectile, SpawnPosition, SpawnRotation);
+		Projectile->SetOwner(this);
+	}
+}
+
+void AWormBoss::SpawnEnemy()
+{
+	// Spawn enemy at the socket
+	GetWorld()->SpawnActor<ABaseEnemyCharacter>(EnemySpawn, GetMesh()->GetSocketLocation("EnemySpawn"), FRotator::ZeroRotator);
+}
+
 
 
 float AWormBoss::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
@@ -59,6 +92,10 @@ float AWormBoss::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
 
 void AWormBoss::HandleDestruction()
 {
+	ACoreGameMode* GameMode = Cast<ACoreGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+
+	GameMode->EndGame(true);
+
 	Super::HandleDestruction();
 }
 

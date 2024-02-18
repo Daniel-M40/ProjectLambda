@@ -74,6 +74,12 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 		return;
 	}
 	
+	// Don't collide with projectile owner
+	if (OtherActor == Owner)
+	{
+		return;
+	}
+
 	if (CurrentOwner)
 	{
 		AController* CurrentInstigator = CurrentOwner->GetInstigatorController(); 

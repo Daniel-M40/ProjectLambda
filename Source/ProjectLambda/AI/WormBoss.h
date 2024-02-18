@@ -40,4 +40,27 @@ public:
 	class UHealthComponent* HealthComponent;
 
 	UBehaviorTree* GetBehaviorTree() const;
+
+
+
+
+	UFUNCTION(BlueprintCallable)
+	void Spit();
+
+	UFUNCTION(BlueprintCallable)
+	void SpawnEnemy();
+
+private:
+	UPROPERTY(EditAnywhere, Category="Attacks")
+	TSubclassOf<class AProjectile> SpitProjectile;
+
+	UPROPERTY(EditAnywhere, Category = "Attacks")
+	int NumSpitLowerBound = 8;
+	UPROPERTY(EditAnywhere, Category = "Attacks")
+	int NumSpitUpperBound = 16;
+
+
+	UPROPERTY(EditAnywhere, Category = "Attacks")
+	TSubclassOf<class ABaseEnemyCharacter> EnemySpawn;
+	
 };
