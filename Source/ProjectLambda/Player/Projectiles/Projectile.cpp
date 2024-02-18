@@ -40,6 +40,10 @@ void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// I do not know why it requires it here.
+	// Blueprint setting didn't work.
+	SetLifeSpan(0.4f);
+
 	ProjectileMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 
 	UE_LOG(LogTemp, Warning, TEXT("BP InitSpeed: %f"), ProjectileMovement->InitialSpeed);
