@@ -7,6 +7,8 @@
 #include "ProjectLambda/Components/HealthComponent.h"
 #include "ProjectLambda/GameModes/CoreGameMode.h"
 
+#include "ProjectLambda/MapGeneration/Room.h"
+
 
 // Sets default values
 ABaseEnemyCharacter::ABaseEnemyCharacter()
@@ -83,6 +85,13 @@ void ABaseEnemyCharacter::HandleDestruction()
 		CoreGameMode->SpawnPickUp(GetActorLocation(), GetActorRotation());
 	}
 	
+	// Inform room that enemy has died
+	ARoom* parentRoom = Cast<ARoom>(GetOwner());
+	if (parentRoom)
+	{
+		parentRoom->EnemyDied();
+	}
+
 	Destroy();
 }
 
