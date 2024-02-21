@@ -63,6 +63,7 @@ void ARoom::BeginPlay()
 	RoomOrigin = GetActorLocation();
 
 	RemainingEnemies = EnemyWave.Num() - 1;
+	EnemiesToKill = EnemyWave.Num() - 1;
 }
 
 // Called every frame
@@ -82,12 +83,16 @@ void ARoom::Tick(float DeltaTime)
 
 				// Spawn the enemy
 				UE_LOG(LogTemp, Warning, TEXT("Spawning Enemy"))
-				GetWorld()->SpawnActor<ABaseEnemyCharacter>(EnemyWave[EnemyWave.Num() - 1 - RemainingEnemies], GenerateEnemySpawnPos(), FRotator::ZeroRotator);
+				ABaseEnemyCharacter* enemy = GetWorld()->SpawnActor<ABaseEnemyCharacter>(EnemyWave[EnemyWave.Num() - 1 - RemainingEnemies], GenerateEnemySpawnPos(), FRotator::ZeroRotator);
+
+				enemy->SetOwner(this);
 
 				RemainingEnemies--;
 			}
 		}
-		else
+
+
+		if (EnemiesToKill <= 0)
 		{
 			Complete();
 		}
@@ -237,3 +242,7 @@ void ARoom::Complete()
 }
 
 
+void ARoom::EnemyDied()
+{
+	EnemiesToKill--;
+}
