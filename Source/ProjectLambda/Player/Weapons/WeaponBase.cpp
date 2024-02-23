@@ -2,9 +2,7 @@
 
 
 #include "WeaponBase.h"
-
 #include "Kismet/GameplayStatics.h"
-#include "Pistol/PistolWeapon.h"
 #include "ProjectLambda/Player/Projectiles/Projectile.h"
 
 // Sets default values

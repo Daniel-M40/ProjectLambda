@@ -3,20 +3,15 @@
 
 #include "PlayerCharacter.h"
 #include "Weapons\WeaponBase.h"
-
 #include "InputAction.h"
-#include "InputMappingContext.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
-#include "AssetTypeActions/AssetDefinition_SoundBase.h"
-#include "Camera/CameraComponent.h"
 #include "Components/AudioComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "ProjectLambda/AI/BaseEnemyCharacter.h"
 #include "ProjectLambda/Components/HealthComponent.h"
 #include "ProjectLambda/GameModes/CoreGameMode.h"
-#include "Weapons/Pistol/PistolWeapon.h"
 #include "Weapons/Shotgun/Shotgun.h"
 
 // Sets default values
