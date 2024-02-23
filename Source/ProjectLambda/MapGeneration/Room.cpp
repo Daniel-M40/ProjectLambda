@@ -236,6 +236,7 @@ void ARoom::Activate()
 
 void ARoom::Complete()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Room Complete"))
 	SetDoorsActive(true);
 	bIsComplete = true;
 	bIsActive = false;

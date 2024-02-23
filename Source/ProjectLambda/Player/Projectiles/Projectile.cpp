@@ -42,7 +42,7 @@ void AProjectile::BeginPlay()
 
 	// I do not know why it requires it here.
 	// Blueprint setting didn't work.
-	SetLifeSpan(0.4f);
+	SetLifeSpan(Lifespan);
 
 	ProjectileMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 
