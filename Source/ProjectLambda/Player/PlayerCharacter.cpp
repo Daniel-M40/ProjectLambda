@@ -13,6 +13,8 @@
 #include "ProjectLambda/Components/HealthComponent.h"
 #include "ProjectLambda/GameModes/CoreGameMode.h"
 #include "Weapons/Shotgun/Shotgun.h"
+#include "Camera/CameraComponent.h"
+
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -367,6 +369,23 @@ float APlayerCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 			{
 				PlayLowHealthSound();
 			}
+
+
+			UCameraComponent* Camera = nullptr;
+
+			TArray<AActor*> ChildActors;
+			GetAttachedActors(ChildActors);
+
+			for (AActor* Child : ChildActors)
+			{
+				 Camera = Child->FindComponentByClass<UCameraComponent>();
+				 if (Camera != nullptr)
+				 {
+					 UE_LOG(LogTemp, Warning, TEXT("Adding Vignette"))
+					 Camera->PostProcessSettings.VignetteIntensity = 2.f;
+					 Camera->PostProcessSettings.SceneColorTint = FLinearColor(1.0f, 0.4f, 0.4f);
+				 }
+			}
 		}
 	}
 
@@ -380,6 +399,22 @@ void APlayerCharacter::IncreaseHealth(float healthIncrement)
 	{
 		CurrentHealth = HealthComponent->IncreaseHealth(healthIncrement);
 	}
+
+	UCameraComponent* Camera = nullptr;
+
+	TArray<AActor*> ChildActors;
+	GetAttachedActors(ChildActors);
+
+	for (AActor* Child : ChildActors)
+	{
+		Camera = Child->FindComponentByClass<UCameraComponent>();
+		if (Camera != nullptr)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Removing Vignette"))
+				Camera->PostProcessSettings.VignetteIntensity = 0.f;
+			Camera->PostProcessSettings.SceneColorTint = FLinearColor(1.0f, 1.0f, 1.0f);
+		}
+	}
 }
 
 
@@ -389,7 +424,11 @@ void APlayerCharacter::IncreaseMaxHealth(float healthIncrement)
 	if (HealthComponent && healthIncrement > 0.f)
 	{
 		CurrentHealth = HealthComponent->IncreaseMaxHealth(healthIncrement);
+
+
 	}
+
+
 }
 
 void APlayerCharacter::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
